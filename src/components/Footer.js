@@ -10,7 +10,7 @@ export default function Footer() {
       <div 
         className="relative py-24 sm:py-32 md:py-40 lg:py-48 px-4"
         style={{
-          backgroundImage: 'url(/images/roof.jpg)',
+          backgroundImage: 'url(/images/footer.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
