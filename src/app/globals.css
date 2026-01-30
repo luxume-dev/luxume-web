@@ -25,24 +25,25 @@
 .font-aloevera {
   font-family: 'Aloevera', system-ui, sans-serif;
 }
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --primary: #ec4899;
+  --primary: #C83C64;
   --primary-dark: #db2777;
+  --secondary: #1C1E54;
+  --text-description: #4A5565;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-text-description: var(--text-description);
   --font-sans: var(--font-inter);
   --font-heading: var(--font-outfit);
-}
-
-* {
-  padding: 0;
-  box-sizing: border-box;
+  --font-lato: var(--font-lato);
 }
 
 html {
@@ -56,8 +57,17 @@ body {
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-outfit), system-ui, -apple-system, sans-serif;
+}
+
+.font-lato {
+  font-family: var(--font-lato), system-ui, sans-serif;
 }
 
 /* Custom Scrollbar */
@@ -84,6 +94,7 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
