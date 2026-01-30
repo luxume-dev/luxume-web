@@ -7,13 +7,13 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="absolute top-0 left-0 right-0 z-50 w-full mt-4">
-      <div className="w-full px-8 py-4">
+    <nav className="fixed top-0 left-0 right-0 z-50 w-full bg-transparent">
+      <div className="w-full px-8 md:px-16 lg:px-24 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <img 
-              src="/images/logo.png" 
+              src="/images/logo.png"
               alt="Luxume" 
               className="h-12 w-auto"
             />
@@ -79,7 +79,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-white p-2"
+            className="md:hidden p-2 text-white"
             aria-label="Toggle menu"
           >
             <svg
@@ -133,11 +133,11 @@ export default function Navbar() {
                 Products
               </Link>
               <Link
-                href="/services"
+                href="/blog"
                 className="text-white/80 text-sm font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Services
+                Blog
               </Link>
               <Link
                 href="/contact"
