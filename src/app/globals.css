@@ -22,6 +22,20 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Aloevera';
+  src: url('/fonts/Aloevera Sans Font/Aloevera-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Aloevera';
+  src: url('/fonts/Aloevera Sans Font/Aloevera-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
 .font-aloevera {
   font-family: 'Aloevera', system-ui, sans-serif;
 }

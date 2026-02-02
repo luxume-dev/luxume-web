@@ -2,7 +2,7 @@
 
 export default function ProductsIntro() {
   return (
-    <section className="w-full py-16 md:py-24 bg-white flex flex-col items-center justify-center text-center px-4">
+    <section className="w-full py-12 bg-white flex flex-col items-center justify-center text-center px-4">
       <div className="max-w-4xl mx-auto">
         <h3 
           className="text-[14px] font-normal tracking-widest uppercase mb-4 font-lato"
@@ -23,7 +23,7 @@ export default function ProductsIntro() {
         </h1>
         
         <p 
-          className="text-[16px] max-w-2xl mx-auto leading-[28px] font-lato mb-12"
+          className="text-[16px] max-w-2xl mx-auto leading-[28px] font-lato mb-8"
           style={{ 
             color: 'var(--text-description)',
             fontWeight: 400

@@ -1,14 +1,19 @@
-import Navbar from '@/components/Navbar';
 import ProductsIntro from '@/components/ProductsIntro';
 import ProductStats from '@/components/ProductStats';
-import Footer from '@/components/Footer';
+import ProductGrid from '@/components/ProductGrid';
+import ProductHero from '@/components/ProductHero';
 
 export default function ProductsPage() {
   return (
     <main className="min-h-screen bg-white">
-      <div className="mt-20"> {/* Add padding to account for absolute navbar */}
+      <div> {/* Add padding to account for absolute navbar */}
+        <ProductHero 
+          heading="Innovative Roofing Materials & Designs"
+          backgroundImage="/images/product-hero.webp"
+        />
         <ProductsIntro />
         <ProductStats />
+        <ProductGrid />
       </div>
     </main>
   );
