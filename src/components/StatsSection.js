@@ -32,11 +32,11 @@ export default function StatsSection() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 text-center">
             {stats.map((stat, index) => (
               <div key={index} className="flex flex-col items-center p-2 sm:p-3">
-                <h3 className="font-aloevera text-[#1a1a4e] text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-1 sm:mb-2" style={{ fontWeight: 400 }}>
+                <h3 className="font-aloevera text-[#1a1a4e] text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-1 sm:mb-2" style={{ fontWeight: 500 }}>
                   {stat.value}
                 </h3>
-                <p className="text-gray-500 text-xs sm:text-sm">{stat.label1}</p>
-                <p className="text-gray-500 text-xs sm:text-sm">{stat.label2}</p>
+                <p className="font-aloevera text-gray-500 text-xs sm:text-sm" style={{ fontWeight: 300 }}>{stat.label1}</p>
+                <p className="font-aloevera text-gray-500 text-xs sm:text-sm" style={{ fontWeight: 300 }}>{stat.label2}</p>
               </div>
             ))}
           </div>

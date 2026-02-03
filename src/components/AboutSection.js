@@ -7,7 +7,7 @@ export default function AboutSection() {
 
         {/* Heading */}
         <h2 className="mb-6 sm:mb-8 md:mb-10 text-2xl sm:text-3xl md:text-4xl lg:text-[44px] leading-tight">
-          <span className="font-aloevera bold text-[#C83C64]">
+          <span className="font-aloevera font-bold text-[#C83C64]">
             Secure & Stylish
           </span>
           <span className="font-aloevera font-bold text-[#1a1a4e]">

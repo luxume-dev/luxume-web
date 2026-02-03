@@ -1,19 +1,35 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
+  
+  // Force white background on contact page
+  const forceWhiteBg = pathname === '/contact';
+  const showWhiteBg = forceWhiteBg || isScrolled;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 w-full bg-transparent">
+    <nav className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${showWhiteBg ? 'bg-white shadow-md' : 'bg-transparent'}`}>
       <div className="w-full px-8 md:px-16 lg:px-24 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <img 
-              src="/images/logo.png"
+              src={showWhiteBg ? "/images/logo.png" : "/images/logo-2.png"}
               alt="Luxume" 
               className="h-12 w-auto"
             />
@@ -23,37 +39,43 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-10">
             <Link 
               href="/" 
-              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              style={{ fontWeight: 300 }}
             >
               Home
             </Link>
             <Link 
               href="/about" 
-              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              style={{ fontWeight: 300 }}
             >
               About Us
             </Link>
             <Link 
               href="/products" 
-              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              style={{ fontWeight: 300 }}
             >
               Products
             </Link>
             <Link 
               href="/contact" 
-              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              style={{ fontWeight: 300 }}
             >
               Contact Us
             </Link>
             <Link 
               href="/blog" 
-              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              style={{ fontWeight: 300 }}
             >
               Blog
             </Link>
             <Link 
               href="/careers" 
-              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              style={{ fontWeight: 300 }}
             >
               Careers
             </Link>
@@ -79,7 +101,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-white"
+            className={`md:hidden p-2 ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
             aria-label="Toggle menu"
           >
             <svg

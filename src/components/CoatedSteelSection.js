@@ -140,9 +140,8 @@ export default function CoatedSteelSection() {
           <h2 
             className="font-aloevera text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4"
             style={{ 
-              fontWeight: 400,
-              fontStyle: 'italic',
-              color: '#1a1a4e'
+              fontWeight: 700,
+              color: '#C83C64'
             }}
           >
             Superior Protection and Style
