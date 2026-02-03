@@ -1,19 +1,29 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 w-full bg-transparent">
-      <div className="w-full px-8 md:px-16 lg:px-24 py-4">
+    <nav className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+      <div className="w-full px-4 sm:px-8 md:px-16 lg:px-24 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <img 
-              src="/images/logo.png"
+              src={isScrolled ? "/images/logo.png" : "/images/logo-2.png"}
               alt="Luxume" 
               className="h-12 w-auto"
             />
@@ -23,37 +33,37 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-10">
             <Link 
               href="/" 
-              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
+              className={`text-sm font-medium hover:text-pink-400 transition-colors ${isScrolled ? 'text-gray-800' : 'text-white'}`}
             >
               Home
             </Link>
             <Link 
               href="/about" 
-              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
+              className={`text-sm font-medium hover:text-pink-400 transition-colors ${isScrolled ? 'text-gray-800' : 'text-white'}`}
             >
               About Us
             </Link>
             <Link 
               href="/products" 
-              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
+              className={`text-sm font-medium hover:text-pink-400 transition-colors ${isScrolled ? 'text-gray-800' : 'text-white'}`}
             >
               Products
             </Link>
             <Link 
               href="/contact" 
-              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
+              className={`text-sm font-medium hover:text-pink-400 transition-colors ${isScrolled ? 'text-gray-800' : 'text-white'}`}
             >
               Contact Us
             </Link>
             <Link 
               href="/blog" 
-              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
+              className={`text-sm font-medium hover:text-pink-400 transition-colors ${isScrolled ? 'text-gray-800' : 'text-white'}`}
             >
               Blog
             </Link>
             <Link 
               href="/careers" 
-              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
+              className={`text-sm font-medium hover:text-pink-400 transition-colors ${isScrolled ? 'text-gray-800' : 'text-white'}`}
             >
               Careers
             </Link>
@@ -79,7 +89,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-white"
+            className={`md:hidden p-2 ${isScrolled ? 'text-gray-800' : 'text-white'}`}
             aria-label="Toggle menu"
           >
             <svg
@@ -109,7 +119,7 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-white/20">
+          <div className="md:hidden mt-4 pb-4 border-t border-white/20 bg-black/90 backdrop-blur-md rounded-lg -mx-4 px-4">
             <div className="flex flex-col gap-4 pt-4">
               <Link
                 href="/"

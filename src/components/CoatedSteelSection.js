@@ -46,8 +46,8 @@ export default function CoatedSteelSection() {
   ];
 
   return (
-    <section className="bg-white py-12 px-4 sm:py-16 sm:px-6 md:py-20 md:px-8 lg:py-24 ml-20 mr-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 md:px-16">
+    <section className="bg-white py-12 sm:py-16 md:py-20 lg:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-16">
         
         {/* Understanding Layers Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16 sm:mb-20 md:mb-24">

@@ -2,8 +2,8 @@
 
 export default function VideoSection() {
   return (
-    <section className="bg-[#0a0a1a] py-12 px-4 sm:py-16 sm:px-6 md:py-20 md:px-8 lg:py-24">
-      <div className="max-w-6xl mx-auto">
+    <section className="bg-[#0a0a1a] py-12 sm:py-16 md:py-20 lg:py-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
         {/* Video Container */}
         <div className="relative rounded-2xl overflow-hidden shadow-2xl">
           <video

@@ -32,7 +32,7 @@ export default function ProductHighlightsSection() {
 
   return (
     <section 
-      className="relative py-16 px-4 sm:py-20 sm:px-6 md:py-24 md:px-8 lg:py-28"
+      className="relative py-16 sm:py-20 md:py-24 lg:py-28"
       style={{
         backgroundImage: 'url(/images/roof.jpg)',
         backgroundSize: 'cover',
@@ -48,7 +48,7 @@ export default function ProductHighlightsSection() {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 md:px-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           
           {/* Left - Image */}

@@ -36,7 +36,7 @@ export default function Footer() {
           </div>
 
           {/* Tagline */}
-          <div className="text-left max-w-md mx-auto sm:mx-0">
+          <div className="text-center sm:text-left max-w-md mx-auto">
             <h3 
               className="font-aloevera text-2xl sm:text-3xl md:text-4xl text-white mb-2"
               style={{ fontWeight: 400, fontStyle: 'italic' }}
@@ -78,7 +78,7 @@ export default function Footer() {
             </div>
             
             {/* Description */}
-            <p className="text-gray-400 text-sm sm:text-base max-w-md text-right">
+            <p className="text-gray-400 text-sm sm:text-base max-w-md text-center lg:text-right mt-4 lg:mt-0">
               Luxume produces premium colour-coated sheets to safeguard and enhance structures in the construction industry.
             </p>
           </div>
@@ -89,10 +89,16 @@ export default function Footer() {
             <div>
               <h4 className="text-white font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2">
-                {['Home', 'About Us', 'Products', 'Contact Us', 'Careers'].map((link) => (
-                  <li key={link}>
-                    <Link href="#" className="text-gray-400 text-sm hover:text-white transition-colors">
-                      {link}
+                {[
+                  { name: 'Home', href: '/' },
+                  { name: 'About Us', href: '/about' },
+                  { name: 'Products', href: '/products' },
+                  { name: 'Contact Us', href: '/contact' },
+                  { name: 'Careers', href: '/careers' }
+                ].map((link) => (
+                  <li key={link.name}>
+                    <Link href={link.href} className="text-gray-400 text-sm hover:text-white transition-colors">
+                      {link.name}
                     </Link>
                   </li>
                 ))}
@@ -171,7 +177,15 @@ export default function Footer() {
           {/* Bottom Bar */}
           <div className="pt-8 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-gray-500 text-xs sm:text-sm">
-              © 2026 Luxume. All Rights Reserved. Designed & Developed by Snap Infinity
+              © 2026 Luxume. All Rights Reserved. Designed & Developed by{' '}
+              <a 
+                href="https://snapinfinity.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors"
+              >
+                Snap Infinity
+              </a>
             </p>
             <div className="flex gap-6">
               <Link href="#" className="text-gray-500 text-xs sm:text-sm hover:text-white transition-colors">

@@ -44,7 +44,7 @@ export default function CoreValuesSection() {
 
   return (
     <section 
-      className="relative py-12 px-4 sm:py-16 sm:px-6 md:py-20 md:px-8 lg:py-24"
+      className="relative py-12 sm:py-16 md:py-20 lg:py-24"
       style={{
         backgroundImage: 'url(/images/roof.jpg)',
         backgroundSize: 'cover',
@@ -62,7 +62,7 @@ export default function CoreValuesSection() {
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto ml-16 mr-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 md:px-12 lg:px-16">
         {/* Header */}
         <div className="mb-8 sm:mb-10 md:mb-12 text-center sm:text-left">
           <h2 

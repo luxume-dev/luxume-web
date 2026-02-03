@@ -105,7 +105,7 @@ export default function ContactSection() {
           </div>
 
           {/* Right - Contact Form */}
-          <div className="w-full lg:w-3/5 border rounded-xl px-10 py-12 md:px-14 md:py-14 border-gray-200">
+          <div className="w-full lg:w-3/5 border rounded-xl px-5 py-8 sm:px-8 sm:py-10 md:px-14 md:py-14 border-gray-200">
             <h2 className="font-semibold text-2xl text-gray-800 mb-8">Send us a Message</h2>
             
             <form className="space-y-6">
