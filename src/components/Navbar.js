@@ -1,85 +1,75 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
-      <div className="w-full px-4 sm:px-8 md:px-16 lg:px-24 py-4">
+    <nav className="fixed top-0 left-0 right-0 z-50 w-full bg-transparent">
+      <div className="w-full px-8 md:px-16 lg:px-24 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <img 
-              src={isScrolled ? "/images/logo.png" : "/images/logo-2.png"}
+              src="/images/logo.png"
               alt="Luxume" 
               className="h-12 w-auto"
             />
           </Link>
 
-          {/* Desktop Navigation - Centered */}
+          {/* Desktop Content (Links + Button) - Pushed to right via flex justify-between + grouping */}
           <div className="hidden md:flex items-center gap-10">
             <Link 
               href="/" 
-              className={`text-sm font-medium hover:text-pink-400 transition-colors ${isScrolled ? 'text-gray-800' : 'text-white'}`}
+              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
             >
               Home
             </Link>
             <Link 
               href="/about" 
-              className={`text-sm font-medium hover:text-pink-400 transition-colors ${isScrolled ? 'text-gray-800' : 'text-white'}`}
+              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
             >
               About Us
             </Link>
             <Link 
               href="/products" 
-              className={`text-sm font-medium hover:text-pink-400 transition-colors ${isScrolled ? 'text-gray-800' : 'text-white'}`}
+              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
             >
               Products
             </Link>
             <Link 
               href="/contact" 
-              className={`text-sm font-medium hover:text-pink-400 transition-colors ${isScrolled ? 'text-gray-800' : 'text-white'}`}
+              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
             >
               Contact Us
             </Link>
             <Link 
               href="/blog" 
-              className={`text-sm font-medium hover:text-pink-400 transition-colors ${isScrolled ? 'text-gray-800' : 'text-white'}`}
+              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
             >
               Blog
             </Link>
             <Link 
               href="/careers" 
-              className={`text-sm font-medium hover:text-pink-400 transition-colors ${isScrolled ? 'text-gray-800' : 'text-white'}`}
+              className="text-white text-sm font-medium hover:text-pink-400 transition-colors"
             >
               Careers
             </Link>
-          </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
+            {/* CTA Button */}
             <a
               href="tel:+1234567890"
-              className="inline-flex items-center justify-center text-white text-sm font-medium rounded transition-all hover:opacity-90"
+              className="inline-flex items-center justify-center text-white font-aloevera rounded transition-all hover:opacity-90"
               style={{ 
                 width: '110px', 
                 height: '38px', 
                 padding: '10px', 
                 gap: '10px',
-                backgroundColor: '#C83C64'
+                backgroundColor: '#C83C64',
+                fontSize: '16px',
+                fontWeight: 500
               }}
             >
               Call Now
@@ -89,7 +79,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`md:hidden p-2 ${isScrolled ? 'text-gray-800' : 'text-white'}`}
+            className="md:hidden p-2 text-white"
             aria-label="Toggle menu"
           >
             <svg
@@ -119,39 +109,39 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-white/20 bg-black/90 backdrop-blur-md rounded-lg -mx-4 px-4">
+          <div className="md:hidden mt-4 pb-4 border-t border-white/20">
             <div className="flex flex-col gap-4 pt-4">
               <Link
                 href="/"
-                className="text-white text-sm font-medium"
+                className="text-gray-800 text-sm font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 href="/about"
-                className="text-white/80 text-sm font-medium"
+                className="text-gray-600 text-sm font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 About Us
               </Link>
               <Link
                 href="/products"
-                className="text-white/80 text-sm font-medium"
+                className="text-gray-600 text-sm font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Products
               </Link>
               <Link
                 href="/blog"
-                className="text-white/80 text-sm font-medium"
+                className="text-gray-600 text-sm font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Blog
               </Link>
               <Link
                 href="/contact"
-                className="text-white/80 text-sm font-medium"
+                className="text-gray-600 text-sm font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact

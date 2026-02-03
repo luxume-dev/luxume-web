@@ -2,7 +2,7 @@ export const products = [
   {
     id: 1,
     title: 'Color Coated Galvalume Sheets',
-    description: 'High-quality color-coated galvalume sheets designed for superior durability and aesthetic appeal.',
+    description: 'High-quality color-coated galvalume sheets designed for superior weather resistance and long-lasting durability. Perfect for residential and commercial roofing applications.',
     tags: ['Weather Resistant', '10+ Year Warranty', 'Eco-Friendly Coating'],
     imageUrl: '/images/color-coated-galvalume-sheets.webp'
   },
