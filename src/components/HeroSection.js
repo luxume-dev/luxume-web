@@ -2,7 +2,7 @@
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center">
+    <section className="fixed top-0 left-0 right-0 z-0 h-screen flex items-center">
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-no-repeat bg-right md:bg-center"

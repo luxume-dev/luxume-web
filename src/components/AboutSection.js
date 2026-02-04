@@ -1,12 +1,90 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register ScrollTrigger plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
 export default function AboutSection() {
+  const sectionRef = useRef(null);
+  const headingRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const lineRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Create a timeline for coordinated animations
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 75%',
+          toggleActions: 'play none none reverse'
+        }
+      });
+
+      // Animate decorative line first
+      tl.fromTo(lineRef.current,
+        { scaleX: 0, opacity: 0 },
+        { scaleX: 1, opacity: 1, duration: 0.6, ease: 'power2.out' }
+      );
+
+      // Animate heading with a slide up and fade
+      tl.fromTo(headingRef.current,
+        { opacity: 0, y: 50, clipPath: 'inset(100% 0% 0% 0%)' },
+        { 
+          opacity: 1, 
+          y: 0, 
+          clipPath: 'inset(0% 0% 0% 0%)',
+          duration: 0.8, 
+          ease: 'power3.out'
+        },
+        '-=0.3'
+      );
+
+      // Animate description with staggered word fade-in feel
+      tl.fromTo(descriptionRef.current,
+        { opacity: 0, y: 30 },
+        { 
+          opacity: 1, 
+          y: 0, 
+          duration: 0.7, 
+          ease: 'power2.out'
+        },
+        '-=0.4'
+      );
+
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="bg-white my-8 sm:my-12 md:my-16 px-4 sm:px-6 md:px-8">
+    <section 
+      ref={sectionRef}
+      className="relative z-20 bg-white pt-8 sm:pt-12 md:pt-16 pb-0 px-4 sm:px-6 md:px-8 overflow-hidden"
+    >
       <div className="mx-auto flex flex-col items-center text-center">
 
+        {/* Decorative Line */}
+        <div 
+          ref={lineRef}
+          className="w-16 sm:w-20 h-1 rounded-full mb-6 sm:mb-8 origin-center"
+          style={{ 
+            background: 'linear-gradient(90deg, #C83C64 0%, #E91E63 100%)',
+            opacity: 0
+          }}
+        />
+
         {/* Heading */}
-        <h2 className="mb-6 sm:mb-8 md:mb-10 text-2xl sm:text-3xl md:text-4xl lg:text-[44px] leading-tight">
+        <h2 
+          ref={headingRef}
+          className="mb-6 sm:mb-8 md:mb-10 text-2xl sm:text-3xl md:text-4xl lg:text-[44px] leading-tight"
+          style={{ opacity: 0 }}
+        >
           <span className="font-aloevera font-bold text-[#C83C64]">
             Secure & Stylish
           </span>
@@ -16,7 +94,11 @@ export default function AboutSection() {
         </h2>
 
         {/* Description */}
-        <p className="max-w-4xl text-sm sm:text-[15px] leading-7 sm:leading-8 text-[#666666] text-center px-2 sm:px-4">
+        <p 
+          ref={descriptionRef}
+          className="max-w-4xl text-sm sm:text-[15px] leading-7 sm:leading-8 text-[#666666] text-center px-2 sm:px-4"
+          style={{ opacity: 0 }}
+        >
           Luxume head quartered at Chittoor Road, Ernakulam is a leading manufacturer
           of colour-coated steel sheets which is primarily supplied to the construction
           industry. We began our operations in the year 2011. Since then, we have been
