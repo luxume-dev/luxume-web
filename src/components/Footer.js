@@ -8,7 +8,7 @@ export default function Footer() {
   const { email, setEmail, isLoading, status, handleSubscribe } = useNewsletter();
 
   return (
-    <footer>
+    <footer className="relative z-10">
       {/* Hero Banner Section */}
       <div 
         className="relative py-24 sm:py-32 md:py-40 lg:py-48 px-4"
@@ -87,7 +87,7 @@ export default function Footer() {
           </div>
 
           {/* Links Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 mb-12">
             {/* Quick Links */}
             <div>
               <h4 className="text-white font-semibold mb-4">Quick Links</h4>
@@ -147,33 +147,33 @@ export default function Footer() {
             {/* Connect Us & Subscribe */}
             <div>
               <h4 className="text-white font-semibold mb-4">Connect Us</h4>
-              <div className="flex gap-3 mb-6">
+              <div className="flex gap-3 sm:gap-2 mb-6">
                 {[FaPhone, FaInstagram, FaFacebookF, FaYoutube].map((Icon, index) => (
                   <a 
                     key={index}
                     href="#"
-                    className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:opacity-80"
+                    className="w-11 h-11 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:opacity-80"
                     style={{ background: '#E91E63' }}
                   >
-                    <Icon className="text-white text-sm" />
+                    <Icon className="text-white text-base sm:text-sm" />
                   </a>
                 ))}
               </div>
               
               <h4 className="text-white font-semibold mb-3">Subscribe Now</h4>
               <form onSubmit={handleSubscribe} className="space-y-2">
-                <div className="flex">
+                <div className="flex max-w-xs sm:max-w-none">
                   <input 
                     type="email" 
                     placeholder="Email Address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 px-4 py-2.5 bg-transparent border border-gray-700 rounded-l-lg text-white text-sm focus:outline-none focus:border-gray-500"
+                    className="flex-1 min-w-0 px-3 sm:px-4 py-3 sm:py-2.5 bg-transparent border border-gray-700 rounded-l-lg text-white text-sm focus:outline-none focus:border-gray-500"
                   />
                   <button 
                     type="submit"
                     disabled={isLoading}
-                    className="px-4 py-2.5 rounded-r-lg transition-all duration-300 hover:opacity-80 disabled:opacity-50"
+                    className="px-4 py-3 sm:py-2.5 rounded-r-lg transition-all duration-300 hover:opacity-80 disabled:opacity-50 flex-shrink-0"
                     style={{ background: '#E91E63' }}
                   >
                     {isLoading ? (
@@ -197,9 +197,10 @@ export default function Footer() {
           </div>
 
           {/* Bottom Bar */}
-          <div className="pt-8 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-gray-500 text-xs sm:text-sm">
-              © 2026 Luxume. All Rights Reserved. Designed & Developed by{' '}
+          <div className="pt-8 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+            <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">
+              © 2026 Luxume. All Rights Reserved.<br className="sm:hidden" />
+              <span className="hidden sm:inline"> </span>Designed & Developed by{' '}
               <a 
                 href="https://snapinfinity.com" 
                 target="_blank" 
@@ -209,7 +210,7 @@ export default function Footer() {
                 Snap Infinity
               </a>
             </p>
-            <div className="flex gap-6">
+            <div className="flex gap-4 sm:gap-6">
               <Link href="#" className="text-gray-500 text-xs sm:text-sm hover:text-white transition-colors">
                 Terms & Conditions
               </Link>

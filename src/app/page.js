@@ -11,13 +11,16 @@ export default function Home() {
   return (
     <main>
       <HeroSection />
-      <AboutSection />
-      <StatsSection />
-      <CoreValuesSection />
-      <CoatedSteelSection />
-      <VideoSection />
-      <ProductHighlightsSection />
-      <TestimonialsSection />
+      {/* Content wrapper that scrolls over the fixed hero */}
+      <div className="relative z-10 mt-[100vh]">
+        <AboutSection />
+        <StatsSection />
+        <CoreValuesSection />
+        <CoatedSteelSection />
+        <VideoSection />
+        <ProductHighlightsSection />
+        <TestimonialsSection />
+      </div>
     </main>
   );
 }

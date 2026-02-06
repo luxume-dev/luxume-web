@@ -1,10 +1,61 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { FaShieldAlt, FaPalette, FaAward, FaPaintBrush, FaCloudRain, FaTools } from 'react-icons/fa';
+
+// Register ScrollTrigger plugin
+gsap.registerPlugin(ScrollTrigger);
 
 export default function CoatedSteelSection() {
   const [language, setLanguage] = useState('english');
+  const imageRef = useRef(null);
+  const featuresRef = useRef(null);
+  const featureCardsRef = useRef([]);
+
+  // GSAP animation when language changes
+  useEffect(() => {
+    if (imageRef.current) {
+      gsap.fromTo(imageRef.current, 
+        { opacity: 0, scale: 0.95 },
+        { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' }
+      );
+    }
+  }, [language]);
+
+  // Scroll-triggered animation for feature cards
+  useEffect(() => {
+    const cards = featureCardsRef.current;
+    
+    if (cards.length > 0) {
+      // Set initial state
+      gsap.set(cards, { 
+        opacity: 0, 
+        y: 60,
+        scale: 0.9
+      });
+
+      // Create staggered animation
+      gsap.to(cards, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.6,
+        stagger: 0.15,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: featuresRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        }
+      });
+    }
+
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
 
   const features = [
     {
@@ -84,11 +135,12 @@ export default function CoatedSteelSection() {
               }}
             >
               {/* Diagram Image */}
-              <div className="mb-6">
+              <div className="mb-6 relative" style={{ aspectRatio: '4/3' }}>
                 <img 
-                  src="/images/diagram.png" 
-                  alt="Coated Steel Layers Diagram" 
-                  className="w-full h-auto"
+                  ref={imageRef}
+                  src={language === 'english' ? '/images/diagram.png' : '/images/malayalam.png'} 
+                  alt={language === 'english' ? 'Coated Steel Layers Diagram' : 'Coated Steel Layers Diagram (Malayalam)'} 
+                  className="w-full h-full object-contain"
                 />
               </div>
               
@@ -152,11 +204,12 @@ export default function CoatedSteelSection() {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
+        <div ref={featuresRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+              ref={el => featureCardsRef.current[index] = el}
+              className="p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer group"
               style={{
                 border: '1px solid #F0F0F0',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
@@ -164,14 +217,14 @@ export default function CoatedSteelSection() {
             >
               {/* Icon */}
               <div 
-                className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl flex items-center justify-center mb-4"
+                className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110"
                 style={{
                   background: `${feature.color}15`,
                   border: `1px solid ${feature.color}30`
                 }}
               >
                 <feature.icon 
-                  className="text-xl sm:text-2xl"
+                  className="text-xl sm:text-2xl transition-transform duration-300 group-hover:scale-110"
                   style={{ color: feature.color }}
                 />
               </div>
