@@ -2,8 +2,11 @@
 
 import Link from 'next/link';
 import { FaPhone, FaInstagram, FaFacebookF, FaYoutube, FaMapMarkerAlt, FaEnvelope, FaPaperPlane } from 'react-icons/fa';
+import { useNewsletter } from '@/hooks/useNewsletter';
 
 export default function Footer() {
+  const { email, setEmail, isLoading, status, handleSubscribe } = useNewsletter();
+
   return (
     <footer>
       {/* Hero Banner Section */}
@@ -158,19 +161,38 @@ export default function Footer() {
               </div>
               
               <h4 className="text-white font-semibold mb-3">Subscribe Now</h4>
-              <div className="flex">
-                <input 
-                  type="email" 
-                  placeholder="Email Address"
-                  className="flex-1 px-4 py-2.5 bg-transparent border border-gray-700 rounded-l-lg text-white text-sm focus:outline-none focus:border-gray-500"
-                />
-                <button 
-                  className="px-4 py-2.5 rounded-r-lg transition-all duration-300 hover:opacity-80"
-                  style={{ background: '#E91E63' }}
-                >
-                  <FaPaperPlane className="text-white" />
-                </button>
-              </div>
+              <form onSubmit={handleSubscribe} className="space-y-2">
+                <div className="flex">
+                  <input 
+                    type="email" 
+                    placeholder="Email Address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="flex-1 px-4 py-2.5 bg-transparent border border-gray-700 rounded-l-lg text-white text-sm focus:outline-none focus:border-gray-500"
+                  />
+                  <button 
+                    type="submit"
+                    disabled={isLoading}
+                    className="px-4 py-2.5 rounded-r-lg transition-all duration-300 hover:opacity-80 disabled:opacity-50"
+                    style={{ background: '#E91E63' }}
+                  >
+                    {isLoading ? (
+                      <span className="text-white text-sm">...</span>
+                    ) : (
+                      <FaPaperPlane className="text-white" />
+                    )}
+                  </button>
+                </div>
+                {status.message && (
+                  <p className={`text-xs ${
+                    status.type === 'success' ? 'text-green-400' : 
+                    status.type === 'info' ? 'text-blue-400' : 
+                    'text-red-400'
+                  }`}>
+                    {status.message}
+                  </p>
+                )}
+              </form>
             </div>
           </div>
 

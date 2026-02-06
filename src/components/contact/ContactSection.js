@@ -1,8 +1,17 @@
 'use client';
 
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from 'react-icons/fa';
+import { useContactForm } from '@/hooks/useContactForm';
 
 export default function ContactSection() {
+  const {
+    formData,
+    isLoading,
+    submitStatus,
+    handleChange,
+    handleSubmit,
+  } = useContactForm();
+
   return (
     <section className="bg-white py-16 md:py-24 px-4 sm:px-8">
       <div className="max-w-6xl mx-auto">
@@ -108,13 +117,29 @@ export default function ContactSection() {
           <div className="w-full lg:w-3/5 border rounded-xl px-5 py-8 sm:px-8 sm:py-10 md:px-14 md:py-14 border-gray-200">
             <h2 className="font-semibold text-2xl text-gray-800 mb-8">Send us a Message</h2>
             
-            <form className="space-y-6">
+            {/* Status Messages */}
+            {submitStatus.message && (
+              <div
+                className={`mb-6 p-4 rounded-lg text-sm ${
+                  submitStatus.type === 'success'
+                    ? 'bg-green-50 text-green-700 border border-green-200'
+                    : 'bg-red-50 text-red-700 border border-red-200'
+                }`}
+              >
+                {submitStatus.message}
+              </div>
+            )}
+
+            <form className="space-y-6" onSubmit={handleSubmit}>
               {/* Row 1: Full Name & Email */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-sm text-gray-700 mb-2">Full Name *</label>
                   <input 
                     type="text" 
+                    name="full_name"
+                    value={formData.full_name}
+                    onChange={handleChange}
                     placeholder="John Doe"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-500 transition-colors"
                   />
@@ -123,6 +148,9 @@ export default function ContactSection() {
                   <label className="block text-sm text-gray-700 mb-2">Email Address *</label>
                   <input 
                     type="email" 
+                    name="email_address"
+                    value={formData.email_address}
+                    onChange={handleChange}
                     placeholder="john@example.com"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-500 transition-colors"
                   />
@@ -135,6 +163,9 @@ export default function ContactSection() {
                   <label className="block text-sm text-gray-700 mb-2">Phone Number</label>
                   <input 
                     type="tel" 
+                    name="phone_number"
+                    value={formData.phone_number}
+                    onChange={handleChange}
                     placeholder="+91 98765 43210"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-500 transition-colors"
                   />
@@ -143,6 +174,9 @@ export default function ContactSection() {
                   <label className="block text-sm text-gray-700 mb-2">Company Name</label>
                   <input 
                     type="text" 
+                    name="company_name"
+                    value={formData.company_name}
+                    onChange={handleChange}
                     placeholder="Your Company"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-500 transition-colors"
                   />
@@ -154,6 +188,9 @@ export default function ContactSection() {
                 <label className="block text-sm text-gray-700 mb-2">Subject *</label>
                 <input 
                   type="text" 
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
                   placeholder=""
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-500 transition-colors"
                 />
@@ -164,6 +201,9 @@ export default function ContactSection() {
                 <label className="block text-sm text-gray-700 mb-2">Message *</label>
                 <textarea 
                   rows={5}
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   placeholder="Tell us about your project requirements..."
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-gray-500 transition-colors resize-none"
                 />
@@ -172,10 +212,11 @@ export default function ContactSection() {
               {/* Submit Button */}
               <button 
                 type="submit"
-                className="w-full py-4 rounded-lg text-white font-medium transition-all duration-300 hover:opacity-90"
+                disabled={isLoading}
+                className="w-full py-4 rounded-lg text-white font-medium transition-all duration-300 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
                 style={{ backgroundColor: '#0a0a2e' }}
               >
-                Send Message
+                {isLoading ? 'Sending...' : 'Send Message'}
               </button>
 
               {/* Terms */}
