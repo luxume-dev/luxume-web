@@ -2,7 +2,7 @@
 
 export default function AboutUsSection() {
   return (
-    <section className="bg-white py-16 md:py-24 px-4 sm:px-8">
+    <section className="bg-white pt-8 md:pt-12 pb-8 md:pb-12 px-4 sm:px-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
           {/* Left - Image */}

@@ -3,54 +3,58 @@
 export default function HowWeWorkSection() {
   const steps = [
     {
-      number: '1',
+      number: '01',
       title: 'Connect With Us',
-      description: 'Reach out to our team through phone, email, or visit our office. Share your requirements and our experts will guide you through our product range to find the perfect solution for your project.'
+      description: 'Reach out to Luxume to share your roofing requirements. Our team will understand your project needs, application type, and quantity requirements to guide you toward the right product selection.'
     },
     {
-      number: '2',
+      number: '02',
       title: 'Choose the Right Roofing Solution',
-      description: 'Based on your needs, we recommend the ideal color-coated steel sheets from our extensive catalog. Consider factors like durability, aesthetics, climate compatibility, and budget to make the best choice.'
+      description: 'Based on your requirements, we help you select the most suitable roofing sheets, profiles, and finishes. You\'ll receive clear product details, specifications, and a competitive quotation for review.'
     },
     {
-      number: '3',
+      number: '03',
       title: 'Order & Delivery',
-      description: 'Once you finalize your selection, place your order with ease. We ensure timely manufacturing and delivery to your location, maintaining the highest quality standards throughout the process.'
+      description: 'Once the order is confirmed, we process it efficiently and ensure timely delivery of high-quality Luxume roofing sheets to your location, ready for installation by your preferred contractor.'
     }
   ];
 
   return (
-    <section className="bg-gray-50 py-16 md:py-24 px-4 sm:px-8 mb-10">
+    <section className="bg-white pt-8 md:pt-12 pb-16 md:pb-24 px-4 sm:px-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-16">
           {/* Left - Steps content */}
           <div className="w-full lg:w-1/2">
             {/* Heading */}
             <h2 
-              className="font-aloevera text-3xl sm:text-4xl mb-8"
+              className="font-aloevera font-bold text-3xl sm:text-4xl md:text-5xl mb-4"
               style={{ color: '#C83C64' }}
             >
               How We Work
             </h2>
 
+            {/* Subtitle */}
+            <p className="text-gray-600 text-sm sm:text-base mb-10 max-w-md">
+              Our process is designed to be simple, transparent, and customer-focused, ensuring you get the right roofing solution with ease.
+            </p>
+
             {/* Steps */}
-            <div className="space-y-6">
+            <div className="space-y-8">
               {steps.map((step, index) => (
-                <div key={index} className="flex gap-4">
-                  {/* Number circle */}
-                  <div 
-                    className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold"
-                    style={{ 
-                      backgroundColor: '#C83C64',
-                      fontSize: '16px'
-                    }}
+                <div key={index} className="flex gap-4 sm:gap-6">
+                  {/* Number */}
+                  <span 
+                    className="text-2xl sm:text-3xl font-light text-gray-300 flex-shrink-0 w-8"
                   >
                     {step.number}
-                  </div>
+                  </span>
 
                   {/* Content */}
                   <div className="flex-1">
-                    <h3 className="font-semibold text-lg text-gray-800 mb-2">
+                    <h3 
+                      className="font-bold text-lg sm:text-xl mb-2"
+                      style={{ color: '#0F172B' }}
+                    >
                       {step.title}
                     </h3>
                     <p className="text-gray-600 text-sm leading-relaxed">
@@ -67,12 +71,18 @@ export default function HowWeWorkSection() {
             <img 
               src="/images/man.png" 
               alt="Worker installing roofing" 
-              className="w-full h-auto rounded-lg shadow-lg object-cover"
-              style={{ maxHeight: '450px', objectPosition: 'center' }}
+              className="w-full h-auto rounded-2xl object-cover"
+              style={{ maxHeight: '550px', objectPosition: 'center' }}
             />
           </div>
         </div>
+
+        {/* Luxume Focus Paragraph - Bottom centered */}
+        <p className="text-gray-600 text-sm sm:text-base text-center mt-12 max-w-2xl mx-auto">
+          Luxume focuses on delivering premium roofing materials engineered for durability, performance, and long-term value.
+        </p>
       </div>
     </section>
   );
 }
+

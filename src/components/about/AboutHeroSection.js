@@ -43,7 +43,7 @@ export default function AboutHeroSection() {
       </div>
 
       {/* Spacer for cards below image */}
-      <div className="h-16 md:h-20 bg-white" />
+      <div className="h-4 md:h-8 bg-white" />
     </section>
   );
 }

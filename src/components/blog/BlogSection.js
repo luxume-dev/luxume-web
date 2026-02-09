@@ -87,36 +87,18 @@ export default function BlogSection() {
   });
 
   return (
-    <section className="bg-white py-12 md:py-16 px-4 sm:px-8">
+    <section className="bg-white py-8 sm:py-12 md:py-16 px-3 sm:px-4 md:px-5 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Filters and Search Row */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
-          {/* Category Filters */}
-          <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                  activeCategory === cat.id
-                    ? 'text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-                style={activeCategory === cat.id ? { backgroundColor: '#C83C64' } : {}}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Search Bar */}
-          <div className="relative w-full md:w-72">
+        <div className="flex flex-col gap-4 mb-6 sm:mb-8 md:mb-10">
+          {/* Search Bar - On top for mobile */}
+          <div className="relative w-full md:w-72 md:order-2 md:ml-auto">
             <input
               type="text"
               placeholder="Search articles..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-full text-sm focus:outline-none focus:border-gray-400 transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 sm:py-2 border border-gray-200 rounded-full text-sm focus:outline-none focus:border-gray-400 transition-colors"
             />
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
@@ -132,10 +114,28 @@ export default function BlogSection() {
               />
             </svg>
           </div>
+
+          {/* Category Filters */}
+          <div className="flex flex-wrap gap-2 md:order-1 overflow-x-auto pb-2 md:pb-0 -mx-1 px-1">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap ${
+                  activeCategory === cat.id
+                    ? 'text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+                style={activeCategory === cat.id ? { backgroundColor: '#C83C64' } : {}}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Blog Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredPosts.map((post) => (
             <article
               key={post.id}

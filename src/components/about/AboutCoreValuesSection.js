@@ -49,13 +49,13 @@ export default function AboutCoreValuesSection() {
   ];
 
   return (
-    <section className="bg-white py-16 md:py-24 px-4 sm:px-8 mt-10 mb-10">
+    <section className="bg-white pt-8 md:pt-12 pb-8 md:pb-12 px-4 sm:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
           <h2 
             className="font-aloevera text-3xl sm:text-4xl md:text-5xl mb-4"
-            style={{ color: '#C83C64' }}
+            style={{ color: '#D46D64' }}
           >
             Core Values
           </h2>

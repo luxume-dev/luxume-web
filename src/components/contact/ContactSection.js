@@ -16,10 +16,9 @@ export default function ContactSection() {
     <section className="bg-white py-16 md:py-24 px-4 sm:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 mt-10 ">
           <h1 
-            className="font-aloevera text-4xl sm:text-5xl mb-4"
-            style={{ color: '#C83C64' }}
+            className="font-aloevera font-bold text-4xl sm:text-5xl mb-4 text-[#C83C64]"
           >
             Get in Touch
           </h1>
@@ -41,7 +40,7 @@ export default function ContactSection() {
                   <FaMapMarkerAlt className="text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-800 mb-2">Visit Us</h3>
+                  <h3 className="font-lato font-semibold text-gray-800 mb-2">Visit Us</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
                     Luxume Manufacturing Facility<br />
                     Industrial Park, Sector 42<br />
@@ -62,7 +61,7 @@ export default function ContactSection() {
                   <FaPhone className="text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-800 mb-2">Call Us</h3>
+                  <h3 className="font-lato font-semibold text-gray-800 mb-2">Call Us</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
                     Sales: +91 22 1234 5678<br />
                     Support: +91 22 8765 4321<br />
@@ -82,7 +81,7 @@ export default function ContactSection() {
                   <FaEnvelope className="text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-800 mb-2">Email Us</h3>
+                  <h3 className="font-lato font-semibold text-gray-800 mb-2">Email Us</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
                     info@luxume.com<br />
                     sales@luxume.com<br />
@@ -102,7 +101,7 @@ export default function ContactSection() {
                   <FaClock className="text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-800 mb-2">Business Hours</h3>
+                  <h3 className="font-lato font-semibold text-gray-800 mb-2">Business Hours</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
                     Monday - Friday: 9:00 AM - 6:00 PM<br />
                     Saturday: 9:00 AM - 2:00 PM<br />
@@ -115,7 +114,7 @@ export default function ContactSection() {
 
           {/* Right - Contact Form */}
           <div className="w-full lg:w-3/5 border rounded-xl px-5 py-8 sm:px-8 sm:py-10 md:px-14 md:py-14 border-gray-200">
-            <h2 className="font-semibold text-2xl text-gray-800 mb-8">Send us a Message</h2>
+            <h2 className="font-lato font-medium text-2xl text-[#0F172B] mb-8">Send us a Message</h2>
             
             {/* Status Messages */}
             {submitStatus.message && (
