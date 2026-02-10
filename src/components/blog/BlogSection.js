@@ -87,12 +87,30 @@ export default function BlogSection() {
   });
 
   return (
-    <section className="bg-white py-8 sm:py-12 md:py-16 px-3 sm:px-4 md:px-5 lg:px-8">
+    <section className="bg-white pt-4 sm:pt-6 md:pt-8 pb-8 sm:pb-12 md:pb-16 px-3 sm:px-4 md:px-5 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Filters and Search Row */}
-        <div className="flex flex-col gap-4 mb-6 sm:mb-8 md:mb-10">
-          {/* Search Bar - On top for mobile */}
-          <div className="relative w-full md:w-72 md:order-2 md:ml-auto">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 sm:mb-8 md:mb-10">
+          {/* Category Filters - Horizontal scroll on mobile */}
+          <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
+                  activeCategory === cat.id
+                    ? 'text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+                style={activeCategory === cat.id ? { backgroundColor: '#C83C64' } : {}}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative w-full md:w-72 md:flex-shrink-0">
             <input
               type="text"
               placeholder="Search articles..."
@@ -113,24 +131,6 @@ export default function BlogSection() {
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
-          </div>
-
-          {/* Category Filters */}
-          <div className="flex flex-wrap gap-2 md:order-1 overflow-x-auto pb-2 md:pb-0 -mx-1 px-1">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap ${
-                  activeCategory === cat.id
-                    ? 'text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-                style={activeCategory === cat.id ? { backgroundColor: '#C83C64' } : {}}
-              >
-                {cat.label}
-              </button>
-            ))}
           </div>
         </div>
 
