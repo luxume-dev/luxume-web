@@ -5,3 +5,4 @@
 
 export { subscribeToNewsletter } from './newsletter.service';
 export { submitContactForm } from './contact.service';
+export { getActiveCareers, getCareerById } from './careers.service';
