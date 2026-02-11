@@ -31,17 +31,17 @@ export default function JobOpeningsSection() {
   ];
 
   return (
-    <section id="openings" className="bg-white py-16 md:py-24 px-4 sm:px-8 mb-10">
+    <section id="openings" className="bg-white pt-8 md:pt-12 pb-16 md:pb-24 px-4 sm:px-8 mb-10">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-10">
           <h2 
-            className="font-aloevera text-3xl sm:text-4xl mb-4 italic"
-            style={{ color: '#C83C64' }}
+            className="font-aloevera text-3xl sm:text-4xl mb-4"
+            style={{ color: '#C83C64', fontWeight: 900 }}
           >
             Current Openings
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base max-w-xl">
+          <p className="font-lato text-gray-600 text-sm sm:text-base max-w-xl" style={{ fontWeight: 500 }}>
             Luxume Pvt. Ltd. an upcoming company dealing in building materials, head quartered at Ernakulam, Kerala is looking for an Assistant Manager - Marketing for its operations. The basic Job Description for this position is as mentioned below:
           </p>
         </div>

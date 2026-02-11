@@ -190,3 +190,13 @@ h6 {
 .icon-heartbeat:hover {
   animation: heartbeat 1.2s ease-in-out infinite;
 }
+
+/* Hide scrollbar for horizontal scroll containers */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}

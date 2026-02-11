@@ -10,8 +10,8 @@ export default function Navbar() {
   const pathname = usePathname();
   
   // Force white background on contact page
-  const forceWhiteBg = pathname === '/contact';
-  const showWhiteBg = forceWhiteBg || isScrolled;
+  const forceWhiteBg = pathname === '/contact' || pathname.startsWith('/careers');
+  const showWhiteBg = forceWhiteBg || isScrolled || isMenuOpen;
 
   useEffect(() => {
     // On homepage, listen for when About section reaches the top
@@ -50,42 +50,42 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-10">
             <Link 
               href="/" 
-              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/' ? 'text-pink-400' : showWhiteBg ? 'text-gray-800' : 'text-white'}`}
               style={{ fontWeight: 300 }}
             >
               Home
             </Link>
             <Link 
               href="/about" 
-              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/about' ? 'text-pink-400' : showWhiteBg ? 'text-gray-800' : 'text-white'}`}
               style={{ fontWeight: 300 }}
             >
               About Us
             </Link>
             <Link 
               href="/products" 
-              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/products' ? 'text-pink-400' : showWhiteBg ? 'text-gray-800' : 'text-white'}`}
               style={{ fontWeight: 300 }}
             >
               Products
             </Link>
             <Link 
               href="/contact" 
-              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/contact' ? 'text-pink-400' : showWhiteBg ? 'text-gray-800' : 'text-white'}`}
               style={{ fontWeight: 300 }}
             >
               Contact Us
             </Link>
             <Link 
               href="/blog" 
-              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/blog' ? 'text-pink-400' : showWhiteBg ? 'text-gray-800' : 'text-white'}`}
               style={{ fontWeight: 300 }}
             >
               Blog
             </Link>
             <Link 
               href="/careers" 
-              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/careers' ? 'text-pink-400' : showWhiteBg ? 'text-gray-800' : 'text-white'}`}
               style={{ fontWeight: 300 }}
             >
               Careers

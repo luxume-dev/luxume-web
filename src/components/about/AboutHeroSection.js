@@ -28,7 +28,12 @@ export default function AboutHeroSection() {
           </div>
 
           {/* Vision Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+          <div 
+            className="bg-white rounded-2xl md:shadow-lg p-6 md:p-8"
+            style={{
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
+            }}
+          >
             <h3 
               className="text-center font-medium text-lg mb-4"
               style={{ color: '#C83C64' }}

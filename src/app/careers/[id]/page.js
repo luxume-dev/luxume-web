@@ -35,7 +35,7 @@ export default function JobDetailPage() {
     <main>
       {/* Hero Header */}
       <section 
-        className="relative py-16 px-4 sm:px-8"
+        className="relative pt-24 sm:pt-28 pb-16 px-4 sm:px-8"
         style={{
           backgroundImage: 'url(/images/luxumeteam.png)',
           backgroundSize: 'cover',
@@ -49,22 +49,22 @@ export default function JobDetailPage() {
         />
 
         <div className="relative z-10 max-w-6xl mx-auto">
-          <h1 className="font-aloevera text-white text-3xl sm:text-4xl mb-6 italic">
+          <h1 className="font-aloevera font-bold text-white text-3xl sm:text-4xl mb-6">
             {job.title}
           </h1>
 
           <div className="flex flex-wrap gap-4 sm:gap-8 text-white/90 text-sm">
             <div className="flex items-center gap-2">
               <FaClock className="text-pink-500" />
-              <span>{job.type}</span>
+              <span className="font-lato font-light">{job.type}</span>
             </div>
             <div className="flex items-center gap-2">
               <FaMapMarkerAlt className="text-pink-500" />
-              <span>{job.location}</span>
+              <span className="font-lato font-light">{job.location}</span>
             </div>
             <div className="flex items-center gap-2">
               <FaBriefcase className="text-pink-500" />
-              <span>{job.experience}</span>
+              <span className="font-lato font-light">{job.experience}</span>
             </div>
           </div>
         </div>
@@ -199,7 +199,7 @@ export default function JobDetailPage() {
             {/* Apply Now Button */}
             <div className="text-center">
               <button 
-                className="px-8 py-3 rounded-full text-white font-medium transition-all duration-300 hover:opacity-90"
+                className="px-8 py-3 rounded-[10px] text-white font-medium transition-all duration-300 hover:opacity-90"
                 style={{ backgroundColor: '#C83C64' }}
               >
                 Apply Now
