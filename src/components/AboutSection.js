@@ -17,23 +17,36 @@ export default function AboutSection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Create a timeline for coordinated animations
-      const tl = gsap.timeline({
+      // Navbar color change trigger - when About section touches navbar bottom
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top 64px', // When top of About section hits navbar bottom (navbar height ~64px)
+        end: 'bottom top',
+        onEnter: () => {
+          window.dispatchEvent(new CustomEvent('aboutReachedTop', { detail: { reached: true } }));
+        },
+        onLeaveBack: () => {
+          window.dispatchEvent(new CustomEvent('aboutReachedTop', { detail: { reached: false } }));
+        }
+      });
+
+      // Content animations (fade in when section is visible)
+      const contentTl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 75%',
+          start: 'top 80%',
           toggleActions: 'play none none reverse'
         }
       });
 
       // Animate decorative line first
-      tl.fromTo(lineRef.current,
+      contentTl.fromTo(lineRef.current,
         { scaleX: 0, opacity: 0 },
         { scaleX: 1, opacity: 1, duration: 0.6, ease: 'power2.out' }
       );
 
       // Animate heading with a slide up and fade
-      tl.fromTo(headingRef.current,
+      contentTl.fromTo(headingRef.current,
         { opacity: 0, y: 50, clipPath: 'inset(100% 0% 0% 0%)' },
         { 
           opacity: 1, 
@@ -45,8 +58,8 @@ export default function AboutSection() {
         '-=0.3'
       );
 
-      // Animate description with staggered word fade-in feel
-      tl.fromTo(descriptionRef.current,
+      // Animate description
+      contentTl.fromTo(descriptionRef.current,
         { opacity: 0, y: 30 },
         { 
           opacity: 1, 
@@ -65,14 +78,14 @@ export default function AboutSection() {
   return (
     <section 
       ref={sectionRef}
-      className="relative z-20 bg-white pt-8 sm:pt-12 md:pt-16 pb-0 px-4 sm:px-6 md:px-8 overflow-hidden"
+      className="relative z-20 bg-white py-6 px-4 sm:px-6 md:px-8 w-full"
     >
-      <div className="mx-auto flex flex-col items-center text-center">
+      <div className="mx-auto flex flex-col items-center text-center w-full">
 
         {/* Decorative Line */}
         <div 
           ref={lineRef}
-          className="w-16 sm:w-20 h-1 rounded-full mb-6 sm:mb-8 origin-center"
+          className="w-16 sm:w-20 h-1 rounded-full mb-4 origin-center"
           style={{ 
             background: 'linear-gradient(90deg, #C83C64 0%, #E91E63 100%)',
             opacity: 0
@@ -82,11 +95,11 @@ export default function AboutSection() {
         {/* Heading */}
         <h2 
           ref={headingRef}
-          className="mb-6 sm:mb-8 md:mb-10 text-2xl sm:text-3xl md:text-4xl lg:text-[44px] leading-tight"
+          className="mb-5 text-2xl sm:text-3xl md:text-4xl lg:text-[44px] leading-tight"
           style={{ opacity: 0 }}
         >
           <span className="font-aloevera font-bold text-[#C83C64]">
-            Secure & Stylish
+            Secure &amp; Stylish
           </span>
           <span className="font-aloevera font-bold text-[#1a1a4e]">
             : The Smart Home Shield

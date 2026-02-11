@@ -14,13 +14,24 @@ export default function Navbar() {
   const showWhiteBg = forceWhiteBg || isScrolled;
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
+    // On homepage, listen for when About section reaches the top
+    if (pathname === '/') {
+      const handleAboutReachedTop = (e) => {
+        setIsScrolled(e.detail.reached);
+      };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+      window.addEventListener('aboutReachedTop', handleAboutReachedTop);
+      return () => window.removeEventListener('aboutReachedTop', handleAboutReachedTop);
+    } else {
+      // On other pages, use normal scroll behavior
+      const handleScroll = () => {
+        setIsScrolled(window.scrollY > 0);
+      };
+
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, [pathname]);
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${showWhiteBg ? 'bg-white shadow-md' : 'bg-transparent'}`}>

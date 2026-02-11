@@ -8,7 +8,7 @@ export default function Footer() {
   const { email, setEmail, isLoading, status, handleSubscribe } = useNewsletter();
 
   return (
-    <footer className="relative z-10">
+    <footer className="relative z-30">
       {/* Hero Banner Section */}
       <div 
         className="relative py-24 sm:py-32 md:py-40 lg:py-48 px-4"

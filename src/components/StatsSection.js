@@ -1,6 +1,17 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register ScrollTrigger plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
 export default function StatsSection() {
+  const imageRef = useRef(null);
+
   const stats = [
     {
       value: '$23 Billion',
@@ -24,6 +35,34 @@ export default function StatsSection() {
     }
   ];
 
+  useEffect(() => {
+    if (!imageRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // ScaleX animation: starts wider, shrinks symmetrically from both sides
+      gsap.fromTo(imageRef.current,
+        { 
+          scaleX: 1.2, // Start at 150% width
+          scaleY: 1.2,
+        },
+        {
+          scaleX: 1, // Return to original width
+          scaleY: 1,
+          scrollTrigger: {
+            trigger: imageRef.current,
+            start: 'top bottom', // Start animation earlier
+            end: 'bottom bottom', // End when image center reaches viewport center
+            scrub: 1,
+            markers: false // Set to true for debugging
+          },
+          ease: 'none'
+        }
+      );
+    }, imageRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section className="bg-white">
       {/* Stats Grid */}
@@ -44,17 +83,18 @@ export default function StatsSection() {
       </div>
 
     {/* Roofing Image Banner */}
-<div className="px-4 sm:px-6 md:px-8 pb-12">
-  <div className="max-w-6xl mx-auto">
-    <div className="overflow-hidden">
-      <img 
-        src="/images/Rectangle 8.png" 
-        alt="Steel Roofing"
-        className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover"
-      />
+    <div className="px-4 sm:px-6 md:px-8 pb-12">
+      <div className="max-w-6xl mx-auto">
+        <div className="overflow-visible">
+          <img 
+            ref={imageRef}
+            src="/images/Rectangle 8.png" 
+            alt="Steel Roofing"
+            className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover"
+          />
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
     </section>
   );
