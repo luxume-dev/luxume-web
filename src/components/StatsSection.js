@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -11,54 +11,106 @@ if (typeof window !== 'undefined') {
 
 export default function StatsSection() {
   const imageRef = useRef(null);
+  const statsContainerRef = useRef(null);
+  const statRefs = useRef([]);
+  const [animatedValues, setAnimatedValues] = useState(['$0', '0', '0', '0%']);
 
   const stats = [
     {
       value: '$23 Billion',
       label1: 'Annual',
-      label2: 'Revenue'
+      label2: 'Revenue',
+      targetNumber: 23,
+      prefix: '$',
+      suffix: ' Billion'
     },
     {
       value: '200K+',
       label1: 'Happy Customers',
-      label2: 'Across India & Abroad'
+      label2: 'Across India & Abroad',
+      targetNumber: 200,
+      suffix: 'K+'
     },
     {
       value: '15+ Years',
       label1: 'Industry',
-      label2: 'Experience'
+      label2: 'Experience',
+      targetNumber: 15,
+      suffix: '+ Years'
     },
     {
       value: '98%',
       label1: 'Customer Rating Across',
-      label2: 'Platforms'
+      label2: 'Platforms',
+      targetNumber: 98,
+      suffix: '%'
     }
   ];
 
   useEffect(() => {
-    if (!imageRef.current) return;
+    if (!imageRef.current || !statsContainerRef.current) return;
 
     const ctx = gsap.context(() => {
-      // ScaleX animation: starts wider, shrinks symmetrically from both sides
+      // Image scale animation
       gsap.fromTo(imageRef.current,
         { 
-          scaleX: 1.2, // Start at 150% width
+          scaleX: 1.2,
           scaleY: 1.2,
         },
         {
-          scaleX: 1, // Return to original width
+          scaleX: 1,
           scaleY: 1,
           scrollTrigger: {
             trigger: imageRef.current,
-            start: 'top bottom', // Start animation earlier
-            end: 'bottom bottom', // End when image center reaches viewport center
+            start: 'top bottom',
+            end: 'bottom bottom',
             scrub: 1,
-            markers: false // Set to true for debugging
+            markers: false
           },
           ease: 'none'
         }
       );
-    }, imageRef);
+
+      // Stat cards fade-up animation with stagger
+      gsap.fromTo(statRefs.current,
+        {
+          opacity: 0,
+          y: 50
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: statsContainerRef.current,
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+            onEnter: () => {
+              // Trigger counter animation
+              stats.forEach((stat, index) => {
+                const obj = { val: 0 };
+                gsap.to(obj, {
+                  val: stat.targetNumber,
+                  duration: 2,
+                  delay: index * 0.15,
+                  ease: 'power2.out',
+                  onUpdate: () => {
+                    const currentVal = Math.round(obj.val);
+                    setAnimatedValues(prev => {
+                      const newValues = [...prev];
+                      newValues[index] = `${stat.prefix || ''}${currentVal}${stat.suffix || ''}`;
+                      return newValues;
+                    });
+                  }
+                });
+              });
+            }
+          }
+        }
+      );
+    }, statsContainerRef);
 
     return () => ctx.revert();
   }, []);
@@ -68,11 +120,15 @@ export default function StatsSection() {
       {/* Stats Grid */}
       <div className="py-8 sm:py-10 md:py-12 px-4 sm:px-6 md:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 text-center">
+          <div ref={statsContainerRef} className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 text-center">
             {stats.map((stat, index) => (
-              <div key={index} className="flex flex-col items-center p-2 sm:p-3">
+              <div 
+                key={index} 
+                ref={el => statRefs.current[index] = el}
+                className="flex flex-col items-center p-2 sm:p-3"
+              >
                 <h3 className="font-aloevera text-[#1a1a4e] text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-1 sm:mb-2" style={{ fontWeight: 500 }}>
-                  {stat.value}
+                  {animatedValues[index]}
                 </h3>
                 <p className="font-aloevera text-gray-500 text-xs sm:text-sm" style={{ fontWeight: 300 }}>{stat.label1}</p>
                 <p className="font-aloevera text-gray-500 text-xs sm:text-sm" style={{ fontWeight: 300 }}>{stat.label2}</p>

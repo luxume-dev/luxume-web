@@ -33,7 +33,6 @@ export default function VideoSection() {
           <video
             ref={videoRef}
             className="w-full h-auto"
-            autoPlay
             muted
             loop
             playsInline
