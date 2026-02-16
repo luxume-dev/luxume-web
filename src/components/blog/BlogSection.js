@@ -1,88 +1,63 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-
-const categories = [
-  { id: 'all', label: 'All' },
-  { id: 'roofing-sheets', label: 'Roofing Sheets' },
-  { id: 'colors-coatings', label: 'Colors & Coatings' },
-  { id: 'installation-tips', label: 'Installation Tips' },
-  { id: 'industry-insights', label: 'Industry Insights' }
-];
-
-const blogPosts = [
-  {
-    id: 1,
-    category: 'roofing-sheets',
-    categoryLabel: 'Roofing Sheets',
-    title: 'Understanding Modern Steel Roofing Sheet Specifications',
-    description: 'Learn about the key specifications to consider when selecting steel roofing sheets for your construction projects. From gauge measurements to coating types, understand what matters.',
-    image: '/images/blog1.jpg',
-    date: 'Jan 15, 2026'
-  },
-  {
-    id: 2,
-    category: 'colors-coatings',
-    categoryLabel: 'Colors & Coatings',
-    title: 'The Ultimate Guide to Color-Coated Galvalume Sheets',
-    description: 'Discover how premium color coated sheets enhance durability and aesthetic appeal of galvalume roofing sheets, protecting your investment for decades.',
-    image: '/images/blog2.jpg',
-    date: 'Jan 12, 2026'
-  },
-  {
-    id: 3,
-    category: 'industry-insights',
-    categoryLabel: 'Industry Insights',
-    title: 'How Industrial Architecture Is Evolving with Steel Roofing',
-    description: 'Explore the transformation of industrial design through innovative steel roofing solutions that combine functionality with modern aesthetics.',
-    image: '/images/blog3.jpg',
-    date: 'Jan 10, 2026'
-  },
-  {
-    id: 4,
-    category: 'installation-tips',
-    categoryLabel: 'Installation Tips',
-    title: 'Professional Installation Techniques for Metal Roofing',
-    description: 'Master the essential techniques and best practices for installing any metal roofing systems to ensure longevity, weather resistance, and optimal performance.',
-    image: '/images/blog4.jpg',
-    date: 'Jan 8, 2026'
-  },
-  {
-    id: 5,
-    category: 'installation-tips',
-    categoryLabel: 'Installation Tips',
-    title: 'Safety Guidelines for Roofing Construction Projects',
-    description: 'Comprehensive safety protocols and guidelines for construction workers installing roofing systems, ensuring workplace safety standards are met.',
-    image: '/images/blog5.jpg',
-    date: 'Jan 5, 2026'
-  },
-  {
-    id: 6,
-    category: 'industry-insights',
-    categoryLabel: 'Industry Insights',
-    title: 'Warehouse Roofing Solutions: Durability Meets Efficiency',
-    description: 'Discover why steel roofing is the preferred choice for warehouse and industrial facilities, offering superior durability and cost-effectiveness.',
-    image: '/images/blog6.jpg',
-    date: 'Jan 3, 2026'
-  }
-];
-
-const categoryColors = {
-  'roofing-sheets': '#C83C64',
-  'colors-coatings': '#C83C64',
-  'installation-tips': '#C83C64',
-  'industry-insights': '#C83C64'
-};
+import { getPublishedBlogs } from '@/services/supabase';
 
 export default function BlogSection() {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredPosts = blogPosts.filter(post => {
-    const matchesCategory = activeCategory === 'all' || post.category === activeCategory;
-    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.description.toLowerCase().includes(searchQuery.toLowerCase());
+  useEffect(() => {
+    async function fetchBlogs() {
+      const { data, error } = await getPublishedBlogs();
+      if (!error && data) {
+        setBlogs(data);
+      }
+      setLoading(false);
+    }
+    fetchBlogs();
+  }, []);
+
+  // Derive unique categories from fetched blogs
+  const categories = [
+    { id: 'all', label: 'All' },
+    ...Array.from(
+      new Map(
+        blogs
+          .filter((b) => b.category)
+          .map((b) => [b.category.id, { id: b.category.slug, label: b.category.name }])
+      ).values()
+    ),
+  ];
+
+  // Extract first paragraph text from content blocks
+  function getFirstParagraph(content) {
+    if (!Array.isArray(content)) return '';
+    const para = content.find((block) => block.type === 'paragraph');
+    return para?.content || '';
+  }
+
+  // Format date
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    return new Date(dateStr).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  }
+
+  const filteredPosts = blogs.filter((post) => {
+    const matchesCategory =
+      activeCategory === 'all' || post.category?.slug === activeCategory;
+    const title = post.title || '';
+    const desc = getFirstParagraph(post.content);
+    const matchesSearch =
+      title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      desc.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -91,7 +66,7 @@ export default function BlogSection() {
       <div className="max-w-6xl mx-auto">
         {/* Filters and Search Row */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 sm:mb-8 md:mb-10">
-          {/* Category Filters - Horizontal scroll on mobile */}
+          {/* Category Filters */}
           <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
             {categories.map((cat) => (
               <button
@@ -134,64 +109,95 @@ export default function BlogSection() {
           </div>
         </div>
 
-        {/* Blog Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {filteredPosts.map((post) => (
-            <article
-              key={post.id}
-              className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300"
-            >
-              {/* Image */}
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full h-full object-cover"
-                />
-                {/* Category Badge */}
-                <span
-                  className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium text-white"
-                  style={{ backgroundColor: categoryColors[post.category] || '#C83C64' }}
-                >
-                  {post.categoryLabel}
-                </span>
+        {/* Loading State */}
+        {loading && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="bg-white rounded-xl overflow-hidden border border-gray-100 animate-pulse"
+              >
+                <div className="h-48 bg-gray-200" />
+                <div className="p-5 space-y-3">
+                  <div className="h-4 bg-gray-200 rounded w-3/4" />
+                  <div className="h-3 bg-gray-200 rounded w-full" />
+                  <div className="h-3 bg-gray-200 rounded w-5/6" />
+                  <div className="h-3 bg-gray-200 rounded w-1/3 mt-4" />
+                </div>
               </div>
+            ))}
+          </div>
+        )}
 
-              {/* Content */}
-              <div className="p-5">
-                <h3 className="font-semibold text-gray-800 text-base mb-2 line-clamp-2">
-                  {post.title}
-                </h3>
-                <p className="text-gray-500 text-sm mb-4 line-clamp-3">
-                  {post.description}
-                </p>
-                <Link
-                  href={`/blog/${post.id}`}
-                  className="inline-flex items-center gap-1 text-sm font-medium transition-colors hover:opacity-80"
-                  style={{ color: '#C83C64' }}
-                >
-                  Read More
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
+        {/* Blog Cards Grid */}
+        {!loading && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {filteredPosts.map((post) => (
+              <Link
+                key={post.id}
+                href={`/blog/${post.slug}`}
+                className="group"
+              >
+                <article className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
+                  {/* Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={post.image_url}
+                      alt={post.image_alt || post.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                  </svg>
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
+                    {/* Category Badge */}
+                    {post.category && (
+                      <span
+                        className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium text-white"
+                        style={{ backgroundColor: '#C83C64' }}
+                      >
+                        {post.category.name}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-5 flex-1 flex flex-col">
+                    <h3 className="font-lato font-bold text-gray-800 text-base mb-2 line-clamp-2 group-hover:text-[#C83C64] transition-colors">
+                      {post.title}
+                    </h3>
+                    <p className="text-gray-500 text-sm mb-4 line-clamp-3 flex-1">
+                      {getFirstParagraph(post.content)}
+                    </p>
+                    <div className="flex items-center justify-between mt-auto">
+                      <span className="text-gray-400 text-xs">
+                        {formatDate(post.created_at)}
+                      </span>
+                      <span
+                        className="inline-flex items-center gap-1 text-sm font-medium transition-colors hover:opacity-80"
+                        style={{ color: '#C83C64' }}
+                      >
+                        Read More
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              </Link>
+            ))}
+          </div>
+        )}
 
         {/* No Results */}
-        {filteredPosts.length === 0 && (
+        {!loading && filteredPosts.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500">No articles found matching your criteria.</p>
           </div>
