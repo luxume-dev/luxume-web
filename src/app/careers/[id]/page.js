@@ -177,7 +177,6 @@ export default function JobDetailPage() {
       )}
 
       {/* How to Apply Section */}
-      {(job.email || job.whatsapp) && (
         <section className="bg-white pb-16 md:pb-24 px-4 sm:px-8">
           <div className="max-w-4xl mx-auto">
             <div 
@@ -190,41 +189,37 @@ export default function JobDetailPage() {
               </p>
 
               <div className="space-y-3 mb-8">
-                {job.email && (
+                <div 
+                  className="flex items-center gap-4 p-4 rounded-lg"
+                  style={{ backgroundColor: 'rgba(200, 60, 100, 0.2)' }}
+                >
                   <div 
-                    className="flex items-center gap-4 p-4 rounded-lg"
-                    style={{ backgroundColor: 'rgba(200, 60, 100, 0.2)' }}
+                    className="w-10 h-10 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: '#C83C64' }}
                   >
-                    <div 
-                      className="w-10 h-10 rounded-lg flex items-center justify-center"
-                      style={{ backgroundColor: '#C83C64' }}
-                    >
-                      <FaEnvelope className="text-white" />
-                    </div>
-                    <div>
-                      <p className="text-white font-medium">Email</p>
-                      <p className="text-gray-400 text-sm">{job.email}</p>
-                    </div>
+                    <FaEnvelope className="text-white" />
                   </div>
-                )}
+                  <div>
+                    <p className="text-white font-medium">Email</p>
+                    <p className="text-gray-400 text-sm">info@suntree.co.in</p>
+                  </div>
+                </div>
 
-                {job.whatsapp && (
+                <div 
+                  className="flex items-center gap-4 p-4 rounded-lg"
+                  style={{ backgroundColor: 'rgba(200, 60, 100, 0.2)' }}
+                >
                   <div 
-                    className="flex items-center gap-4 p-4 rounded-lg"
-                    style={{ backgroundColor: 'rgba(200, 60, 100, 0.2)' }}
+                    className="w-10 h-10 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: '#C83C64' }}
                   >
-                    <div 
-                      className="w-10 h-10 rounded-lg flex items-center justify-center"
-                      style={{ backgroundColor: '#C83C64' }}
-                    >
-                      <FaWhatsapp className="text-white" />
-                    </div>
-                    <div>
-                      <p className="text-white font-medium">WhatsApp</p>
-                      <p className="text-gray-400 text-sm">{job.whatsapp}</p>
-                    </div>
+                    <FaWhatsapp className="text-white" />
                   </div>
-                )}
+                  <div>
+                    <p className="text-white font-medium">WhatsApp</p>
+                    <p className="text-gray-400 text-sm">97789 20962</p>
+                  </div>
+                </div>
               </div>
 
               {/* Apply Now Button */}
@@ -239,7 +234,6 @@ export default function JobDetailPage() {
             </div>
           </div>
         </section>
-      )}
     </main>
   );
 }

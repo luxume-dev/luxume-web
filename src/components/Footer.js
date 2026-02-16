@@ -11,7 +11,7 @@ export default function Footer() {
     <footer className="relative z-30">
       {/* Hero Banner Section */}
       <div 
-        className="relative py-24 sm:py-32 md:py-40 lg:py-48 px-4"
+        className="relative pt-8 sm:pt-12 md:pt-16 lg:pt-20 pb-10 sm:pb-12 md:pb-16 lg:pb-20 px-4"
         style={{
           backgroundImage: 'url(/images/footer.jpg)',
           backgroundSize: 'cover',
@@ -19,47 +19,49 @@ export default function Footer() {
           backgroundRepeat: 'no-repeat'
         }}
       >
-        {/* Dark Overlay */}
+        {/* Overlay */}
         <div 
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(180deg, rgba(10, 10, 40, 0.85) 0%, rgba(10, 10, 40, 0.9) 100%)'
+            background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.7) 100%)'
           }}
         />
 
         {/* Content */}
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Logo */}
-          <div className="flex justify-center mb-16">
+          <div className="flex justify-center mb-8">
             <img 
               src="/images/logo-2.png" 
               alt="Luxume Roofing" 
-              className="h-24 sm:h-32 md:h-40 lg:h-48"
+              className="h-28 sm:h-36 md:h-48 lg:h-56"
             />
           </div>
 
-          {/* Tagline */}
-          <div className="text-center sm:text-left max-w-md mx-auto">
-            <h3 
-              className="font-aloevera text-2xl sm:text-3xl md:text-4xl text-white mb-2"
-              style={{ fontWeight: 400, fontStyle: 'italic' }}
-            >
-              Experience
-            </h3>
-            <h3 
-              className="font-aloevera text-2xl sm:text-3xl md:text-4xl text-white mb-4"
-              style={{ fontWeight: 400, fontStyle: 'italic' }}
-            >
-              Strength Above All
-            </h3>
-            <p className="text-gray-400 text-sm sm:text-base mb-6">
-              Built with premium steel and precision engineering to deliver unmatched durability, reliability, and performance.
-            </p>
+          {/* Tagline + Button Row */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-8 sm:gap-0">
+            <div className="text-center sm:text-left w-full sm:w-auto sm:max-w-md">
+              <h3 
+                className="font-aloevera text-white mb-2 text-[42px] sm:text-[55px] leading-[1.1] sm:leading-[63px]"
+                style={{ fontWeight: 300 }}
+              >
+                Experience
+              </h3>
+              <h3 
+                className="font-aloevera text-white mb-4 text-[32px] sm:text-[39px] leading-[1.1]"
+                style={{ fontWeight: 300 }}
+              >
+                Strength Above All
+              </h3>
+              <p className="font-lato font-light text-white text-sm sm:text-sm mb-0 mx-auto sm:mx-0 sm:max-w-[360px]">
+                Built with premium steel and precision engineering to deliver unmatched durability, reliability, and performance.
+              </p>
+            </div>
             
             {/* Call Now Button */}
             <button 
-              className="px-8 py-3 rounded-lg text-white font-medium transition-all duration-300 hover:opacity-90"
-              style={{ background: 'linear-gradient(90deg, #E91E63 0%, #F44336 100%)' }}
+              className="rounded text-white font-medium transition-all duration-300 hover:opacity-90"
+              style={{ background: '#C83C64', width: '180px', height: '46px', padding: '10px', gap: '10px' }}
             >
               Call Now
             </button>
@@ -69,12 +71,13 @@ export default function Footer() {
 
       {/* Main Footer */}
       <div 
-        className="py-12 px-4 sm:py-16 sm:px-6 md:px-8"
+        className="pt-0 pb-12 px-4 sm:pt-0 sm:pb-16 sm:px-6 md:px-8"
         style={{ background: '#0a0a1a' }}
       >
         <div className="max-w-7xl mx-auto">
           {/* Top Section - Logo & Description */}
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 pb-8 border-b border-gray-800">
+          <hr style={{ borderColor: '#D46D64', borderWidth: '0.5px' }} className="mb-6" />
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6">
             {/* Logo */}
             <div className="mb-6 lg:mb-0">
               <img src="/images/logo-2.png" alt="Luxume Roofing" className="h-12 sm:h-14" />
@@ -85,6 +88,7 @@ export default function Footer() {
               Luxume produces premium colour-coated sheets to safeguard and enhance structures in the construction industry.
             </p>
           </div>
+          <hr style={{ borderColor: '#D46D64', borderWidth: '0.5px' }} className="mb-12" />
 
           {/* Links Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 mb-12">

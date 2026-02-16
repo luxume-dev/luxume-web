@@ -1,8 +1,21 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { FaUsers, FaMicrochip, FaSmile, FaRecycle, FaHeadset, FaShieldAlt } from 'react-icons/fa';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function AboutCoreValuesSection() {
+  const sectionRef = useRef(null);
+  const headingRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const cardRefs = useRef([]);
+  const iconRefs = useRef([]);
+
   const values = [
     {
       icon: FaUsers,
@@ -48,32 +61,119 @@ export default function AboutCoreValuesSection() {
     }
   ];
 
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Heading — smooth fade up
+      gsap.fromTo(headingRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0,
+          duration: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          }
+        }
+      );
+
+      // Subtitle — smooth fade up after heading
+      gsap.fromTo(subtitleRef.current,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1, y: 0,
+          duration: 0.9,
+          delay: 0.15,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          }
+        }
+      );
+
+      // Cards — smooth staggered fade up
+      cardRefs.current.forEach((card, index) => {
+        if (!card) return;
+
+        gsap.fromTo(card,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1, y: 0,
+            duration: 0.9,
+            delay: index * 0.1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: sectionRef.current.querySelector('.values-grid'),
+              start: 'top 82%',
+              toggleActions: 'play none none none',
+            }
+          }
+        );
+      });
+
+      // Icons — smooth scale in (no spin)
+      iconRefs.current.forEach((icon, index) => {
+        if (!icon) return;
+
+        gsap.fromTo(icon,
+          { scale: 0.3, opacity: 0 },
+          {
+            scale: 1, opacity: 1,
+            duration: 0.6,
+            delay: 0.2 + index * 0.1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: sectionRef.current.querySelector('.values-grid'),
+              start: 'top 82%',
+              toggleActions: 'play none none none',
+            }
+          }
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="bg-white pt-8 md:pt-12 pb-8 md:pb-12 px-4 sm:px-8">
+    <section ref={sectionRef} className="bg-white pt-8 md:pt-12 pb-8 md:pb-12 px-4 sm:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
           <h2 
+            ref={headingRef}
             className="font-aloevera text-3xl sm:text-4xl md:text-5xl mb-4"
-            style={{ color: '#D46D64' }}
+            style={{ color: '#D46D64', opacity: 0 }}
           >
             Core Values
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
+          <p 
+            ref={subtitleRef}
+            className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto"
+            style={{ opacity: 0 }}
+          >
             At Luxume, our core values define everything we build. From uncompromising strength and quality to innovation, reliability, and customer trust.
           </p>
         </div>
 
         {/* Values Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="values-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {values.map((value, index) => (
             <div 
               key={index}
-              className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100"
+              ref={el => cardRefs.current[index] = el}
+              className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-all duration-500 ease-out border border-gray-100 hover:-translate-y-1"
+              style={{ opacity: 0 }}
             >
               {/* Icon */}
               <div 
-                className="w-14 h-14 rounded-full flex items-center justify-center mb-4"
+                ref={el => iconRefs.current[index] = el}
+                className="w-14 h-14 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500 ease-out"
                 style={{ backgroundColor: value.iconBg }}
               >
                 <value.icon 
@@ -84,7 +184,7 @@ export default function AboutCoreValuesSection() {
 
               {/* Title */}
               <h3 
-                className="font-semibold text-lg mb-3"
+                className="font-semibold text-lg mb-3 transition-colors duration-300"
                 style={{ color: value.iconColor }}
               >
                 {value.title}
