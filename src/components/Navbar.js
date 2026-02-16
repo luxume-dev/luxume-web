@@ -144,50 +144,35 @@ export default function Navbar() {
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-white/20">
             <div className="flex flex-col gap-4 pt-4">
-              <Link
-                href="/"
-                className="text-gray-800 text-sm font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                href="/about"
-                className="text-gray-600 text-sm font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                About Us
-              </Link>
-              <Link
-                href="/products"
-                className="text-gray-600 text-sm font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Products
-              </Link>
-              <Link
-                href="/blog"
-                className="text-gray-600 text-sm font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Blog
-              </Link>
-              <Link
-                href="/contact"
-                className="text-gray-600 text-sm font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact
-              </Link>
+              {[
+                { href: '/', label: 'Home' },
+                { href: '/about', label: 'About Us' },
+                { href: '/products', label: 'Products' },
+                { href: '/contact', label: 'Contact Us' },
+                { href: '/blog', label: 'Blog' },
+                { href: '/careers', label: 'Careers' },
+              ].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === link.href ? 'text-pink-400' : 'text-gray-800'}`}
+                  style={{ fontWeight: 300 }}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ))}
               <a
                 href="tel:+1234567890"
-                className="inline-flex items-center justify-center text-white text-sm font-medium rounded transition-all hover:opacity-90"
+                className="inline-flex items-center justify-center text-white font-aloevera rounded transition-all hover:opacity-90"
                 style={{ 
                   width: '110px', 
                   height: '38px', 
                   padding: '10px', 
                   gap: '10px',
-                  backgroundColor: '#C83C64'
+                  backgroundColor: '#C83C64',
+                  fontSize: '16px',
+                  fontWeight: 500
                 }}
                 onClick={() => setIsMenuOpen(false)}
               >

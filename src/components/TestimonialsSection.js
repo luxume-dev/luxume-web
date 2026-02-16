@@ -1,8 +1,20 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { FaStar, FaQuoteRight } from 'react-icons/fa';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function TestimonialsSection() {
+  const sectionRef = useRef(null);
+  const headingRef = useRef(null);
+  const descRef = useRef(null);
+  const cardRefs = useRef([]);
+
   const testimonials = [
     {
       quote: "Luxume roofing completely transformed our home. The finish is premium, the structure feels solid, and even after heavy rains and heat, the performance is outstanding.",
@@ -24,34 +36,96 @@ export default function TestimonialsSection() {
     }
   ];
 
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Heading — fade up
+      gsap.fromTo(headingRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0,
+          duration: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          }
+        }
+      );
+
+      // Description — fade up with delay
+      gsap.fromTo(descRef.current,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1, y: 0,
+          duration: 0.9,
+          delay: 0.15,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          }
+        }
+      );
+
+      // Testimonial cards — staggered slide up
+      cardRefs.current.forEach((card, index) => {
+        if (!card) return;
+
+        gsap.fromTo(card,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1, y: 0,
+            duration: 0.8,
+            delay: index * 0.15,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: sectionRef.current.querySelector('.testimonials-grid'),
+              start: 'top 82%',
+              toggleActions: 'play none none none',
+            }
+          }
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="bg-white py-16 sm:py-20 md:py-24 lg:py-28">
+    <section ref={sectionRef} className="bg-white py-16 sm:py-20 md:py-24 lg:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-16">
         
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16">
           <h2 
+            ref={headingRef}
             className="font-aloevera text-3xl sm:text-4xl md:text-5xl mb-4"
-            style={{ fontWeight: 400, fontStyle: 'italic' }}
+            style={{ fontWeight: 400, fontStyle: 'italic', opacity: 0 }}
           >
             <span className="text-[#1a1a4e]">Trusted by Homes</span>
             <br />
             <span style={{ color: '#E91E63' }}>That Demand Strength</span>
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto mt-4 sm:mt-6">
+          <p ref={descRef} className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto mt-4 sm:mt-6" style={{ opacity: 0 }}>
             From modern residences to large-scale projects, Luxume roofing sheets have earned the trust of customers through durability, design excellence, and long-lasting performance. Here's what our clients have to say about building with Luxume.
           </p>
         </div>
 
         {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div className="testimonials-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {testimonials.map((testimonial, index) => (
             <div 
               key={index}
+              ref={el => cardRefs.current[index] = el}
               className="bg-white p-6 sm:p-8 rounded-2xl transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
               style={{
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-                border: '1px solid #F5F5F5'
+                border: '1px solid #F5F5F5',
+                opacity: 0
               }}
             >
               {/* Quote Icon */}
@@ -114,3 +188,4 @@ export default function TestimonialsSection() {
     </section>
   );
 }
+

@@ -1,6 +1,30 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+
 export default function AboutHeroSection() {
+  const missionRef = useRef(null);
+  const visionRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        [missionRef.current, visionRef.current],
+        { opacity: 0, y: 40 },
+        { 
+          opacity: 1, 
+          y: 0, 
+          duration: 1.2, 
+          ease: 'power2.out', 
+          stagger: 0.25 
+        }
+      );
+    });
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section className="relative">
       {/* Background Image */}
@@ -15,7 +39,11 @@ export default function AboutHeroSection() {
       <div className="max-w-5xl mx-auto px-4 sm:px-8 -mt-24 md:-mt-32 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Mission Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+          <div 
+            ref={missionRef}
+            className="bg-white rounded-2xl shadow-lg p-6 md:p-8"
+            style={{ opacity: 0 }}
+          >
             <h3 
               className="text-center font-medium text-lg mb-4"
               style={{ color: '#C83C64' }}
@@ -29,8 +57,10 @@ export default function AboutHeroSection() {
 
           {/* Vision Card */}
           <div 
+            ref={visionRef}
             className="bg-white rounded-2xl md:shadow-lg p-6 md:p-8"
             style={{
+              opacity: 0,
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
             }}
           >
