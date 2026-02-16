@@ -11,7 +11,10 @@ export default function Navbar() {
   
   // Force white background on contact page
   const forceWhiteBg = pathname === '/contact' || pathname.startsWith('/careers');
+  // Force dark logo + text (without forcing white bg) on product detail pages
+  const forceDarkContent = pathname.startsWith('/products/');
   const showWhiteBg = forceWhiteBg || isScrolled || isMenuOpen;
+  const useDarkContent = showWhiteBg || forceDarkContent;
 
   useEffect(() => {
     // On homepage, listen for when About section reaches the top
@@ -40,7 +43,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <img 
-              src={showWhiteBg ? "/images/logo.png" : "/images/logo-2.png"}
+              src={useDarkContent ? "/images/logo.png" : "/images/logo-2.png"}
               alt="Luxume" 
               className="h-12 w-auto"
             />
@@ -50,42 +53,42 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-10">
             <Link 
               href="/" 
-              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/' ? 'text-pink-400' : showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
               style={{ fontWeight: 300 }}
             >
               Home
             </Link>
             <Link 
               href="/about" 
-              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/about' ? 'text-pink-400' : showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/about' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
               style={{ fontWeight: 300 }}
             >
               About Us
             </Link>
             <Link 
               href="/products" 
-              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/products' ? 'text-pink-400' : showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/products' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
               style={{ fontWeight: 300 }}
             >
               Products
             </Link>
             <Link 
               href="/contact" 
-              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/contact' ? 'text-pink-400' : showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/contact' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
               style={{ fontWeight: 300 }}
             >
               Contact Us
             </Link>
             <Link 
               href="/blog" 
-              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/blog' ? 'text-pink-400' : showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/blog' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
               style={{ fontWeight: 300 }}
             >
               Blog
             </Link>
             <Link 
               href="/careers" 
-              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/careers' ? 'text-pink-400' : showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+              className={`text-sm font-aloevera hover:text-pink-400 transition-colors ${pathname === '/careers' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
               style={{ fontWeight: 300 }}
             >
               Careers
@@ -112,7 +115,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`md:hidden p-2 ${showWhiteBg ? 'text-gray-800' : 'text-white'}`}
+            className={`md:hidden p-2 ${useDarkContent ? 'text-gray-800' : 'text-white'}`}
             aria-label="Toggle menu"
           >
             <svg
