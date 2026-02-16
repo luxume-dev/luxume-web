@@ -146,38 +146,48 @@ export default function CoatedSteelSection() {
               
               {/* Language Toggle - Pill Style */}
               <div 
-                className="flex rounded-full overflow-hidden"
+                className="flex"
                 style={{ 
+                  height: '40px',
+                  borderRadius: '30px',
                   border: '1px solid #E5E5E5',
-                  background: '#FFFFFF'
+                  background: '#FFFFFF',
+                  padding: '2px',
+                  gap: '10px'
                 }}
               >
                 <button
                   onClick={() => setLanguage('english')}
-                  className="flex-1 px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-medium transition-all duration-300 rounded-full"
+                  className="flex-1 text-sm sm:text-base font-medium transition-all duration-300"
                   style={language === 'english' ? { 
                     color: '#E91E63',
-                    border: '2px solid #E91E63',
+                    boxShadow: '0 0 0 2px #E91E63',
                     background: '#FFFFFF',
-                    margin: '-1px'
+                    borderRadius: '30px',
+                    height: '100%'
                   } : {
                     color: '#9CA3AF',
-                    background: 'transparent'
+                    background: 'transparent',
+                    borderRadius: '30px',
+                    height: '100%'
                   }}
                 >
                   English
                 </button>
                 <button
                   onClick={() => setLanguage('malayalam')}
-                  className="flex-1 px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-medium transition-all duration-300 rounded-full"
+                  className="flex-1 text-sm sm:text-base font-medium transition-all duration-300"
                   style={language === 'malayalam' ? { 
                     color: '#E91E63',
-                    border: '2px solid #E91E63',
+                    boxShadow: '0 0 0 2px #E91E63',
                     background: '#FFFFFF',
-                    margin: '-1px'
+                    borderRadius: '30px',
+                    height: '100%'
                   } : {
                     color: '#9CA3AF',
-                    background: 'transparent'
+                    background: 'transparent',
+                    borderRadius: '30px',
+                    height: '100%'
                   }}
                 >
                   Malayalam

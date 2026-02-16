@@ -15,35 +15,35 @@ export default function CoreValuesSection() {
       icon: FaLeaf,
       title: 'Eco-Friendly',
       description: 'As a responsible steel roofing manufacturer, Luxume follows eco-friendly practices across operations. Engineered steel ensures durability, recyclability, and efficient resource utilization. We actively reduce environmental impact and protect biodiversity.',
-      color: '#4CAF50',
+      color: '#10B981',
       animation: 'sway'
     },
     {
       icon: FaShieldAlt,
       title: 'Reliability',
       description: 'Reliability drives every process at Luxume. We deliver consistent quality through dependable products and services. Honoring commitments builds lasting customer trust and brand credibility.',
-      color: '#2196F3',
+      color: '#3B82F6',
       animation: 'shield-pulse'
     },
     {
       icon: FaUsers,
       title: 'Customer Orientation',
       description: 'Our customers are the foundation of Luxume. We prioritize customer satisfaction through standardized processes, continuous innovation, and investments in technology and human capital. Delivering value across the supply chain builds brand loyalty and sustainable growth.',
-      color: '#9C27B0',
+      color: '#F59E0B',
       animation: 'bounce-subtle'
     },
     {
       icon: FaMicrochip,
       title: 'Technology First',
       description: 'Luxume adopts advanced technology across product quality, sales automation, transactions, and customer relationship management. Smart technology enables efficiency, scalability, real-time insights, and cost optimization. This approach gives us a strong competitive edge in the market.',
-      color: '#00BCD4',
+      color: '#8B5CF6',
       animation: 'glow-pulse'
     },
     {
       icon: FaHeart,
       title: 'People Friendly',
       description: 'At Luxume, people remain central despite technological advancements. We foster an ethical, transparent, and supportive work environment focused on growth and well-being. Empowered employees create satisfied customers, strengthening trust across the entire ecosystem.',
-      color: '#E040FB',
+      color: '#EC4899',
       animation: 'heartbeat'
     }
   ];
@@ -93,7 +93,6 @@ export default function CoreValuesSection() {
               className="group p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-[1.02] sm:hover:scale-105 active:scale-[0.98]"
               style={{
                 background: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(10px)',
                 border: '1px solid rgba(255, 255, 255, 0.1)'
               }}
             >
@@ -120,7 +119,7 @@ export default function CoreValuesSection() {
               </h3>
 
               {/* Description */}
-              <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
+              <p className="text-gray-400 leading-relaxed" style={{ fontSize: '16px' }}>
                 {value.description}
               </p>
             </div>
