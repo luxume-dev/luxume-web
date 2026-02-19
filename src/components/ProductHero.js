@@ -17,12 +17,8 @@ export default function ProductHero({ heading, backgroundImage }) {
       {/* Content */}
       <div className="relative z-10 w-full px-4 text-center">
         <h1 
-          className="font-aloevera text-white leading-tight drop-shadow-lg max-w-3xl mx-auto" 
-          style={{ 
-            fontSize: '64px', 
-            fontWeight: 700,
-            fontStyle: 'normal'
-          }}
+          className="aloevera-bold text-white leading-tight drop-shadow-lg max-w-3xl mx-auto" 
+          style={{ fontSize: '64px' }}
         >
           {heading}
         </h1>

@@ -1,7 +1,14 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { FaUsers, FaMicrochip, FaSmile, FaRecycle, FaHeadset, FaShieldAlt } from 'react-icons/fa';
+import { useEffect, useRef, useState } from 'react';
+import {
+  CustomerOrientationIcon,
+  TechnologyFirstIcon,
+  PeopleFriendlyIcon,
+  SustainabilityIcon,
+  EcoFriendlyIcon,
+  ReliabilityIcon
+} from '@/components/icons/CoreValueIcons';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -15,49 +22,50 @@ export default function AboutCoreValuesSection() {
   const subtitleRef = useRef(null);
   const cardRefs = useRef([]);
   const iconRefs = useRef([]);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const values = [
     {
-      icon: FaUsers,
+      icon: CustomerOrientationIcon,
       title: 'Customer Orientation',
-      description: 'Our customers are the foundation of Luxume. We prioritize customer satisfaction through standardized processes, continuous innovation, and investments in technology and human capital.',
-      iconColor: '#E91E63',
-      iconBg: '#FCE4EC'
+      description: 'Our customers are the foundation of Luxume. We prioritize customer satisfaction through standardized processes, continuous innovation, and investments in technology and human capital. Delivering value across the supply chain builds brand loyalty and sustainable growth.',
+      color: '#F59E0B',
+      iconBg: '#F59E0B15'
     },
     {
-      icon: FaMicrochip,
+      icon: TechnologyFirstIcon,
       title: 'Technology First',
-      description: 'Luxume adopts advanced technology across product quality, sales automation, transactions, and customer relationship management. Smart technology enables efficiency and scalability.',
-      iconColor: '#2196F3',
-      iconBg: '#E3F2FD'
+      description: 'Luxume adopts advanced technology across product quality, sales automation, transactions, and customer relationship management. Smart technology enables efficiency, scalability, real-time insights, and cost optimization. This approach gives us a strong competitive edge in the market.',
+      color: '#8B5CF6',
+      iconBg: '#8B5CF615'
     },
     {
-      icon: FaSmile,
+      icon: PeopleFriendlyIcon,
       title: 'People Friendly',
-      description: 'At Luxume, people remain central despite technological advancements. We foster an ethical, transparent, and supportive work environment focused on growth and well-being.',
-      iconColor: '#FF9800',
-      iconBg: '#FFF3E0'
+      description: 'At Luxume, people remain central despite technological advancements. We foster an ethical, transparent, and supportive work environment focused on growth and well-being. Empowered employees create satisfied customers, strengthening trust across the entire ecosystem.',
+      color: '#EC4899',
+      iconBg: '#EC489915'
     },
     {
-      icon: FaRecycle,
+      icon: SustainabilityIcon,
       title: 'Sustainability',
-      description: 'At Luxume, sustainability is embedded across sourcing, manufacturing, and distribution. We focus on efficient resource use, waste reduction, and energy conservation.',
-      iconColor: '#E91E63',
-      iconBg: '#FCE4EC'
+      description: 'At Luxume, sustainability is embedded across sourcing, manufacturing, and distribution. We focus on efficient resource use, waste reduction, and energy conservation to ensure long-term growth. This approach strengthens profitability, trust, and business continuity.',
+      color: '#C83C64',
+      iconBg: '#C83C6415'
     },
     {
-      icon: FaHeadset,
-      title: 'Post-Sales',
-      description: 'We believe in building lasting relationships beyond the point of sale. Our dedicated support team ensures customers receive prompt assistance and guidance whenever needed.',
-      iconColor: '#4CAF50',
-      iconBg: '#E8F5E9'
+      icon: EcoFriendlyIcon,
+      title: 'Eco-Friendly',
+      description: 'As a responsible steel roofing manufacturer, Luxume follows eco-friendly practices across operations. Engineered steel ensures durability, recyclability, and efficient resource utilization. We actively reduce environmental impact and protect biodiversity.',
+      color: '#10B981',
+      iconBg: '#10B98115'
     },
     {
-      icon: FaShieldAlt,
+      icon: ReliabilityIcon,
       title: 'Reliability',
-      description: 'Reliability drives every process at Luxume. We deliver consistent quality through dependable products and services. Honoring commitments builds lasting customer trust.',
-      iconColor: '#2196F3',
-      iconBg: '#E3F2FD'
+      description: 'Reliability drives every process at Luxume. We deliver consistent quality through dependable products and services. Honoring commitments builds lasting customer trust and brand credibility.',
+      color: '#3B82F6',
+      iconBg: '#3B82F615'
     }
   ];
 
@@ -116,7 +124,7 @@ export default function AboutCoreValuesSection() {
         );
       });
 
-      // Icons — smooth scale in (no spin)
+      // Icons — smooth scale in
       iconRefs.current.forEach((icon, index) => {
         if (!icon) return;
 
@@ -147,8 +155,8 @@ export default function AboutCoreValuesSection() {
         <div className="text-center mb-12 md:mb-16">
           <h2 
             ref={headingRef}
-            className="font-aloevera text-3xl sm:text-4xl md:text-5xl mb-4"
-            style={{ color: '#D46D64', opacity: 0 }}
+            className="aloevera-bold text-[36px] mb-4"
+            style={{ color: '#C83C64', opacity: 0 }}
           >
             Core Values
           </h2>
@@ -167,25 +175,35 @@ export default function AboutCoreValuesSection() {
             <div 
               key={index}
               ref={el => cardRefs.current[index] = el}
-              className="group bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-all duration-500 ease-out border border-gray-100 hover:-translate-y-1"
-              style={{ opacity: 0 }}
+              className="group bg-white p-6 rounded-xl transition-all duration-500 ease-out cursor-pointer"
+              style={{ 
+                opacity: 0,
+                border: hoveredIndex === index ? `1.5px solid ${value.color}` : '1px solid #f3f4f6',
+                boxShadow: hoveredIndex === index 
+                  ? `0 12px 28px ${value.color}20, 0 4px 12px rgba(0,0,0,0.05)` 
+                  : '0 1px 3px rgba(0,0,0,0.05)',
+                transform: hoveredIndex === index ? 'translateY(-6px)' : 'translateY(0)',
+              }}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
             >
               {/* Icon */}
               <div 
                 ref={el => iconRefs.current[index] = el}
-                className="w-14 h-14 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500 ease-out"
-                style={{ backgroundColor: value.iconBg }}
+                className="w-14 h-14 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500 ease-out"
+                style={{ 
+                  backgroundColor: value.iconBg, 
+                  borderRadius: '14px',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+                }}
               >
-                <value.icon 
-                  className="text-xl"
-                  style={{ color: value.iconColor }}
-                />
+                <value.icon />
               </div>
 
               {/* Title */}
               <h3 
-                className="font-semibold text-lg mb-3 transition-colors duration-300"
-                style={{ color: value.iconColor }}
+                className="font-lato font-bold text-[24px] mb-3 transition-colors duration-300"
+                style={{ color: value.color }}
               >
                 {value.title}
               </h3>

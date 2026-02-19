@@ -18,7 +18,7 @@ export default function HeroSection() {
       <div className="relative z-10 w-full px-6 sm:px-12 md:px-16 lg:px-24">
         <div className="max-w-2xl">
           {/* Main Heading */}
-          <h1 className="font-aloevera text-white leading-snug mb-6 sm:mb-8 md:mb-10 drop-shadow-lg text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-50" style={{ fontWeight: 400 }}>
+          <h1 className="aloevera-regular text-white leading-snug mb-6 sm:mb-8 md:mb-10 drop-shadow-lg text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-50">
             Discover the Perfect
             <br className="hidden sm:block" />
             <span className="sm:hidden"> </span>

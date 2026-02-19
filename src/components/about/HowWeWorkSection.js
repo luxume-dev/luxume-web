@@ -131,18 +131,18 @@ export default function HowWeWorkSection() {
   return (
     <section ref={sectionRef} className="bg-white pt-8 md:pt-12 pb-16 md:pb-24 px-4 sm:px-8">
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-16">
-          {/* Left - Steps content */}
-          <div className="w-full lg:w-1/2">
-            {/* Heading */}
-            <h2 
-              ref={headingRef}
-              className="font-aloevera font-bold text-3xl sm:text-4xl md:text-5xl mb-4"
-              style={{ color: '#C83C64', opacity: 0 }}
-            >
-              How We Work
-            </h2>
+        {/* Heading - Full width at top */}
+        <h2 
+          ref={headingRef}
+          className="aloevera-bold text-3xl sm:text-4xl md:text-5xl mb-4 lg:mb-6"
+          style={{ color: '#C83C64', opacity: 0 }}
+        >
+          How We Work
+        </h2>
 
+        <div className="flex flex-col lg:flex-row items-stretch gap-8 lg:gap-16">
+          {/* Left - Steps content (Subtitle + Steps) */}
+          <div className="w-full lg:w-3/5">
             {/* Subtitle */}
             <p 
               ref={subtitleRef}
@@ -163,16 +163,17 @@ export default function HowWeWorkSection() {
                 >
                   {/* Number */}
                   <span 
-                    className="text-2xl sm:text-3xl font-light text-gray-300 flex-shrink-0 w-8"
+                    className="lato-regular text-[20px] flex-shrink-0 w-8 pt-2"
+                    style={{ color: '#99A1AF' }}
                   >
                     {step.number}
                   </span>
 
                   {/* Content */}
-                  <div className="flex-1">
+                  <div className="flex-1 mt-2">
                     <h3 
-                      className="font-bold text-lg sm:text-xl mb-2"
-                      style={{ color: '#0F172B' }}
+                      className="aloevera-medium text-[36px] mb-2"
+                      style={{ color: '#1C1E54' }}
                     >
                       {step.title}
                     </h3>
@@ -188,14 +189,14 @@ export default function HowWeWorkSection() {
           {/* Right - Image */}
           <div 
             ref={imageRef}
-            className="w-full lg:w-1/2"
+            className="w-full lg:w-2/5"
             style={{ opacity: 0 }}
           >
             <img 
               src="/images/man.png" 
               alt="Worker installing roofing" 
-              className="w-full h-auto rounded-2xl object-cover"
-              style={{ maxHeight: '550px', objectPosition: 'center' }}
+              className="w-full rounded-2xl object-cover"
+              style={{ height: '100%', objectPosition: 'center' }}
             />
           </div>
         </div>
@@ -203,7 +204,7 @@ export default function HowWeWorkSection() {
         {/* Luxume Focus Paragraph - Bottom centered */}
         <p 
           ref={bottomTextRef}
-          className="text-gray-600 text-sm sm:text-base text-center mt-12 max-w-2xl mx-auto"
+          className="lato-light text-[20px] leading-relaxed text-center mt-12 max-w-2xl mx-auto"
           style={{ opacity: 0 }}
         >
           Luxume focuses on delivering premium roofing materials engineered for durability, performance, and long-term value.

@@ -98,10 +98,10 @@ export default function AboutSection() {
           className="mb-5 text-2xl sm:text-3xl md:text-4xl lg:text-[44px] leading-tight"
           style={{ opacity: 0 }}
         >
-          <span className="font-aloevera font-bold text-[#C83C64]">
+          <span className="aloevera-bold text-[#C83C64]">
             Secure &amp; Stylish
           </span>
-          <span className="font-aloevera font-bold text-[#1a1a4e]">
+          <span className="aloevera-bold text-[#1a1a4e]">
             : The Smart Home Shield
           </span>
         </h2>

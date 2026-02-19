@@ -12,21 +12,18 @@ export default function ProductsIntro() {
         </h3>
         
         <h1 
-          className="font-aloevera text-[48px] leading-tight mb-6"
+          className="aloevera-bold text-[48px] leading-tight mb-6"
           style={{ 
-            color: 'var(--secondary)',
-            fontWeight: 700,
-            fontStyle: 'normal'
+            color: 'var(--secondary)'
           }}
         >
           Premium Steel Solutions
         </h1>
         
         <p 
-          className="text-[16px] max-w-2xl mx-auto leading-[28px] font-lato mb-8"
+          className="lato-regular text-[16px] max-w-2xl mx-auto leading-[28px] mb-8"
           style={{ 
-            color: 'var(--text-description)',
-            fontWeight: 400
+            color: 'var(--text-description)'
           }}
         >
           Discover our comprehensive range of high-quality color-coated steel products designed to deliver unmatched strength, durability, and aesthetic appeal for your projects.

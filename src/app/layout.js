@@ -20,8 +20,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${lato.variable} antialiased`}>
         <Navbar />
-        {children}
-        <Footer />
+        <div className="relative z-10">
+          {children}
+          <Footer />
+        </div>
       </body>
     </html>
   );

@@ -11,7 +11,7 @@ export default function Footer() {
     <footer className="relative z-30">
       {/* Hero Banner Section */}
       <div 
-        className="relative pt-8 sm:pt-12 md:pt-16 lg:pt-20 pb-10 sm:pb-12 md:pb-16 lg:pb-20 px-4"
+        className="relative pt-8 sm:pt-12 md:pt-16 lg:pt-20 pb-4 sm:pb-6 md:pb-8 lg:pb-10 px-4 sm:px-6 md:px-8"
         style={{
           backgroundImage: 'url(/images/footer.jpg)',
           backgroundSize: 'cover',
@@ -28,13 +28,13 @@ export default function Footer() {
         />
 
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 max-w-7xl mx-auto ">
           {/* Logo */}
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-center my-16 lg:my-24">
             <img 
               src="/images/logo-2.png" 
               alt="Luxume Roofing" 
-              className="h-28 sm:h-36 md:h-48 lg:h-56"
+              className="h-40 sm:h-56 md:h-72 lg:h-[24rem]"
             />
           </div>
 
@@ -42,18 +42,16 @@ export default function Footer() {
           <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-8 sm:gap-0">
             <div className="text-center sm:text-left w-full sm:w-auto sm:max-w-md">
               <h3 
-                className="font-aloevera text-white mb-2 text-[42px] sm:text-[55px] leading-[1.1] sm:leading-[63px]"
-                style={{ fontWeight: 300 }}
+                className="aloevera-light text-white mb-2 text-[42px] sm:text-[55px] leading-[1.1] sm:leading-[63px]"
               >
                 Experience
               </h3>
               <h3 
-                className="font-aloevera text-white mb-4 text-[32px] sm:text-[39px] leading-[1.1]"
-                style={{ fontWeight: 300 }}
+                className="aloevera-light text-white mb-4 text-[32px] sm:text-[39px] leading-[1.1]"
               >
                 Strength Above All
               </h3>
-              <p className="font-lato font-light text-white text-sm sm:text-sm mb-0 mx-auto sm:mx-0 sm:max-w-[360px]">
+              <p className="font-lato font-light text-white text-[16px] mb-0 mx-auto sm:mx-0 sm:max-w-[360px]">
                 Built with premium steel and precision engineering to deliver unmatched durability, reliability, and performance.
               </p>
             </div>
@@ -94,7 +92,7 @@ export default function Footer() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 mb-12">
             {/* Quick Links */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Quick Links</h4>
+              <h4 className="aloevera-medium text-white text-[16px] mb-4">Quick Links</h4>
               <ul className="space-y-2">
                 {[
                   { name: 'Home', href: '/' },
@@ -104,7 +102,7 @@ export default function Footer() {
                   { name: 'Careers', href: '/careers' }
                 ].map((link) => (
                   <li key={link.name}>
-                    <Link href={link.href} className="text-gray-400 text-sm hover:text-white transition-colors">
+                    <Link href={link.href} className="aloevera-light text-gray-400 text-[16px] hover:text-white transition-colors">
                       {link.name}
                     </Link>
                   </li>
@@ -114,15 +112,15 @@ export default function Footer() {
 
             {/* Popular Products */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Popular Products</h4>
+              <h4 className="aloevera-medium text-white text-[16px] mb-4">Popular Products</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link href="#" className="text-gray-400 text-sm hover:text-white transition-colors">
+                  <Link href="#" className="aloevera-light text-gray-400 text-[16px] hover:text-white transition-colors">
                     Color Coated Galvalume Sheets
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-gray-400 text-sm hover:text-white transition-colors">
+                  <Link href="#" className="aloevera-light text-gray-400 text-[16px] hover:text-white transition-colors">
                     Color Coated Galvalume Coils
                   </Link>
                 </li>
@@ -131,18 +129,18 @@ export default function Footer() {
 
             {/* Contact Info */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Contact Info</h4>
+              <h4 className="aloevera-medium text-white text-[16px] mb-4">Contact Info</h4>
               <ul className="space-y-3">
-                <li className="flex gap-3 text-gray-400 text-sm">
-                  <FaMapMarkerAlt className="text-gray-500 flex-shrink-0 mt-1" />
+                <li className="flex gap-3 aloevera-light text-gray-400 text-[16px]">
+                  <FaMapMarkerAlt className="text-gray-400 flex-shrink-0 mt-1" />
                   <span>2nd Floor, SajMahal Building, Madakapilli Lane, Ernakulam South, Ernakulam Pin: 682016</span>
                 </li>
-                <li className="flex gap-3 text-gray-400 text-sm items-center">
-                  <FaPhone className="text-gray-500" />
+                <li className="flex gap-3 aloevera-light text-gray-400 text-[16px] items-center">
+                  <FaPhone className="text-gray-400" />
                   <span>+91 97785 57752</span>
                 </li>
-                <li className="flex gap-3 text-gray-400 text-sm items-center">
-                  <FaEnvelope className="text-gray-500" />
+                <li className="flex gap-3 aloevera-light text-gray-400 text-[16px] items-center">
+                  <FaEnvelope className="text-gray-400" />
                   <span>info@luxume.com</span>
                 </li>
               </ul>
@@ -150,21 +148,21 @@ export default function Footer() {
 
             {/* Connect Us & Subscribe */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Connect Us</h4>
+              <h4 className="aloevera-medium text-white text-[16px] mb-4">Connect Us</h4>
               <div className="flex gap-3 sm:gap-2 mb-6">
                 {[FaPhone, FaInstagram, FaFacebookF, FaYoutube].map((Icon, index) => (
                   <a 
                     key={index}
                     href="#"
                     className="w-11 h-11 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:opacity-80"
-                    style={{ background: '#E91E63' }}
+                    style={{ background: '#D46D64' }}
                   >
                     <Icon className="text-white text-base sm:text-sm" />
                   </a>
                 ))}
               </div>
               
-              <h4 className="text-white font-semibold mb-3">Subscribe Now</h4>
+              <h4 className="aloevera-medium text-white text-[16px] mb-3">Subscribe Now</h4>
               <form onSubmit={handleSubscribe} className="space-y-2">
                 <div className="flex max-w-xs sm:max-w-none">
                   <input 
@@ -178,7 +176,7 @@ export default function Footer() {
                     type="submit"
                     disabled={isLoading}
                     className="px-4 py-3 sm:py-2.5 rounded-r-lg transition-all duration-300 hover:opacity-80 disabled:opacity-50 flex-shrink-0"
-                    style={{ background: '#E91E63' }}
+                    style={{ background: '#D46D64' }}
                   >
                     {isLoading ? (
                       <span className="text-white text-sm">...</span>
@@ -201,7 +199,7 @@ export default function Footer() {
           </div>
 
           {/* Bottom Bar */}
-          <div className="pt-8 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+          <div className="pt-8 border-t border-[#D46D64] flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
             <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">
               © 2026 Luxume. All Rights Reserved.<br className="sm:hidden" />
               <span className="hidden sm:inline"> </span>Designed & Developed by{' '}
@@ -209,16 +207,16 @@ export default function Footer() {
                 href="https://snapinfinity.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:text-white transition-colors"
+                className="hover:text-white transition-colors underline"
               >
                 Snap Infinity
               </a>
             </p>
             <div className="flex gap-4 sm:gap-6">
-              <Link href="#" className="text-gray-500 text-xs sm:text-sm hover:text-white transition-colors">
+              <Link href="/terms-conditions" className="text-gray-500 text-xs sm:text-sm hover:text-white transition-colors">
                 Terms & Conditions
               </Link>
-              <Link href="#" className="text-gray-500 text-xs sm:text-sm hover:text-white transition-colors">
+              <Link href="/privacy-policy" className="text-gray-500 text-xs sm:text-sm hover:text-white transition-colors">
                 Privacy Policy
               </Link>
             </div>

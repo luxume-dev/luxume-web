@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { FaStar, FaQuoteRight } from 'react-icons/fa';
+import { useEffect, useRef, useState } from 'react';
+import { FaStar } from 'react-icons/fa';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -14,6 +14,7 @@ export default function TestimonialsSection() {
   const headingRef = useRef(null);
   const descRef = useRef(null);
   const cardRefs = useRef([]);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const testimonials = [
     {
@@ -103,12 +104,12 @@ export default function TestimonialsSection() {
         <div className="text-center mb-12 sm:mb-16">
           <h2 
             ref={headingRef}
-            className="font-aloevera text-3xl sm:text-4xl md:text-5xl mb-4"
-            style={{ fontWeight: 400, fontStyle: 'italic', opacity: 0 }}
+            className="aloevera-bold text-4xl sm:text-5xl md:text-[60px] mb-4"
+            style={{ opacity: 0 }}
           >
-            <span className="text-[#1a1a4e]">Trusted by Homes</span>
+            <span style={{ color: '#1C1E54' }}>Trusted by Homes</span>
             <br />
-            <span style={{ color: '#E91E63' }}>That Demand Strength</span>
+            <span style={{ color: '#C83C64' }}>That Demand Strength</span>
           </h2>
           <p ref={descRef} className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto mt-4 sm:mt-6" style={{ opacity: 0 }}>
             From modern residences to large-scale projects, Luxume roofing sheets have earned the trust of customers through durability, design excellence, and long-lasting performance. Here's what our clients have to say about building with Luxume.
@@ -121,64 +122,86 @@ export default function TestimonialsSection() {
             <div 
               key={index}
               ref={el => cardRefs.current[index] = el}
-              className="bg-white p-6 sm:p-8 rounded-2xl transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-              style={{
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-                border: '1px solid #F5F5F5',
-                opacity: 0
-              }}
+              className="h-full"
+              style={{ opacity: 0 }}
             >
-              {/* Quote Icon */}
               <div 
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mb-4"
-                style={{ background: '#E91E63' }}
+                className="flex flex-col bg-white p-6 sm:p-8 rounded-2xl transition-all duration-300 cursor-pointer h-full"
+                style={{
+                  boxShadow: hoveredIndex === index 
+                    ? '0 12px 28px rgba(200, 60, 100, 0.2), 0 4px 12px rgba(0,0,0,0.05)' 
+                    : '0 4px 20px rgba(0, 0, 0, 0.08)',
+                  border: hoveredIndex === index 
+                    ? '1.5px solid #C83C64' 
+                    : '1px solid #F5F5F5',
+                  transform: hoveredIndex === index ? 'translateY(-6px)' : 'translateY(0)'
+                }}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
               >
-                <FaQuoteRight className="text-white text-lg sm:text-xl" />
-              </div>
-
-              {/* Stars */}
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} className="text-yellow-400 text-sm sm:text-base" />
-                ))}
-              </div>
-
-              {/* Quote Text */}
-              <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-6">
-                "{testimonial.quote}"
-              </p>
-
-              {/* Divider */}
-              <div 
-                className="w-12 h-1 mb-4 rounded-full"
-                style={{ background: '#E91E63' }}
-              />
-
-              {/* Author */}
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <img 
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
-                  />
-                  {/* Verified Badge */}
-                  <div 
-                    className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center"
-                    style={{ background: '#E91E63' }}
-                  >
-                    <svg className="w-2 h-2 sm:w-3 sm:h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
+                {/* Quote Icon */}
+                <div 
+                  className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center mb-4 transition-transform duration-300"
+                  style={{ 
+                    background: '#C83C64', 
+                    borderRadius: '20px',
+                    transform: hoveredIndex === index ? 'scale(1.1)' : 'scale(1)'
+                  }}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 3C15.4696 3 14.9609 3.21071 14.5858 3.58579C14.2107 3.96086 14 4.46957 14 5V11C14 11.5304 14.2107 12.0391 14.5858 12.4142C14.9609 12.7893 15.4696 13 16 13C16.2652 13 16.5196 13.1054 16.7071 13.2929C16.8946 13.4804 17 13.7348 17 14V15C17 15.5304 16.7893 16.0391 16.4142 16.4142C16.0391 16.7893 15.5304 17 15 17C14.7348 17 14.4804 17.1054 14.2929 17.2929C14.1054 17.4804 14 17.7348 14 18V20C14 20.2652 14.1054 20.5196 14.2929 20.7071C14.4804 20.8946 14.7348 21 15 21C16.5913 21 18.1174 20.3679 19.2426 19.2426C20.3679 18.1174 21 16.5913 21 15V5C21 4.46957 20.7893 3.96086 20.4142 3.58579C20.0391 3.21071 19.5304 3 19 3H16Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M5 3C4.46957 3 3.96086 3.21071 3.58579 3.58579C3.21071 3.96086 3 4.46957 3 5V11C3 11.5304 3.21071 12.0391 3.58579 12.4142C3.96086 12.7893 4.46957 13 5 13C5.26522 13 5.51957 13.1054 5.70711 13.2929C5.89464 13.4804 6 13.7348 6 14V15C6 15.5304 5.78929 16.0391 5.41421 16.4142C5.03914 16.7893 4.53043 17 4 17C3.73478 17 3.48043 17.1054 3.29289 17.2929C3.10536 17.4804 3 17.7348 3 18V20C3 20.2652 3.10536 20.5196 3.29289 20.7071C3.48043 20.8946 3.73478 21 4 21C5.5913 21 7.11742 20.3679 8.24264 19.2426C9.36786 18.1174 10 16.5913 10 15V5C10 4.46957 9.78929 3.96086 9.41421 3.58579C9.03914 3.21071 8.53043 3 8 3H5Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-sm sm:text-base text-[#1a1a4e]">
-                    {testimonial.name}
-                  </h4>
-                  <p className="text-gray-500 text-xs sm:text-sm">
-                    {testimonial.location}
-                  </p>
+
+                {/* Stars */}
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar key={i} className="text-yellow-400 text-sm sm:text-base" />
+                  ))}
+                </div>
+
+                {/* Quote Text */}
+                <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-6 flex-grow">
+                  "{testimonial.quote}"
+                </p>
+
+                {/* Divider */}
+                <div 
+                  className="w-12 h-1 mb-4 rounded-full transition-all duration-300"
+                  style={{ background: '#C83C64', width: hoveredIndex === index ? '48px' : '32px' }}
+                />
+
+                {/* Author */}
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <img 
+                      src={testimonial.avatar}
+                      alt={testimonial.name}
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover transition-transform duration-300"
+                      style={{ transform: hoveredIndex === index ? 'scale(1.1)' : 'scale(1)' }}
+                    />
+                    {/* Verified Badge */}
+                    <div 
+                      className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shadow-sm"
+                      style={{ background: '#C83C64', border: '2px solid white' }}
+                    >
+                      <svg className="w-2 h-2 sm:w-3 sm:h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 
+                      className="font-semibold text-sm sm:text-base text-[#1a1a4e] transition-colors duration-300"
+                      style={{ color: hoveredIndex === index ? '#C83C64' : '#1a1a4e' }}
+                    >
+                      {testimonial.name}
+                    </h4>
+                    <p className="text-gray-500 text-xs sm:text-sm">
+                      {testimonial.location}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

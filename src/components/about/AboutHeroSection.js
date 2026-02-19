@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import gsap from 'gsap';
 
 export default function AboutHeroSection() {
@@ -26,14 +27,19 @@ export default function AboutHeroSection() {
   }, []);
 
   return (
-    <section className="relative">
-      {/* Background Image */}
-      <div 
-        className="w-full h-[500px] md:h-[600px] bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: 'url(/images/about.png)',
-        }}
-      />
+    <section className="bg-white">
+      {/* Hero Image - full width, no margins */}
+      <section className="relative w-full overflow-hidden" style={{ height: '730px' }}>
+        <Image
+          src="/images/about.png"
+          alt="About Luxume - Premium steel roofing solutions"
+          fill
+          priority
+          className="object-cover"
+        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/55"></div>
+      </section>
 
       {/* Mission & Vision Cards */}
       <div className="max-w-5xl mx-auto px-4 sm:px-8 -mt-24 md:-mt-32 relative z-10">
@@ -45,8 +51,7 @@ export default function AboutHeroSection() {
             style={{ opacity: 0 }}
           >
             <h3 
-              className="text-center font-medium text-lg mb-4"
-              style={{ color: '#C83C64' }}
+              className="aloevera-medium text-center text-lg mb-4 text-[#C83C64]"
             >
               Mission
             </h3>
@@ -58,15 +63,11 @@ export default function AboutHeroSection() {
           {/* Vision Card */}
           <div 
             ref={visionRef}
-            className="bg-white rounded-2xl md:shadow-lg p-6 md:p-8"
-            style={{
-              opacity: 0,
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
-            }}
+            className="bg-white rounded-2xl shadow-lg p-6 md:p-8"
+            style={{ opacity: 0 }}
           >
             <h3 
-              className="text-center font-medium text-lg mb-4"
-              style={{ color: '#C83C64' }}
+              className="aloevera-medium text-center text-lg mb-4 text-[#C83C64]"
             >
               Vision
             </h3>
@@ -78,7 +79,7 @@ export default function AboutHeroSection() {
       </div>
 
       {/* Spacer for cards below image */}
-      <div className="h-4 md:h-8 bg-white" />
+      <div className="h-4 md:h-8" />
     </section>
   );
 }

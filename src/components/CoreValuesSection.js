@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaRecycle, FaLeaf, FaShieldAlt, FaUsers, FaMicrochip, FaHeart } from 'react-icons/fa';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -15,6 +15,7 @@ export default function CoreValuesSection() {
   const subtitleRef = useRef(null);
   const cardRefs = useRef([]);
   const iconRefs = useRef([]);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   const values = [
     {
       icon: FaRecycle,
@@ -165,9 +166,8 @@ export default function CoreValuesSection() {
         <div className="mb-8 sm:mb-10 md:mb-12 text-center sm:text-left">
           <h2 
             ref={headingRef}
-            className="font-aloevera text-3xl sm:text-4xl md:text-5xl lg:text-4xl mb-3 sm:mb-4"
+            className="aloevera-bold text-3xl sm:text-4xl md:text-5xl lg:text-4xl mb-3 sm:mb-4"
             style={{ 
-              fontWeight: 700,
               color: '#D46D64',
               opacity: 0
             }}
@@ -182,43 +182,55 @@ export default function CoreValuesSection() {
         {/* Values Grid */}
         <div className="values-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
           {values.map((value, index) => (
+            // GSAP animates this outer div
             <div 
               key={index}
               ref={el => cardRefs.current[index] = el}
-              className="group p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-[1.02] sm:hover:scale-105 active:scale-[0.98]"
-              style={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                opacity: 0
-              }}
+              className="h-full"
+              style={{ opacity: 0 }}
             >
-              {/* Icon */}
-              <div 
-                ref={el => iconRefs.current[index] = el}
-                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl flex items-center justify-center mb-3 sm:mb-4 icon-${value.animation}`}
+              {/* Inner card handles hover effects */}
+              <div
+                className="group h-full p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl transition-all duration-300 cursor-pointer flex flex-col"
                 style={{
-                  background: `linear-gradient(135deg, ${value.color}20 0%, ${value.color}40 100%)`,
-                  border: `1px solid ${value.color}50`
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: hoveredIndex === index ? `1.5px solid ${value.color}` : '1px solid rgba(255, 255, 255, 0.1)',
+                  boxShadow: hoveredIndex === index 
+                    ? `0 12px 28px ${value.color}40, 0 4px 12px rgba(0,0,0,0.5)` 
+                    : 'none',
+                  transform: hoveredIndex === index ? 'translateY(-6px)' : 'translateY(0)',
                 }}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
               >
-                <value.icon 
-                  className="text-xl sm:text-2xl transition-transform duration-300"
+                {/* Icon */}
+                <div 
+                  ref={el => iconRefs.current[index] = el}
+                  className={`w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl flex items-center justify-center mb-3 sm:mb-4 icon-${value.animation}`}
+                  style={{
+                    background: `linear-gradient(135deg, ${value.color}20 0%, ${value.color}40 100%)`,
+                    border: `1px solid ${value.color}50`
+                  }}
+                >
+                  <value.icon 
+                    className="text-xl sm:text-2xl transition-transform duration-300 group-hover:scale-110"
+                    style={{ color: value.color }}
+                  />
+                </div>
+
+                {/* Title */}
+                <h3 
+                  className="font-semibold text-lg sm:text-xl mb-2 sm:mb-3"
                   style={{ color: value.color }}
-                />
+                >
+                  {value.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-gray-400 leading-relaxed text-white flex-grow" style={{ fontSize: '16px' }}>
+                  {value.description}
+                </p>
               </div>
-
-              {/* Title */}
-              <h3 
-                className="font-semibold text-lg sm:text-xl mb-2 sm:mb-3"
-                style={{ color: value.color }}
-              >
-                {value.title}
-              </h3>
-
-              {/* Description */}
-              <p className="text-gray-400 leading-relaxed" style={{ fontSize: '16px' }}>
-                {value.description}
-              </p>
             </div>
           ))}
         </div>

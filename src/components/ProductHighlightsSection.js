@@ -119,13 +119,13 @@ export default function ProductHighlightsSection() {
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-10 lg:gap-16 items-center">
           
           {/* Left - Image */}
           <div className="flex justify-center lg:justify-start">
             <div 
               ref={imageRef}
-              className="relative w-64 h-80 sm:w-72 sm:h-96 md:w-80 md:h-[28rem] rounded-full overflow-hidden opacity-0"
+              className="relative w-56 h-96 sm:w-64 sm:h-[28rem] md:w-72 md:h-[34rem] rounded-[300px] overflow-hidden opacity-0"
               style={{
                 border: '4px solid rgba(255, 255, 255, 0.1)'
               }}
@@ -142,17 +142,16 @@ export default function ProductHighlightsSection() {
           <div ref={contentRef}>
             {/* Header */}
             <h2 
-              className="font-aloevera text-3xl sm:text-4xl md:text-5xl text-white mb-4 sm:mb-6 opacity-0"
-              style={{ fontWeight: 400 }}
+              className="aloevera-bold text-[40px] text-white mb-4 sm:mb-6 opacity-0"
             >
               Product Highlights
             </h2>
-            <p className="text-gray-300 text-sm sm:text-base mb-8 sm:mb-10 max-w-xl opacity-0">
+            <p className="lato-regular text-base text-gray-300 mb-8 sm:mb-10 opacity-0">
               Our products come with a range of unique features and benefits that make them a preferred choice among architects, builders, structural engineers, designers, contractors and house owners alike. We offer long-lasting and visually appealing colour-coated steel sheets that have the following features.
             </p>
 
             {/* Highlights Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 sm:gap-x-10 gap-y-10 sm:gap-y-12">
               {highlights.map((highlight, index) => (
                 <div 
                   key={index} 
@@ -161,21 +160,19 @@ export default function ProductHighlightsSection() {
                 >
                   {/* Checkmark Icon */}
                   <div 
-                    className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)'
-                    }}
+                    className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white"
                   >
-                    <FaCheck className="text-white text-xs sm:text-sm" />
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M20 6L9 17L4 12" stroke="#101828" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </div>
                   
                   {/* Text */}
                   <div>
-                    <h3 className="text-white font-semibold text-sm sm:text-base mb-1">
+                    <h3 className="aloevera-bold text-white text-2xl mb-1">
                       {highlight.title}
                     </h3>
-                    <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
+                    <p className="lato-regular text-base text-gray-400 leading-relaxed">
                       {highlight.description}
                     </p>
                   </div>

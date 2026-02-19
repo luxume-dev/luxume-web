@@ -85,22 +85,22 @@ export default function AboutUsSection() {
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
           {/* Left - Image */}
-          <div className="w-full lg:w-1/2">
+          <div className="w-full lg:w-2/5">
             <img 
               ref={imageRef}
-              src="/images/sheet.png" 
+              src="/images/sheet2.png" 
               alt="Colorful roofing sheets" 
               className="w-full h-auto"
-              style={{ opacity: 0 }}
+              style={{ opacity: 0, transform: 'rotate(10deg)' }}
             />
           </div>
 
           {/* Right - Text content */}
-          <div className="w-full lg:w-1/2">
+          <div className="w-full lg:w-3/5">
             {/* About Us heading */}
             <h2 
               ref={headingRef}
-              className="font-aloevera text-3xl sm:text-4xl mb-6"
+              className="aloevera-bold text-[36px] mb-6"
               style={{ color: '#C83C64', opacity: 0 }}
             >
               About Us

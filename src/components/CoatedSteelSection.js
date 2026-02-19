@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { FaShieldAlt, FaPalette, FaAward, FaPaintBrush, FaCloudRain, FaTools } from 'react-icons/fa';
+import { AntiCorrosionIcon, ChoiceOfColoursIcon, PremiumProductIcon, SuperiorPaintIcon, WeatherProofIcon, ZeroMaintenanceIcon } from './icons/CoatedSteelIcons';
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -48,6 +48,9 @@ export default function CoatedSteelSection() {
           trigger: featuresRef.current,
           start: 'top 80%',
           toggleActions: 'play none none none'
+        },
+        onComplete: () => {
+          gsap.set(cards, { clearProps: 'transform,opacity' });
         }
       });
     }
@@ -59,40 +62,40 @@ export default function CoatedSteelSection() {
 
   const features = [
     {
-      icon: FaShieldAlt,
+      icon: AntiCorrosionIcon,
+      iconBg: '#F3F4F6',
       title: 'Anti Corrosion',
       description: 'Resists rust and maintains beauty.',
-      color: '#6366F1'
     },
     {
-      icon: FaPalette,
+      icon: ChoiceOfColoursIcon,
+      iconBg: '#FFEDD4',
       title: 'Choice of Colours',
       description: 'Many vibrant colors to choose from.',
-      color: '#F97316'
     },
     {
-      icon: FaAward,
+      icon: PremiumProductIcon,
+      iconBg: '#F3E8FF',
       title: 'Premium Product',
       description: 'Aluminum-zinc color-coated sheets that stand out in quality and appearance.',
-      color: '#10B981'
     },
     {
-      icon: FaPaintBrush,
+      icon: SuperiorPaintIcon,
+      iconBg: '#FCE7F3',
       title: 'Superior Paint Technology',
       description: 'Advanced paint technology that keeps colors bright.',
-      color: '#EF4444'
     },
     {
-      icon: FaCloudRain,
+      icon: WeatherProofIcon,
+      iconBg: '#DBEAFE',
       title: 'Weather Proof',
       description: "Suitable for Kerala's climate with intense sun and heavy rain.",
-      color: '#06B6D4'
     },
     {
-      icon: FaTools,
+      icon: ZeroMaintenanceIcon,
+      iconBg: '#DCFCE7',
       title: 'Zero Maintenance',
       description: 'Requires no maintenance.',
-      color: '#8B5CF6'
     }
   ];
 
@@ -110,14 +113,14 @@ export default function CoatedSteelSection() {
             >
               Inside Luxume's Coated Steel Sheets
             </p>
-            <h2 className="font-aloevera text-3xl sm:text-4xl md:text-5xl leading-tight mb-4 sm:mb-6" style={{ fontWeight: 400 }}>
-              <span className="text-[#1a1a4e]">Understanding</span>
+            <h2 className="aloevera-bold text-[64px] leading-tight mb-4 sm:mb-6">
+              <span className="text-[#1C1E54]">Understanding</span>
               <br />
-              <span className="text-[#1a1a4e]">the Layers of</span>
+              <span className="text-[#1C1E54]">the Layers of</span>
               <br />
-              <span style={{ color: '#E91E63' }}>Coated Steel</span>
+              <span style={{ color: '#C83C64' }}>Coated Steel</span>
               <br />
-              <span style={{ color: '#E91E63' }}>Sheets</span>
+              <span style={{ color: '#C83C64' }}>Sheets</span>
             </h2>
             <p className="text-gray-600 text-sm sm:text-base max-w-md">
               This diagram illustrates the multiple layers involved in the production of coated steel sheets, highlighting their protective and functional coatings.
@@ -200,11 +203,7 @@ export default function CoatedSteelSection() {
         {/* Superior Protection Section */}
         <div className="text-center mb-10 sm:mb-12 md:mb-14">
           <h2 
-            className="font-aloevera text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4"
-            style={{ 
-              fontWeight: 700,
-              color: '#C83C64'
-            }}
+            className="aloevera-bold text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 text-[#C83C64]"
           >
             Superior Protection and Style
           </h2>
@@ -219,7 +218,7 @@ export default function CoatedSteelSection() {
             <div 
               key={index}
               ref={el => featureCardsRef.current[index] = el}
-              className="p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer group"
+              className="p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-white transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 cursor-pointer group hover:border-[#C83C64]"
               style={{
                 border: '1px solid #F0F0F0',
                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
@@ -228,19 +227,13 @@ export default function CoatedSteelSection() {
               {/* Icon */}
               <div 
                 className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110"
-                style={{
-                  background: `${feature.color}15`,
-                  border: `1px solid ${feature.color}30`
-                }}
+                style={{ background: feature.iconBg }}
               >
-                <feature.icon 
-                  className="text-xl sm:text-2xl transition-transform duration-300 group-hover:scale-110"
-                  style={{ color: feature.color }}
-                />
+                <feature.icon />
               </div>
 
               {/* Title */}
-              <h3 className="font-semibold text-base sm:text-lg text-[#1a1a4e] mb-2">
+              <h3 className="aloevera-medium text-[20px] text-[#1a1a4e] mb-2 transition-colors duration-300 group-hover:text-[#C83C64]">
                 {feature.title}
               </h3>
 

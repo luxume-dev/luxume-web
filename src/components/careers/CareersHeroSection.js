@@ -71,7 +71,7 @@ export default function CareersHeroSection() {
         >
           <h1 
             ref={titleRef}
-            className="font-aloevera font-bold text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-3 sm:mb-4 opacity-0"
+            className="aloevera-bold text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-3 sm:mb-4 opacity-0"
           >
             Join the<br />Luxume Team
           </h1>

@@ -3,7 +3,6 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from 'react-icons/fa';
 import { useContactForm } from '@/hooks/useContactForm';
 
 if (typeof window !== 'undefined') {
@@ -211,7 +210,7 @@ export default function ContactSection() {
         <div className="text-center mb-12 mt-10">
           <h1 
             ref={headingRef}
-            className="font-aloevera font-bold text-4xl sm:text-5xl mb-4 text-[#C83C64]"
+            className="aloevera-bold text-4xl sm:text-5xl mb-4 text-[#C83C64]"
             style={{ opacity: 0 }}
           >
             Get in Touch
@@ -237,10 +236,13 @@ export default function ContactSection() {
               <div className="flex gap-4">
                 <div 
                   ref={el => iconRefs.current[0] = el}
-                  className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: '#0a0a2e' }}
+                  className="w-12 h-12 flex items-center justify-center flex-shrink-0 rounded-[10px]"
+                  style={{ backgroundColor: '#0F172B' }}
                 >
-                  <FaMapMarkerAlt className="text-white" />
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 10C20 14.993 14.461 20.193 12.601 21.799C12.4277 21.9293 12.2168 21.9998 12 21.9998C11.7832 21.9998 11.5723 21.9293 11.399 21.799C9.539 20.193 4 14.993 4 10C4 7.87827 4.84285 5.84344 6.34315 4.34315C7.84344 2.84285 9.87827 2 12 2C14.1217 2 16.1566 2.84285 17.6569 4.34315C19.1571 5.84344 20 7.87827 20 10Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 </div>
                 <div>
                   <h3 className="font-lato font-semibold text-gray-800 mb-2">Visit Us</h3>
@@ -263,10 +265,12 @@ export default function ContactSection() {
               <div className="flex gap-4">
                 <div 
                   ref={el => iconRefs.current[1] = el}
-                  className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: '#0a0a2e' }}
+                  className="w-12 h-12 flex items-center justify-center flex-shrink-0 rounded-[10px]"
+                  style={{ backgroundColor: '#0F172B' }}
                 >
-                  <FaPhone className="text-white" />
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21.9994 16.92V19.92C22.0006 20.1985 21.9435 20.4741 21.832 20.7293C21.7204 20.9845 21.5567 21.2136 21.3515 21.4018C21.1463 21.5901 20.904 21.7335 20.6402 21.8227C20.3764 21.9119 20.0968 21.945 19.8194 21.92C16.7423 21.5856 13.7864 20.5341 11.1894 18.85C8.77327 17.3146 6.72478 15.2661 5.18945 12.85C3.49942 10.2412 2.44769 7.27097 2.11944 4.17997C2.09446 3.90344 2.12732 3.62474 2.21595 3.3616C2.30457 3.09846 2.44702 2.85666 2.63421 2.6516C2.82141 2.44653 3.04925 2.28268 3.30324 2.1705C3.55722 2.05831 3.83179 2.00024 4.10945 1.99997H7.10945C7.59475 1.9952 8.06524 2.16705 8.43321 2.48351C8.80118 2.79996 9.04152 3.23942 9.10944 3.71997C9.23607 4.68004 9.47089 5.6227 9.80945 6.52997C9.94399 6.8879 9.97311 7.27689 9.89335 7.65086C9.8136 8.02482 9.62831 8.36809 9.35944 8.63998L8.08945 9.90997C9.513 12.4135 11.5859 14.4864 14.0894 15.91L15.3594 14.64C15.6313 14.3711 15.9746 14.1858 16.3486 14.1061C16.7225 14.0263 17.1115 14.0554 17.4694 14.19C18.3767 14.5285 19.3194 14.7634 20.2794 14.89C20.7652 14.9585 21.2088 15.2032 21.526 15.5775C21.8431 15.9518 22.0116 16.4296 21.9994 16.92Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 </div>
                 <div>
                   <h3 className="font-lato font-semibold text-gray-800 mb-2">Call Us</h3>
@@ -288,10 +292,13 @@ export default function ContactSection() {
               <div className="flex gap-4">
                 <div 
                   ref={el => iconRefs.current[2] = el}
-                  className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: '#0a0a2e' }}
+                  className="w-12 h-12 flex items-center justify-center flex-shrink-0 rounded-[10px]"
+                  style={{ backgroundColor: '#0F172B' }}
                 >
-                  <FaEnvelope className="text-white" />
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 4H4C2.89543 4 2 4.89543 2 6V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V6C22 4.89543 21.1046 4 20 4Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M22 7L13.03 12.7C12.7213 12.8934 12.3643 12.996 12 12.996C11.6357 12.996 11.2787 12.8934 10.97 12.7L2 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 </div>
                 <div>
                   <h3 className="font-lato font-semibold text-gray-800 mb-2">Email Us</h3>
@@ -313,10 +320,13 @@ export default function ContactSection() {
               <div className="flex gap-4">
                 <div 
                   ref={el => iconRefs.current[3] = el}
-                  className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: '#0a0a2e' }}
+                  className="w-12 h-12 flex items-center justify-center flex-shrink-0 rounded-[10px]"
+                  style={{ backgroundColor: '#0F172B' }}
                 >
-                  <FaClock className="text-white" />
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M12 6V12L16 14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 </div>
                 <div>
                   <h3 className="font-lato font-semibold text-gray-800 mb-2">Business Hours</h3>

@@ -127,11 +127,11 @@ export default function StatsSection() {
                 ref={el => statRefs.current[index] = el}
                 className="flex flex-col items-center p-2 sm:p-3"
               >
-                <h3 className="font-aloevera text-[#1a1a4e] text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-1 sm:mb-2" style={{ fontWeight: 500 }}>
+                <h3 className="aloevera-medium text-[#1a1a4e] text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-1 sm:mb-2">
                   {animatedValues[index]}
                 </h3>
-                <p className="font-aloevera text-gray-500 text-xs sm:text-sm" style={{ fontWeight: 300 }}>{stat.label1}</p>
-                <p className="font-aloevera text-gray-500 text-xs sm:text-sm" style={{ fontWeight: 300 }}>{stat.label2}</p>
+                <p className="aloevera-light text-gray-500 text-xs sm:text-sm">{stat.label1}</p>
+                <p className="aloevera-light text-gray-500 text-xs sm:text-sm">{stat.label2}</p>
               </div>
             ))}
           </div>

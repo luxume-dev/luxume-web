@@ -74,7 +74,7 @@ export default function BlogHeroSection() {
         <div className="relative z-10 h-full flex flex-col items-start justify-center text-left px-4 sm:px-8 md:px-16 lg:px-24">
           <h1 
             ref={headingRef}
-            className="font-aloevera font-bold text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-2 sm:mb-3 md:mb-4"
+            className="aloevera-bold text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-2 sm:mb-3 md:mb-4"
             style={{ opacity: 0 }}
           >
             Luxume Insights & Updates
