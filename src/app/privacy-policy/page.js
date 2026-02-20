@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-export default function PrivacyPolicy() {
+export default function PrivacyPolicy() { 
   return (
     <main className="min-h-screen bg-white">
 
