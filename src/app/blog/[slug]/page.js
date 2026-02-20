@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { getBlogBySlug } from '@/services/supabase';
+import { useBlog } from '@/hooks/useBlogs';
+
 
 /* ─── Recursive Content Block Renderer ─────────────────────────────── */
 
@@ -99,19 +100,7 @@ function ContentBlockRenderer({ block }) {
 
 export default function BlogDetailPage() {
   const { slug } = useParams();
-  const [blog, setBlog] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchBlog() {
-      const { data, error } = await getBlogBySlug(slug);
-      if (!error && data) {
-        setBlog(data);
-      }
-      setLoading(false);
-    }
-    if (slug) fetchBlog();
-  }, [slug]);
+  const { data: blog, isLoading: loading } = useBlog(slug);
 
   /* ─── Dynamic SEO Head Tags ─────────────────────────────────────── */
   useEffect(() => {

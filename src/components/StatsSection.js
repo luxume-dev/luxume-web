@@ -51,7 +51,7 @@ export default function StatsSection() {
     if (!imageRef.current || !statsContainerRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Image scale animation
+      // Image scale animation (keep — already unique scrub-based)
       gsap.fromTo(imageRef.current,
         { 
           scaleX: 1.2,
@@ -71,28 +71,32 @@ export default function StatsSection() {
         }
       );
 
-      // Stat cards fade-up animation with stagger
-      gsap.fromTo(statRefs.current,
-        {
-          opacity: 0,
-          y: 50
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: statsContainerRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none',
-            onEnter: () => {
-              // Trigger counter animation
-              stats.forEach((stat, index) => {
+      // Stat cards — elastic scale-pop with bounce
+      statRefs.current.forEach((stat, index) => {
+        if (!stat) return;
+        gsap.fromTo(stat,
+          {
+            opacity: 0,
+            scale: 0,
+            rotate: -10 + index * 5,
+          },
+          {
+            opacity: 1,
+            scale: 1,
+            rotate: 0,
+            duration: 0.9,
+            delay: index * 0.12,
+            ease: 'elastic.out(1, 0.5)',
+            scrollTrigger: {
+              trigger: statsContainerRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none none',
+              onEnter: () => {
+                // Trigger counter animation
+                const statData = stats[index];
                 const obj = { val: 0 };
                 gsap.to(obj, {
-                  val: stat.targetNumber,
+                  val: statData.targetNumber,
                   duration: 2,
                   delay: index * 0.15,
                   ease: 'power2.out',
@@ -100,16 +104,16 @@ export default function StatsSection() {
                     const currentVal = Math.round(obj.val);
                     setAnimatedValues(prev => {
                       const newValues = [...prev];
-                      newValues[index] = `${stat.prefix || ''}${currentVal}${stat.suffix || ''}`;
+                      newValues[index] = `${statData.prefix || ''}${currentVal}${statData.suffix || ''}`;
                       return newValues;
                     });
                   }
                 });
-              });
+              }
             }
           }
-        }
-      );
+        );
+      });
     }, statsContainerRef);
 
     return () => ctx.revert();
@@ -126,6 +130,7 @@ export default function StatsSection() {
                 key={index} 
                 ref={el => statRefs.current[index] = el}
                 className="flex flex-col items-center p-2 sm:p-3"
+                style={{ opacity: 0 }}
               >
                 <h3 className="aloevera-medium text-[#1a1a4e] text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-1 sm:mb-2">
                   {animatedValues[index]}

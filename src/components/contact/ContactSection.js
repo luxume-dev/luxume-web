@@ -247,9 +247,9 @@ export default function ContactSection() {
                 <div>
                   <h3 className="font-lato font-semibold text-gray-800 mb-2">Visit Us</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    Luxume Manufacturing Facility<br />
-                    Industrial Park, Sector 42<br />
-                    Mumbai, Maharashtra 400001<br />
+                    2nd Floor, SajMahal Building,<br />
+                    Madakapilli Lane, Ernakulam South,<br />
+                    Ernakulam, Kerala 682016<br />
                     India
                   </p>
                 </div>
@@ -275,9 +275,7 @@ export default function ContactSection() {
                 <div>
                   <h3 className="font-lato font-semibold text-gray-800 mb-2">Call Us</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    Sales: +91 22 1234 5678<br />
-                    Support: +91 22 8765 4321<br />
-                    Toll Free: 1800 123 4567
+                    +91 97785 57752
                   </p>
                 </div>
               </div>
@@ -303,9 +301,7 @@ export default function ContactSection() {
                 <div>
                   <h3 className="font-lato font-semibold text-gray-800 mb-2">Email Us</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    info@luxume.com<br />
-                    sales@luxume.com<br />
-                    support@luxume.com
+                    info@luxume.com
                   </p>
                 </div>
               </div>

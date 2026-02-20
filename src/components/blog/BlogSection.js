@@ -4,15 +4,14 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { getPublishedBlogs } from '@/services/supabase';
+import { useBlogs } from '@/hooks/useBlogs';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
 export default function BlogSection() {
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data: blogs = [], isLoading: loading } = useBlogs();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -20,17 +19,6 @@ export default function BlogSection() {
   const filtersRef = useRef(null);
   const searchRef = useRef(null);
   const cardRefs = useRef([]);
-
-  useEffect(() => {
-    async function fetchBlogs() {
-      const { data, error } = await getPublishedBlogs();
-      if (!error && data) {
-        setBlogs(data);
-      }
-      setLoading(false);
-    }
-    fetchBlogs();
-  }, []);
 
   // Animate filters + search on mount
   useEffect(() => {

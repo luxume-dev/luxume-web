@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { FaStar } from 'react-icons/fa';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { FaStar, FaUserCircle } from 'react-icons/fa';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -16,24 +16,41 @@ export default function TestimonialsSection() {
   const cardRefs = useRef([]);
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
+  // Spotlight hover effect
+  const handleMouseMove = useCallback((e, index) => {
+    const card = cardRefs.current[index]?.querySelector('.testimonial-inner');
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const spotX = (x / rect.width) * 100;
+    const spotY = (y / rect.height) * 100;
+    card.style.background = `radial-gradient(circle at ${spotX}% ${spotY}%, rgba(200, 60, 100, 0.05) 0%, rgba(255,255,255,1) 50%)`;
+  }, []);
+
+  const handleMouseLeave = useCallback((index) => {
+    const card = cardRefs.current[index]?.querySelector('.testimonial-inner');
+    if (card) {
+      card.style.background = '#FFFFFF';
+    }
+    setHoveredIndex(null);
+  }, []);
+
   const testimonials = [
     {
       quote: "Luxume roofing completely transformed our home. The finish is premium, the structure feels solid, and even after heavy rains and heat, the performance is outstanding.",
       name: "Priya Menon",
       location: "Calicut",
-      avatar: "https://randomuser.me/api/portraits/women/44.jpg"
     },
     {
       quote: "We chose Luxume for its strength and design flexibility. The installation was smooth, and the sheets deliver exactly what they promise—durability and style.",
       name: "Rajesh Kumar",
       location: "Bangalore",
-      avatar: "https://randomuser.me/api/portraits/men/32.jpg"
     },
     {
       quote: "After using Luxume roofing sheets, we no longer worry about weather damage. The quality is unmatched, and the look adds real value to the property.",
       name: "Anjali Sharma",
       location: "Ernakulam",
-      avatar: "https://randomuser.me/api/portraits/women/68.jpg"
     }
   ];
 
@@ -41,13 +58,13 @@ export default function TestimonialsSection() {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Heading — fade up
+      // Heading — scale up from tiny with rotation
       gsap.fromTo(headingRef.current,
-        { opacity: 0, y: 30 },
+        { opacity: 0, scale: 0.8, rotateZ: -2 },
         {
-          opacity: 1, y: 0,
+          opacity: 1, scale: 1, rotateZ: 0,
           duration: 1,
-          ease: 'power2.out',
+          ease: 'back.out(1.4)',
           scrollTrigger: {
             trigger: headingRef.current,
             start: 'top 85%',
@@ -56,13 +73,13 @@ export default function TestimonialsSection() {
         }
       );
 
-      // Description — fade up with delay
+      // Description — blur-in from right
       gsap.fromTo(descRef.current,
-        { opacity: 0, y: 20 },
+        { opacity: 0, x: 50, filter: 'blur(5px)' },
         {
-          opacity: 1, y: 0,
+          opacity: 1, x: 0, filter: 'blur(0px)',
           duration: 0.9,
-          delay: 0.15,
+          delay: 0.2,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: headingRef.current,
@@ -72,16 +89,16 @@ export default function TestimonialsSection() {
         }
       );
 
-      // Testimonial cards — staggered slide up
+      // Testimonial cards — cascade waterfall (diagonal slide)
       cardRefs.current.forEach((card, index) => {
         if (!card) return;
 
         gsap.fromTo(card,
-          { opacity: 0, y: 50 },
+          { opacity: 0, x: -40 + (index * 20), y: 60, rotate: -3 + index * 2 },
           {
-            opacity: 1, y: 0,
-            duration: 0.8,
-            delay: index * 0.15,
+            opacity: 1, x: 0, y: 0, rotate: 0,
+            duration: 0.9,
+            delay: index * 0.18,
             ease: 'power3.out',
             scrollTrigger: {
               trigger: sectionRef.current.querySelector('.testimonials-grid'),
@@ -126,26 +143,29 @@ export default function TestimonialsSection() {
               style={{ opacity: 0 }}
             >
               <div 
-                className="flex flex-col bg-white p-6 sm:p-8 rounded-2xl transition-all duration-300 cursor-pointer h-full"
+                className="testimonial-inner flex flex-col bg-white p-6 sm:p-8 rounded-2xl cursor-pointer h-full"
                 style={{
                   boxShadow: hoveredIndex === index 
-                    ? '0 12px 28px rgba(200, 60, 100, 0.2), 0 4px 12px rgba(0,0,0,0.05)' 
+                    ? '0 20px 40px rgba(200, 60, 100, 0.15), 0 4px 12px rgba(0,0,0,0.05)' 
                     : '0 4px 20px rgba(0, 0, 0, 0.08)',
                   border: hoveredIndex === index 
                     ? '1.5px solid #C83C64' 
                     : '1px solid #F5F5F5',
-                  transform: hoveredIndex === index ? 'translateY(-6px)' : 'translateY(0)'
+                  transform: hoveredIndex === index ? 'translateY(-4px) rotateZ(0.5deg)' : 'translateY(0) rotateZ(0deg)',
+                  transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)'
                 }}
                 onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
+                onMouseMove={(e) => handleMouseMove(e, index)}
+                onMouseLeave={() => handleMouseLeave(index)}
               >
                 {/* Quote Icon */}
                 <div 
-                  className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center mb-4 transition-transform duration-300"
+                  className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center mb-4"
                   style={{ 
                     background: '#C83C64', 
                     borderRadius: '20px',
-                    transform: hoveredIndex === index ? 'scale(1.1)' : 'scale(1)'
+                    transform: hoveredIndex === index ? 'scale(1.1) rotate(10deg)' : 'scale(1) rotate(0deg)',
+                    transition: 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)'
                   }}
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -157,29 +177,42 @@ export default function TestimonialsSection() {
                 {/* Stars */}
                 <div className="flex gap-1 mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <FaStar key={i} className="text-yellow-400 text-sm sm:text-base" />
+                    <FaStar 
+                      key={i} 
+                      className="text-sm sm:text-base"
+                      style={{
+                        color: hoveredIndex === index ? '#C83C64' : '#FBBF24',
+                        transition: `color 0.3s ease ${i * 0.05}s`
+                      }}
+                    />
                   ))}
                 </div>
 
                 {/* Quote Text */}
                 <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-6 flex-grow">
-                  "{testimonial.quote}"
+                  &quot;{testimonial.quote}&quot;
                 </p>
 
                 {/* Divider */}
                 <div 
-                  className="w-12 h-1 mb-4 rounded-full transition-all duration-300"
-                  style={{ background: '#C83C64', width: hoveredIndex === index ? '48px' : '32px' }}
+                  className="h-1 mb-4 rounded-full"
+                  style={{ 
+                    background: 'linear-gradient(90deg, #C83C64, #E91E63)', 
+                    width: hoveredIndex === index ? '64px' : '32px',
+                    transition: 'width 0.4s cubic-bezier(0.22, 1, 0.36, 1)'
+                  }}
                 />
 
                 {/* Author */}
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <img 
-                      src={testimonial.avatar}
-                      alt={testimonial.name}
-                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover transition-transform duration-300"
-                      style={{ transform: hoveredIndex === index ? 'scale(1.1)' : 'scale(1)' }}
+                    <FaUserCircle 
+                      className="w-10 h-10 sm:w-12 sm:h-12"
+                      style={{ 
+                        color: hoveredIndex === index ? '#C83C64' : '#d1d5db',
+                        transform: hoveredIndex === index ? 'scale(1.1)' : 'scale(1)',
+                        transition: 'all 0.3s ease',
+                      }}
                     />
                     {/* Verified Badge */}
                     <div 
@@ -193,8 +226,11 @@ export default function TestimonialsSection() {
                   </div>
                   <div>
                     <h4 
-                      className="font-semibold text-sm sm:text-base text-[#1a1a4e] transition-colors duration-300"
-                      style={{ color: hoveredIndex === index ? '#C83C64' : '#1a1a4e' }}
+                      className="font-semibold text-sm sm:text-base"
+                      style={{ 
+                        color: hoveredIndex === index ? '#C83C64' : '#1a1a4e',
+                        transition: 'color 0.3s ease'
+                      }}
                     >
                       {testimonial.name}
                     </h4>
@@ -211,4 +247,3 @@ export default function TestimonialsSection() {
     </section>
   );
 }
-

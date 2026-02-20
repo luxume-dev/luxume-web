@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { FaRecycle, FaLeaf, FaShieldAlt, FaUsers, FaMicrochip, FaHeart } from 'react-icons/fa';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -16,6 +16,7 @@ export default function CoreValuesSection() {
   const cardRefs = useRef([]);
   const iconRefs = useRef([]);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+
   const values = [
     {
       icon: FaRecycle,
@@ -61,17 +62,35 @@ export default function CoreValuesSection() {
     }
   ];
 
+  // Handle hover — gradient border sweep + icon spin
+  const handleHover = useCallback((index) => {
+    setHoveredIndex(index);
+    const icon = iconRefs.current[index];
+    if (icon) {
+      gsap.to(icon, { rotate: 360, duration: 0.6, ease: 'power2.inOut' });
+    }
+  }, []);
+
+  const handleLeave = useCallback((index) => {
+    setHoveredIndex(null);
+    const icon = iconRefs.current[index];
+    if (icon) {
+      gsap.to(icon, { rotate: 0, duration: 0.4, ease: 'power2.out' });
+    }
+  }, []);
+
   useEffect(() => {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Heading — fade up
+      // Heading — slide in from left with clip reveal
       gsap.fromTo(headingRef.current,
-        { opacity: 0, y: 30 },
+        { opacity: 0, x: -60, clipPath: 'inset(0 100% 0 0)' },
         {
-          opacity: 1, y: 0,
+          opacity: 1, x: 0,
+          clipPath: 'inset(0 0% 0 0)',
           duration: 1,
-          ease: 'power2.out',
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: headingRef.current,
             start: 'top 85%',
@@ -80,13 +99,13 @@ export default function CoreValuesSection() {
         }
       );
 
-      // Subtitle — fade up with delay
+      // Subtitle — typewriter-like fade from right
       gsap.fromTo(subtitleRef.current,
-        { opacity: 0, y: 20 },
+        { opacity: 0, x: 40 },
         {
-          opacity: 1, y: 0,
+          opacity: 1, x: 0,
           duration: 0.9,
-          delay: 0.15,
+          delay: 0.2,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: headingRef.current,
@@ -96,17 +115,18 @@ export default function CoreValuesSection() {
         }
       );
 
-      // Cards — staggered fade up
+      // Cards — horizontal slide-in from alternating sides
       cardRefs.current.forEach((card, index) => {
         if (!card) return;
+        const fromLeft = index % 2 === 0;
 
         gsap.fromTo(card,
-          { opacity: 0, y: 40, scale: 0.95 },
+          { opacity: 0, x: fromLeft ? -80 : 80, rotateY: fromLeft ? -10 : 10 },
           {
-            opacity: 1, y: 0, scale: 1,
+            opacity: 1, x: 0, rotateY: 0,
             duration: 0.8,
             delay: index * 0.1,
-            ease: 'power2.out',
+            ease: 'power3.out',
             scrollTrigger: {
               trigger: sectionRef.current.querySelector('.values-grid'),
               start: 'top 82%',
@@ -156,7 +176,7 @@ export default function CoreValuesSection() {
       <div 
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.78) 100%)'
+          background: 'linear-gradient(180deg, rgba(10, 10, 30, 0.93) 0%, rgba(15, 15, 40, 0.90) 100%)'
         }}
       />
 
@@ -187,21 +207,23 @@ export default function CoreValuesSection() {
               key={index}
               ref={el => cardRefs.current[index] = el}
               className="h-full"
-              style={{ opacity: 0 }}
+              style={{ opacity: 0, perspective: '800px' }}
             >
               {/* Inner card handles hover effects */}
               <div
-                className="group h-full p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl transition-all duration-300 cursor-pointer flex flex-col"
+                className="group h-full p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl cursor-pointer flex flex-col"
                 style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: hoveredIndex === index ? `1.5px solid ${value.color}` : '1px solid rgba(255, 255, 255, 0.1)',
+                  background: hoveredIndex === index ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.025)',
+                  border: hoveredIndex === index ? `1px solid ${value.color}30` : '1px solid rgba(255, 255, 255, 0.06)',
                   boxShadow: hoveredIndex === index 
-                    ? `0 12px 28px ${value.color}40, 0 4px 12px rgba(0,0,0,0.5)` 
+                    ? `0 0 20px ${value.color}30, inset 0 1px 0 ${value.color}20` 
                     : 'none',
-                  transform: hoveredIndex === index ? 'translateY(-6px)' : 'translateY(0)',
+                  transform: hoveredIndex === index ? 'scale(1.04)' : 'scale(1)',
+                  transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
+                  backdropFilter: hoveredIndex === index ? 'blur(12px)' : 'blur(0px)',
                 }}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
+                onMouseEnter={() => handleHover(index)}
+                onMouseLeave={() => handleLeave(index)}
               >
                 {/* Icon */}
                 <div 
@@ -213,7 +235,7 @@ export default function CoreValuesSection() {
                   }}
                 >
                   <value.icon 
-                    className="text-xl sm:text-2xl transition-transform duration-300 group-hover:scale-110"
+                    className="text-xl sm:text-2xl"
                     style={{ color: value.color }}
                   />
                 </div>
@@ -238,4 +260,3 @@ export default function CoreValuesSection() {
     </section>
   );
 }
-

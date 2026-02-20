@@ -30,14 +30,20 @@ export default function HeroSection() {
 
           {/* CTA Button */}
           <a
-            href="tel:+1234567890"
-            className="inline-flex items-center justify-center text-white font-medium rounded transition-all duration-300 shadow-lg hover:shadow-xl hover:opacity-90 w-full sm:w-auto px-8 sm:px-10 py-3 sm:py-4 text-sm sm:text-base"
+            href="/contact"
+            className="group inline-flex items-center gap-3 text-white font-medium rounded-lg transition-all duration-300 shadow-lg hover:shadow-2xl w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 text-sm sm:text-base"
             style={{ 
               backgroundColor: '#C83C64',
-              maxWidth: '225px'
+              maxWidth: '250px',
             }}
           >
-            Call Now
+            <span className="aloevera-medium">Contact Us</span>
+            <svg 
+              className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" 
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
           </a>
         </div>
       </div>

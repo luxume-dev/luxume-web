@@ -30,7 +30,7 @@ export default function AboutSection() {
         }
       });
 
-      // Content animations (fade in when section is visible)
+      // Content animations (triggered when section is visible)
       const contentTl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -39,35 +39,46 @@ export default function AboutSection() {
         }
       });
 
-      // Animate decorative line first
+      // Animate decorative line (keep as is — already unique)
       contentTl.fromTo(lineRef.current,
         { scaleX: 0, opacity: 0 },
         { scaleX: 1, opacity: 1, duration: 0.6, ease: 'power2.out' }
       );
 
-      // Animate heading with a slide up and fade
-      contentTl.fromTo(headingRef.current,
-        { opacity: 0, y: 50, clipPath: 'inset(100% 0% 0% 0%)' },
-        { 
-          opacity: 1, 
-          y: 0, 
-          clipPath: 'inset(0% 0% 0% 0%)',
-          duration: 0.8, 
-          ease: 'power3.out'
-        },
-        '-=0.3'
-      );
+      // Heading — letter-stagger reveal
+      const headingEl = headingRef.current;
+      if (headingEl) {
+        // Wrap each word's text in spans for animation
+        const spans = headingEl.querySelectorAll('span');
+        spans.forEach(span => {
+          const text = span.textContent;
+          span.innerHTML = text.split('').map(char => 
+            char === ' ' ? ' ' : `<span class="inline-block" style="opacity:0;transform:translateY(20px) rotateX(40deg)">${char}</span>`
+          ).join('');
+        });
 
-      // Animate description
+        const chars = headingEl.querySelectorAll('.inline-block');
+        contentTl.to(chars, {
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          duration: 0.04,
+          stagger: 0.03,
+          ease: 'power2.out',
+        }, '-=0.2');
+      }
+
+      // Description — blur-to-sharp fade
       contentTl.fromTo(descriptionRef.current,
-        { opacity: 0, y: 30 },
+        { opacity: 0, filter: 'blur(8px)', y: 15 },
         { 
           opacity: 1, 
+          filter: 'blur(0px)',
           y: 0, 
-          duration: 0.7, 
+          duration: 1, 
           ease: 'power2.out'
         },
-        '-=0.4'
+        '-=0.3'
       );
 
     }, sectionRef);
@@ -96,7 +107,7 @@ export default function AboutSection() {
         <h2 
           ref={headingRef}
           className="mb-5 text-2xl sm:text-3xl md:text-4xl lg:text-[44px] leading-tight"
-          style={{ opacity: 0 }}
+          style={{ perspective: '600px' }}
         >
           <span className="aloevera-bold text-[#C83C64]">
             Secure &amp; Stylish

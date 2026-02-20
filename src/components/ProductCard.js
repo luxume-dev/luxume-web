@@ -8,7 +8,8 @@ export default function ProductCard({ product }) {
   const tags = Array.isArray(product.features) ? product.features.slice(0, 3) : [];
 
   return (
-    <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full border border-gray-100">
+    <Link href={`/products/${product.slug}`} className="block">
+    <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full border border-gray-100 cursor-pointer">
       {/* Image Container */}
       <div className="relative h-80 w-full overflow-hidden">
         {product.product_image_url ? (
@@ -56,24 +57,23 @@ export default function ProductCard({ product }) {
         )}
 
         {/* Button */}
-        <Link href={`/products/${product.slug}`}>
-          <button className="w-full bg-[#C83C64] hover:bg-[#a62f50] text-white py-3.5 rounded-xl font-medium transition-colors duration-300 flex items-center justify-center gap-2 group-hover:gap-3">
-            Learn More
-            <svg 
-              width="16" 
-              height="16" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-            >
-              <path d="M5 12h14m-7-7 7 7-7 7"/>
-            </svg>
-          </button>
-        </Link>
+        <div className="w-full bg-[#C83C64] hover:bg-[#a62f50] text-white py-3.5 rounded-xl font-medium transition-colors duration-300 flex items-center justify-center gap-2 group-hover:gap-3">
+          Learn More
+          <svg 
+            width="16" 
+            height="16" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          >
+            <path d="M5 12h14m-7-7 7 7-7 7"/>
+          </svg>
+        </div>
       </div>
     </div>
+    </Link>
   );
 }

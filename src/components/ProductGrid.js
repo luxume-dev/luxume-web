@@ -1,25 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { getProducts } from '@/services/supabase/products.service';
+import { useProducts } from '@/hooks/useProducts';
 import ProductCard from './ProductCard';
 
 export default function ProductGrid() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data: products, isLoading } = useProducts();
 
-  useEffect(() => {
-    async function fetchProducts() {
-      const { data, error } = await getProducts();
-      if (!error && data) {
-        setProducts(data);
-      }
-      setLoading(false);
-    }
-    fetchProducts();
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <section className="pt-8 pb-16 md:pt-12 md:pb-24 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
@@ -45,7 +32,7 @@ export default function ProductGrid() {
     );
   }
 
-  if (!products.length) {
+  if (!products?.length) {
     return (
       <section className="pt-8 pb-16 md:pt-12 md:pb-24 px-4 bg-white">
         <div className="max-w-7xl mx-auto text-center text-gray-500">

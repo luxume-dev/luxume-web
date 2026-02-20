@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AntiCorrosionIcon, ChoiceOfColoursIcon, PremiumProductIcon, SuperiorPaintIcon, WeatherProofIcon, ZeroMaintenanceIcon } from './icons/CoatedSteelIcons';
@@ -14,6 +14,40 @@ export default function CoatedSteelSection() {
   const featuresRef = useRef(null);
   const featureCardsRef = useRef([]);
 
+  // 3D tilt hover handler
+  const handleMouseMove = useCallback((e, index) => {
+    const card = featureCardsRef.current[index];
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -8;
+    const rotateY = ((x - centerX) / centerX) * 8;
+    
+    card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+    
+    // Inner glow follows cursor
+    const glowX = (x / rect.width) * 100;
+    const glowY = (y / rect.height) * 100;
+    card.style.background = `radial-gradient(circle at ${glowX}% ${glowY}%, rgba(200, 60, 100, 0.06) 0%, rgba(255,255,255,1) 60%)`;
+  }, []);
+
+  const handleMouseLeave = useCallback((index) => {
+    const card = featureCardsRef.current[index];
+    if (!card) return;
+    gsap.to(card, {
+      rotateX: 0,
+      rotateY: 0,
+      scale: 1,
+      duration: 0.5,
+      ease: 'power2.out',
+      clearProps: 'transform'
+    });
+    card.style.background = '#FFFFFF';
+  }, []);
+
   // GSAP animation when language changes
   useEffect(() => {
     if (imageRef.current) {
@@ -24,25 +58,27 @@ export default function CoatedSteelSection() {
     }
   }, [language]);
 
-  // Scroll-triggered animation for feature cards
+  // Scroll-triggered animation for feature cards — rotate-in from bottom
   useEffect(() => {
     const cards = featureCardsRef.current;
     
     if (cards.length > 0) {
-      // Set initial state
+      // Set initial state — rotated in with perspective
       gsap.set(cards, { 
         opacity: 0, 
-        y: 60,
-        scale: 0.9
+        rotateX: 25,
+        y: 80,
+        transformPerspective: 800,
+        transformOrigin: 'center bottom'
       });
 
-      // Create staggered animation
+      // Create staggered rotate-in animation
       gsap.to(cards, {
         opacity: 1,
+        rotateX: 0,
         y: 0,
-        scale: 1,
-        duration: 0.6,
-        stagger: 0.15,
+        duration: 0.7,
+        stagger: 0.12,
         ease: 'power3.out',
         scrollTrigger: {
           trigger: featuresRef.current,
@@ -50,7 +86,7 @@ export default function CoatedSteelSection() {
           toggleActions: 'play none none none'
         },
         onComplete: () => {
-          gsap.set(cards, { clearProps: 'transform,opacity' });
+          gsap.set(cards, { clearProps: 'transform,opacity,transformPerspective,transformOrigin' });
         }
       });
     }
@@ -212,21 +248,25 @@ export default function CoatedSteelSection() {
           </p>
         </div>
 
-        {/* Features Grid */}
+        {/* Features Grid — with 3D tilt hover */}
         <div ref={featuresRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
           {features.map((feature, index) => (
             <div 
               key={index}
               ref={el => featureCardsRef.current[index] = el}
-              className="p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-white transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 cursor-pointer group hover:border-[#C83C64]"
+              className="p-5 sm:p-6 rounded-xl sm:rounded-2xl cursor-pointer group"
               style={{
                 border: '1px solid #F0F0F0',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+                transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
+                willChange: 'transform'
               }}
+              onMouseMove={(e) => handleMouseMove(e, index)}
+              onMouseLeave={() => handleMouseLeave(index)}
             >
               {/* Icon */}
               <div 
-                className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110"
+                className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6"
                 style={{ background: feature.iconBg }}
               >
                 <feature.icon />

@@ -11,8 +11,11 @@ if (typeof window !== 'undefined') {
 export default function HowWeWorkSection() {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
+  const headingUnderlineRef = useRef(null);
   const subtitleRef = useRef(null);
   const stepRefs = useRef([]);
+  const stepNumberRefs = useRef([]);
+  const stepContentRefs = useRef([]);
   const imageRef = useRef(null);
   const bottomTextRef = useRef(null);
 
@@ -38,12 +41,12 @@ export default function HowWeWorkSection() {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Heading — smooth slide in from left
+      // Heading — fade in then underline draws
       gsap.fromTo(headingRef.current,
-        { opacity: 0, x: -40 },
+        { opacity: 0, y: 20 },
         {
-          opacity: 1, x: 0,
-          duration: 1,
+          opacity: 1, y: 0,
+          duration: 0.8,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: sectionRef.current,
@@ -52,6 +55,24 @@ export default function HowWeWorkSection() {
           }
         }
       );
+
+      // Heading underline — sweep from left
+      if (headingUnderlineRef.current) {
+        gsap.fromTo(headingUnderlineRef.current,
+          { scaleX: 0, transformOrigin: 'left center' },
+          {
+            scaleX: 1,
+            duration: 0.8,
+            delay: 0.5,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none none',
+            }
+          }
+        );
+      }
 
       // Subtitle — smooth fade up
       gsap.fromTo(subtitleRef.current,
@@ -69,32 +90,55 @@ export default function HowWeWorkSection() {
         }
       );
 
-      // Steps — smooth staggered slide-in from left
+      // Steps — timeline reveal: number pops, then content slides in
       stepRefs.current.forEach((step, index) => {
         if (!step) return;
+        const numberEl = stepNumberRefs.current[index];
+        const contentEl = stepContentRefs.current[index];
 
-        gsap.fromTo(step,
-          { opacity: 0, x: -30 },
-          {
-            opacity: 1, x: 0,
-            duration: 0.9,
-            delay: 0.25 + index * 0.15,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 75%',
-              toggleActions: 'play none none none',
+        // Step number — pop in with back.out bounce
+        if (numberEl) {
+          gsap.fromTo(numberEl,
+            { opacity: 0, scale: 0, rotate: -90 },
+            {
+              opacity: 1, scale: 1, rotate: 0,
+              duration: 0.5,
+              delay: 0.4 + index * 0.25,
+              ease: 'back.out(2)',
+              scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top 75%',
+                toggleActions: 'play none none none',
+              }
             }
-          }
-        );
+          );
+        }
+
+        // Step content — expand in from left
+        if (contentEl) {
+          gsap.fromTo(contentEl,
+            { opacity: 0, x: -30, clipPath: 'inset(0 100% 0 0)' },
+            {
+              opacity: 1, x: 0, clipPath: 'inset(0 0% 0 0)',
+              duration: 0.7,
+              delay: 0.55 + index * 0.25,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top 75%',
+                toggleActions: 'play none none none',
+              }
+            }
+          );
+        }
       });
 
-      // Image — smooth slide in from right
+      // Image — smooth slide in from right with subtle scale
       if (imageRef.current) {
         gsap.fromTo(imageRef.current,
-          { opacity: 0, x: 60 },
+          { opacity: 0, x: 60, scale: 0.95 },
           {
-            opacity: 1, x: 0,
+            opacity: 1, x: 0, scale: 1,
             duration: 1.2,
             delay: 0.2,
             ease: 'power2.out',
@@ -131,14 +175,24 @@ export default function HowWeWorkSection() {
   return (
     <section ref={sectionRef} className="bg-white pt-8 md:pt-12 pb-16 md:pb-24 px-4 sm:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Heading - Full width at top */}
-        <h2 
-          ref={headingRef}
-          className="aloevera-bold text-3xl sm:text-4xl md:text-5xl mb-4 lg:mb-6"
-          style={{ color: '#C83C64', opacity: 0 }}
-        >
-          How We Work
-        </h2>
+        {/* Heading - Full width at top with animated underline */}
+        <div className="relative inline-block mb-4 lg:mb-6">
+          <h2 
+            ref={headingRef}
+            className="aloevera-bold text-3xl sm:text-4xl md:text-5xl"
+            style={{ color: '#C83C64', opacity: 0 }}
+          >
+            How We Work
+          </h2>
+          <div 
+            ref={headingUnderlineRef}
+            className="h-1 rounded-full mt-2"
+            style={{ 
+              background: 'linear-gradient(90deg, #C83C64, #E91E63)',
+              transform: 'scaleX(0)'
+            }}
+          />
+        </div>
 
         <div className="flex flex-col lg:flex-row items-stretch gap-8 lg:gap-16">
           {/* Left - Steps content (Subtitle + Steps) */}
@@ -152,27 +206,47 @@ export default function HowWeWorkSection() {
               Our process is designed to be simple, transparent, and customer-focused, ensuring you get the right roofing solution with ease.
             </p>
 
-            {/* Steps */}
+            {/* Steps — with timeline numbers */}
             <div className="space-y-8">
               {steps.map((step, index) => (
                 <div 
                   key={index} 
                   ref={el => stepRefs.current[index] = el}
-                  className="flex gap-4 sm:gap-6"
-                  style={{ opacity: 0 }}
+                  className="flex gap-4 sm:gap-6 group"
                 >
-                  {/* Number */}
+                  {/* Number — pops in with bounce */}
                   <span 
-                    className="lato-regular text-[20px] flex-shrink-0 w-8 pt-2"
-                    style={{ color: '#99A1AF' }}
+                    ref={el => stepNumberRefs.current[index] = el}
+                    className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center lato-regular text-[16px] font-semibold"
+                    style={{ 
+                      color: '#C83C64', 
+                      backgroundColor: '#C83C6412',
+                      border: '2px solid #C83C6430',
+                      opacity: 0,
+                      transition: 'transform 0.3s ease, background-color 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.2)';
+                      e.currentTarget.style.backgroundColor = '#C83C64';
+                      e.currentTarget.style.color = 'white';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                      e.currentTarget.style.backgroundColor = '#C83C6412';
+                      e.currentTarget.style.color = '#C83C64';
+                    }}
                   >
                     {step.number}
                   </span>
 
-                  {/* Content */}
-                  <div className="flex-1 mt-2">
+                  {/* Content — clip reveal */}
+                  <div 
+                    ref={el => stepContentRefs.current[index] = el}
+                    className="flex-1 mt-1"
+                    style={{ opacity: 0 }}
+                  >
                     <h3 
-                      className="aloevera-medium text-[36px] mb-2"
+                      className="aloevera-medium text-[36px] mb-2 group-hover:text-[#C83C64] transition-colors duration-300"
                       style={{ color: '#1C1E54' }}
                     >
                       {step.title}
@@ -204,7 +278,7 @@ export default function HowWeWorkSection() {
         {/* Luxume Focus Paragraph - Bottom centered */}
         <p 
           ref={bottomTextRef}
-          className="lato-light text-[20px] leading-relaxed text-center mt-12 max-w-2xl mx-auto"
+          className="lato-regular text-gray-600 text-center mt-12 max-w-2xl mx-auto"
           style={{ opacity: 0 }}
         >
           Luxume focuses on delivering premium roofing materials engineered for durability, performance, and long-term value.

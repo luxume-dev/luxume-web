@@ -73,13 +73,13 @@ export default function AboutCoreValuesSection() {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Heading — smooth fade up
+      // Heading — drop from above with bounce
       gsap.fromTo(headingRef.current,
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: -40 },
         {
           opacity: 1, y: 0,
-          duration: 1,
-          ease: 'power2.out',
+          duration: 0.8,
+          ease: 'bounce.out',
           scrollTrigger: {
             trigger: headingRef.current,
             start: 'top 85%',
@@ -88,13 +88,13 @@ export default function AboutCoreValuesSection() {
         }
       );
 
-      // Subtitle — smooth fade up after heading
+      // Subtitle — fade up with blur
       gsap.fromTo(subtitleRef.current,
-        { opacity: 0, y: 20 },
+        { opacity: 0, filter: 'blur(6px)', y: 15 },
         {
-          opacity: 1, y: 0,
+          opacity: 1, filter: 'blur(0px)', y: 0,
           duration: 0.9,
-          delay: 0.15,
+          delay: 0.2,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: headingRef.current,
@@ -104,17 +104,17 @@ export default function AboutCoreValuesSection() {
         }
       );
 
-      // Cards — smooth staggered fade up
+      // Cards — zoom-in from center (scale up from small with slight spread)
       cardRefs.current.forEach((card, index) => {
         if (!card) return;
 
         gsap.fromTo(card,
-          { opacity: 0, y: 40 },
+          { opacity: 0, scale: 0.4 },
           {
-            opacity: 1, y: 0,
-            duration: 0.9,
-            delay: index * 0.1,
-            ease: 'power2.out',
+            opacity: 1, scale: 1,
+            duration: 0.7,
+            delay: index * 0.08,
+            ease: 'back.out(1.4)',
             scrollTrigger: {
               trigger: sectionRef.current.querySelector('.values-grid'),
               start: 'top 82%',
@@ -124,17 +124,17 @@ export default function AboutCoreValuesSection() {
         );
       });
 
-      // Icons — smooth scale in
+      // Icons — spin in 
       iconRefs.current.forEach((icon, index) => {
         if (!icon) return;
 
         gsap.fromTo(icon,
-          { scale: 0.3, opacity: 0 },
+          { scale: 0, rotate: -360, opacity: 0 },
           {
-            scale: 1, opacity: 1,
-            duration: 0.6,
-            delay: 0.2 + index * 0.1,
-            ease: 'power2.out',
+            scale: 1, rotate: 0, opacity: 1,
+            duration: 0.7,
+            delay: 0.15 + index * 0.08,
+            ease: 'power3.out',
             scrollTrigger: {
               trigger: sectionRef.current.querySelector('.values-grid'),
               start: 'top 82%',
@@ -175,14 +175,15 @@ export default function AboutCoreValuesSection() {
             <div 
               key={index}
               ref={el => cardRefs.current[index] = el}
-              className="group bg-white p-6 rounded-xl transition-all duration-500 ease-out cursor-pointer"
+              className="group bg-white p-6 rounded-xl cursor-pointer"
               style={{ 
                 opacity: 0,
                 border: hoveredIndex === index ? `1.5px solid ${value.color}` : '1px solid #f3f4f6',
                 boxShadow: hoveredIndex === index 
-                  ? `0 12px 28px ${value.color}20, 0 4px 12px rgba(0,0,0,0.05)` 
+                  ? `0 8px 24px ${value.color}15` 
                   : '0 1px 3px rgba(0,0,0,0.05)',
-                transform: hoveredIndex === index ? 'translateY(-6px)' : 'translateY(0)',
+                transform: hoveredIndex === index ? 'translateY(-4px)' : 'translateY(0)',
+                transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
               }}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
@@ -190,22 +191,32 @@ export default function AboutCoreValuesSection() {
               {/* Icon */}
               <div 
                 ref={el => iconRefs.current[index] = el}
-                className="w-14 h-14 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500 ease-out"
+                className="w-14 h-14 flex items-center justify-center mb-4"
                 style={{ 
                   backgroundColor: value.iconBg, 
                   borderRadius: '14px',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+                  transform: hoveredIndex === index ? 'scale(1.15) rotate(5deg)' : 'scale(1) rotate(0deg)',
+                  transition: 'transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)'
                 }}
               >
                 <value.icon />
               </div>
 
-              {/* Title */}
+              {/* Title with underline expand */}
               <h3 
-                className="font-lato font-bold text-[24px] mb-3 transition-colors duration-300"
+                className="font-lato font-bold text-[24px] mb-3 relative inline-block"
                 style={{ color: value.color }}
               >
                 {value.title}
+                <span 
+                  className="absolute bottom-0 left-0 h-[2px] rounded-full"
+                  style={{ 
+                    backgroundColor: value.color,
+                    width: hoveredIndex === index ? '100%' : '0%',
+                    transition: 'width 0.4s cubic-bezier(0.22, 1, 0.36, 1)'
+                  }}
+                />
               </h3>
 
               {/* Description */}

@@ -67,12 +67,7 @@ export default function Navbar() {
             >
               Products
             </Link>
-            <Link 
-              href="/contact" 
-              className={`text-sm aloevera-light hover:text-pink-400 transition-colors ${pathname === '/contact' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
-            >
-              Contact Us
-            </Link>
+
             <Link 
               href="/blog" 
               className={`text-sm aloevera-light hover:text-pink-400 transition-colors ${pathname === '/blog' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
@@ -87,11 +82,11 @@ export default function Navbar() {
             </Link>
 
             {/* CTA Button */}
-            <a
-              href="tel:+1234567890"
+            <Link
+              href="/contact"
               className="inline-flex items-center justify-center text-white aloevera-medium rounded transition-all hover:opacity-90"
               style={{ 
-                width: '110px', 
+                width: '130px', 
                 height: '38px', 
                 padding: '10px', 
                 gap: '10px',
@@ -99,8 +94,8 @@ export default function Navbar() {
                 fontSize: '16px'
               }}
             >
-              Call Now
-            </a>
+              Contact Us
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -142,7 +137,7 @@ export default function Navbar() {
                 { href: '/', label: 'Home' },
                 { href: '/about', label: 'About Us' },
                 { href: '/products', label: 'Products' },
-                { href: '/contact', label: 'Contact Us' },
+
                 { href: '/blog', label: 'Blog' },
                 { href: '/careers', label: 'Careers' },
               ].map((link) => (
@@ -155,11 +150,11 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <a
-                href="tel:+1234567890"
+              <Link
+                href="/contact"
                 className="inline-flex items-center justify-center text-white aloevera-medium rounded transition-all hover:opacity-90"
                 style={{ 
-                  width: '110px', 
+                  width: '130px', 
                   height: '38px', 
                   padding: '10px', 
                   gap: '10px',
@@ -168,8 +163,8 @@ export default function Navbar() {
                 }}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Call Now
-              </a>
+                Contact Us
+              </Link>
             </div>
           </div>
         )}

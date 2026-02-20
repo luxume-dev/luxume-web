@@ -10,15 +10,30 @@ export default function AboutHeroSection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Mission card — slide in from left with fade and scale
       gsap.fromTo(
-        [missionRef.current, visionRef.current],
-        { opacity: 0, y: 40 },
+        missionRef.current,
+        { opacity: 0, x: -60, scale: 0.95 },
         { 
           opacity: 1, 
-          y: 0, 
-          duration: 1.2, 
-          ease: 'power2.out', 
-          stagger: 0.25 
+          x: 0, 
+          scale: 1,
+          duration: 0.9, 
+          ease: 'power3.out',
+        }
+      );
+
+      // Vision card — slide in from right with fade and scale
+      gsap.fromTo(
+        visionRef.current,
+        { opacity: 0, x: 60, scale: 0.95 },
+        { 
+          opacity: 1, 
+          x: 0, 
+          scale: 1,
+          duration: 0.9, 
+          delay: 0.2,
+          ease: 'power3.out',
         }
       );
     });
@@ -47,8 +62,8 @@ export default function AboutHeroSection() {
           {/* Mission Card */}
           <div 
             ref={missionRef}
-            className="bg-white rounded-2xl shadow-lg p-6 md:p-8"
-            style={{ opacity: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-6 md:p-8 hover:shadow-xl transition-shadow duration-500 hover:-translate-y-1"
+            style={{ opacity: 0, transition: 'transform 0.4s ease, box-shadow 0.5s ease' }}
           >
             <h3 
               className="aloevera-medium text-center text-lg mb-4 text-[#C83C64]"
@@ -63,8 +78,8 @@ export default function AboutHeroSection() {
           {/* Vision Card */}
           <div 
             ref={visionRef}
-            className="bg-white rounded-2xl shadow-lg p-6 md:p-8"
-            style={{ opacity: 0 }}
+            className="bg-white rounded-2xl shadow-lg p-6 md:p-8 hover:shadow-xl transition-shadow duration-500 hover:-translate-y-1"
+            style={{ opacity: 0, transition: 'transform 0.4s ease, box-shadow 0.5s ease' }}
           >
             <h3 
               className="aloevera-medium text-center text-lg mb-4 text-[#C83C64]"

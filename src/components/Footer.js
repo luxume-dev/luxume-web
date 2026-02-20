@@ -56,13 +56,14 @@ export default function Footer() {
               </p>
             </div>
             
-            {/* Call Now Button */}
-            <button 
-              className="rounded text-white font-medium transition-all duration-300 hover:opacity-90"
+            {/* Contact Us Button */}
+            <a 
+              href="/contact"
+              className="rounded text-white font-medium transition-all duration-300 hover:opacity-90 inline-flex items-center justify-center"
               style={{ background: '#C83C64', width: '180px', height: '46px', padding: '10px', gap: '10px' }}
             >
-              Call Now
-            </button>
+              Contact Us
+            </a>
           </div>
         </div>
       </div>
@@ -115,13 +116,8 @@ export default function Footer() {
               <h4 className="aloevera-medium text-white text-[16px] mb-4">Popular Products</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link href="#" className="aloevera-light text-gray-400 text-[16px] hover:text-white transition-colors">
-                    Color Coated Galvalume Sheets
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="aloevera-light text-gray-400 text-[16px] hover:text-white transition-colors">
-                    Color Coated Galvalume Coils
+                  <Link href="/products/colour-coated-galvalume-sheets" className="aloevera-light text-gray-400 text-[16px] hover:text-white transition-colors">
+                    Colour Coated Galvalume Sheets
                   </Link>
                 </li>
               </ul>
@@ -150,10 +146,17 @@ export default function Footer() {
             <div>
               <h4 className="aloevera-medium text-white text-[16px] mb-4">Connect Us</h4>
               <div className="flex gap-3 sm:gap-2 mb-6">
-                {[FaPhone, FaInstagram, FaFacebookF, FaYoutube].map((Icon, index) => (
+                {[
+                  { Icon: FaPhone,     href: 'tel:+919778557752' },
+                  { Icon: FaInstagram, href: 'https://www.instagram.com/luxume_roofing/' },
+                  { Icon: FaFacebookF, href: 'https://www.facebook.com/profile.php?id=100069323057371' },
+                  { Icon: FaYoutube,   href: 'https://www.youtube.com/@Luxume_Roofing' },
+                ].map(({ Icon, href }, index) => (
                   <a 
                     key={index}
-                    href="#"
+                    href={href}
+                    target={href.startsWith('tel') ? '_self' : '_blank'}
+                    rel="noopener noreferrer"
                     className="w-11 h-11 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:opacity-80"
                     style={{ background: '#D46D64' }}
                   >

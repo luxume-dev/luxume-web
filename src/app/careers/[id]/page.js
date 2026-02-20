@@ -1,25 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { FaClock, FaMapMarkerAlt, FaBriefcase, FaEnvelope, FaWhatsapp } from 'react-icons/fa';
-import { getCareerById } from '@/services/supabase';
+import { useCareer } from '@/hooks/useCareers';
 
 export default function JobDetailPage() {
   const { id } = useParams();
-  const [job, setJob] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchCareer() {
-      const { data, error } = await getCareerById(id);
-      if (!error && data) {
-        setJob(data);
-      }
-      setLoading(false);
-    }
-    if (id) fetchCareer();
-  }, [id]);
+  const { data: job, isLoading: loading } = useCareer(id);
 
   if (loading) {
     return (
@@ -188,10 +175,13 @@ export default function JobDetailPage() {
                 Interested candidates may send their updated resume via:
               </p>
 
-              <div className="space-y-3 mb-8">
-                <div 
-                  className="flex items-center gap-4 p-4 rounded-lg"
+              <div className="space-y-3">
+                <a 
+                  href="mailto:info@luxume.com"
+                  className="flex items-center gap-4 p-4 rounded-lg transition-all duration-300"
                   style={{ backgroundColor: 'rgba(200, 60, 100, 0.2)' }}
+                  onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(200, 60, 100, 0.35)'}
+                  onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(200, 60, 100, 0.2)'}
                 >
                   <div 
                     className="w-10 h-10 rounded-lg flex items-center justify-center"
@@ -201,13 +191,18 @@ export default function JobDetailPage() {
                   </div>
                   <div>
                     <p className="text-white font-medium">Email</p>
-                    <p className="text-gray-400 text-sm">info@suntree.co.in</p>
+                    <p className="text-gray-400 text-sm">info@luxume.com</p>
                   </div>
-                </div>
+                </a>
 
-                <div 
-                  className="flex items-center gap-4 p-4 rounded-lg"
+                <a 
+                  href="https://wa.me/919778557752"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 p-4 rounded-lg transition-all duration-300"
                   style={{ backgroundColor: 'rgba(200, 60, 100, 0.2)' }}
+                  onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(200, 60, 100, 0.35)'}
+                  onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(200, 60, 100, 0.2)'}
                 >
                   <div 
                     className="w-10 h-10 rounded-lg flex items-center justify-center"
@@ -217,19 +212,9 @@ export default function JobDetailPage() {
                   </div>
                   <div>
                     <p className="text-white font-medium">WhatsApp</p>
-                    <p className="text-gray-400 text-sm">97789 20962</p>
+                    <p className="text-gray-400 text-sm">+91 97785 57752</p>
                   </div>
-                </div>
-              </div>
-
-              {/* Apply Now Button */}
-              <div className="text-center">
-                <button 
-                  className="px-8 py-3 rounded-[10px] text-white font-medium transition-all duration-300 hover:opacity-90"
-                  style={{ backgroundColor: '#C83C64' }}
-                >
-                  Apply Now
-                </button>
+                </a>
               </div>
             </div>
           </div>

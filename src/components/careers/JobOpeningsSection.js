@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { getActiveCareers } from '@/services/supabase';
+import { useCareers } from '@/hooks/useCareers';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -11,24 +11,12 @@ if (typeof window !== 'undefined') {
 }
 
 export default function JobOpeningsSection() {
-  const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data: jobs = [], isLoading: loading } = useCareers();
   
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const introRef = useRef(null);
   const cardsRef = useRef([]);
-
-  useEffect(() => {
-    async function fetchCareers() {
-      const { data, error } = await getActiveCareers();
-      if (!error && data) {
-        setJobs(data);
-      }
-      setLoading(false);
-    }
-    fetchCareers();
-  }, []);
 
   // Animation Effect
   useEffect(() => {
@@ -110,9 +98,40 @@ export default function JobOpeningsSection() {
           </p>
         </div>
 
-        {/* Loading State */}
+        {/* Loading State — shimmer skeleton */}
         {loading && (
-          <div className="text-center py-12 text-gray-500">Loading openings...</div>
+          <>
+            <style>{`
+              @keyframes shimmer {
+                0%   { background-position: -600px 0; }
+                100% { background-position:  600px 0; }
+              }
+              .shimmer {
+                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+                background-size: 600px 100%;
+                animation: shimmer 1.4s infinite linear;
+                border-radius: 8px;
+              }
+            `}</style>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="border border-gray-100 rounded-xl p-6 space-y-4">
+                  <div className="flex justify-between items-start">
+                    <div className="space-y-2 flex-1 mr-4">
+                      <div className="shimmer h-5 w-3/4" />
+                      <div className="shimmer h-3 w-1/3" />
+                    </div>
+                    <div className="shimmer h-9 w-24 rounded-lg flex-shrink-0" />
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    <div className="shimmer h-6 w-20 rounded-full" />
+                    <div className="shimmer h-6 w-24 rounded-full" />
+                    <div className="shimmer h-6 w-16 rounded-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
 
         {/* No Openings */}
@@ -124,26 +143,29 @@ export default function JobOpeningsSection() {
         {!loading && jobs.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {jobs.map((job, index) => (
-              <div 
+              <Link 
                 key={job.id}
+                href={`/careers/${job.id}`}
+                className="block"
+              >
+              <div 
                 ref={el => cardsRef.current[index] = el}
-                className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300 opacity-0"
+                className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300 opacity-0 cursor-pointer"
               >
                 {/* Job Header */}
                 <div className="flex justify-between items-start mb-3">
-                  <Link href={`/careers/${job.id}`} className="hover:opacity-80">
+                  <div>
                     <h3 className="font-semibold text-gray-800 text-lg mb-1">
                       {job.title}{job.department ? ` - ${job.department}` : ''}
                     </h3>
                     <p className="text-gray-500 text-sm">{job.location}</p>
-                  </Link>
-                  <Link 
-                    href={`/careers/${job.id}`}
+                  </div>
+                  <span 
                     className="px-4 py-2 rounded-lg text-white text-sm font-medium transition-all duration-300 hover:opacity-90"
                     style={{ backgroundColor: '#C83C64' }}
                   >
                     Apply Now
-                  </Link>
+                  </span>
                 </div>
 
                 {/* Tags */}
@@ -160,6 +182,7 @@ export default function JobOpeningsSection() {
                   </div>
                 )}
               </div>
+              </Link>
             ))}
           </div>
         )}

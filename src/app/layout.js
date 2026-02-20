@@ -2,6 +2,8 @@ import { Lato } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import QueryProvider from "@/providers/QueryProvider";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const lato = Lato({
   variable: "--font-lato",
@@ -19,11 +21,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${lato.variable} antialiased`}>
-        <Navbar />
-        <div className="relative z-10">
-          {children}
-          <Footer />
-        </div>
+        <QueryProvider>
+          <Navbar />
+          <div className="relative z-10">
+            {children}
+            <Footer />
+          </div>
+          <WhatsAppButton />
+        </QueryProvider>
       </body>
     </html>
   );

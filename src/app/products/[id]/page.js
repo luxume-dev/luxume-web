@@ -1,42 +1,150 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import CoatedSteelSection from '@/components/CoatedSteelSection';
-import { getProductBySlug } from '@/services/supabase/products.service';
+import { useProduct } from '@/hooks/useProducts';
+import RequestQuoteModal from '@/components/RequestQuoteModal';
 
 export default function ProductDetailPage() {
   const params = useParams();
   const slug = params.id;
 
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { data: product, isLoading, error } = useProduct(slug);
 
   // State to track the selected color index
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [hoveredProfileIndex, setHoveredProfileIndex] = useState(null);
   const [hoveredPaintIndex, setHoveredPaintIndex] = useState(null);
 
-  useEffect(() => {
-    async function fetchProduct() {
-      setLoading(true);
-      const { data, error: fetchError } = await getProductBySlug(slug);
-      if (fetchError) {
-        setError(fetchError);
-      } else {
-        setProduct(data);
-      }
-      setLoading(false);
-    }
-    if (slug) fetchProduct();
-  }, [slug]);
+  // Quote modal state
+  const [quoteModal, setQuoteModal] = useState({ isOpen: false, profileType: '' });
+  const openQuote = (profileTitle) => setQuoteModal({ isOpen: true, profileType: profileTitle });
+  const closeQuote = () => setQuoteModal({ isOpen: false, profileType: '' });
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <main className="bg-white min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2" style={{ borderColor: '#C83C64' }}></div>
+      <main className="bg-white overflow-hidden">
+        {/* Shimmer keyframe */}
+        <style>{`
+          @keyframes shimmer {
+            0%   { background-position: -800px 0; }
+            100% { background-position:  800px 0; }
+          }
+          .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 800px 100%;
+            animation: shimmer 1.4s infinite linear;
+            border-radius: 8px;
+          }
+        `}</style>
+
+        {/* Hero skeleton */}
+        <div className="shimmer w-full" style={{ height: '730px', borderRadius: 0 }} />
+
+        {/* Title + specs skeleton */}
+        <section className="py-16 px-4 md:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="shimmer h-12 w-2/5 mx-auto mb-12" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <div className="space-y-4">
+                <div className="shimmer h-8 w-3/5" />
+                <div className="shimmer h-4 w-full" />
+                <div className="shimmer h-4 w-5/6" />
+                <div className="shimmer h-4 w-4/6" />
+              </div>
+              <div className="border-2 border-gray-100 rounded-lg overflow-hidden space-y-px">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="flex">
+                    <div className="shimmer h-10 w-1/3 m-1" />
+                    <div className="shimmer h-10 w-2/3 m-1" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Colours skeleton */}
+        <section className="py-16 px-4 md:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="shimmer h-10 w-1/3 mx-auto mb-4" />
+            <div className="shimmer h-4 w-2/4 mx-auto mb-12" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="shimmer rounded-2xl" style={{ height: '440px' }} />
+              <div className="bg-gray-50 rounded-2xl p-8 grid grid-cols-4 gap-4">
+                {[...Array(10)].map((_, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="shimmer aspect-[3/2] w-full" />
+                    <div className="shimmer h-3 w-3/4 mx-auto" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Profile types skeleton — 3 cards */}
+        <section className="py-16 px-4 md:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="shimmer h-10 w-1/3 mx-auto mb-4" />
+            <div className="shimmer h-4 w-2/4 mx-auto mb-12" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="border border-gray-100 rounded-[20px] overflow-hidden">
+                  <div className="shimmer h-48 m-4 rounded-t-[30px]" />
+                  <div className="p-6 space-y-3">
+                    <div className="shimmer h-5 w-2/3" />
+                    <div className="shimmer h-3 w-full" />
+                    <div className="shimmer h-3 w-5/6" />
+                    <div className="space-y-2 mt-4">
+                      {[...Array(4)].map((_, j) => (
+                        <div key={j} className="flex items-center gap-2">
+                          <div className="shimmer h-5 w-5 rounded-full flex-shrink-0" />
+                          <div className="shimmer h-3 flex-1" />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="shimmer h-10 w-full mt-4 rounded-lg" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Paint finish skeleton — 4 cards */}
+        <section className="py-16 px-4 md:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="shimmer h-10 w-1/3 mx-auto mb-4" />
+            <div className="shimmer h-4 w-2/4 mx-auto mb-12" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="rounded-2xl p-6 space-y-3" style={{ boxShadow: '0px 0px 15px 0px #0000001A' }}>
+                  <div className="flex justify-between">
+                    <div className="shimmer h-7 w-1/3" />
+                    <div className="shimmer h-5 w-1/4 rounded-full" />
+                  </div>
+                  <div className="shimmer h-3 w-3/4" />
+                  <div className="shimmer h-3 w-full" />
+                  <div className="shimmer h-3 w-5/6" />
+                  <div className="shimmer h-3 w-2/3 mb-2" />
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {[...Array(3)].map((_, j) => (
+                      <div key={j} className="shimmer h-6 w-16 rounded-full" />
+                    ))}
+                  </div>
+                  <hr className="border-gray-100 my-2" />
+                  <div className="shimmer h-4 w-1/2" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA strip skeleton */}
+        <div className="shimmer w-full mt-8" style={{ height: '260px', borderRadius: 0 }} />
       </main>
     );
   }
@@ -46,7 +154,7 @@ export default function ProductDetailPage() {
       <main className="bg-white min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="font-aloevera text-2xl font-bold mb-2" style={{ color: '#1a1b4b' }}>Product Not Found</h2>
-          <p className="font-lato text-gray-600">{error || 'The product you are looking for does not exist.'}</p>
+          <p className="font-lato text-gray-600">{error?.message || 'The product you are looking for does not exist.'}</p>
         </div>
       </main>
     );
@@ -250,6 +358,7 @@ export default function ProductDetailPage() {
 
                   {/* CTA Button */}
                   <button 
+                    onClick={() => openQuote(type.title)}
                     className="w-full py-3 rounded-lg text-white font-lato font-semibold text-base transition-all duration-300 hover:opacity-90"
                     style={{ backgroundColor: '#0F172B' }}
                   >
@@ -416,14 +525,14 @@ export default function ProductDetailPage() {
               Product Catalogue
             </a>
             <a 
-              href="#" 
+              href="/dos-and-donts" 
               className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full text-white font-lato font-semibold transition-all duration-300 hover:opacity-90"
               style={{ backgroundColor: '#C83C64' }}
             >
               Do&apos;s & Don&apos;ts
             </a>
             <a 
-              href="#" 
+              href="/warranty" 
               className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full text-white font-lato font-semibold transition-all duration-300 hover:opacity-90"
               style={{ backgroundColor: '#C83C64' }}
             >
@@ -433,6 +542,13 @@ export default function ProductDetailPage() {
         </div>
       </section>
 
+      {/* Request Quote Modal */}
+      <RequestQuoteModal
+        isOpen={quoteModal.isOpen}
+        onClose={closeQuote}
+        productName={title}
+        profileType={quoteModal.profileType}
+      />
     </main>
   );
 }
