@@ -15,6 +15,15 @@ export default function ProductHighlightsSection() {
   const descRef = useRef(null);
   const itemRefs = useRef([]);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    setIsMobile(mq.matches);
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   const highlights = [
     { icon: FaWrench, title: 'Easy Installation', description: 'Quick and effortless installation process, saving time and reducing labor costs.', color: '#F59E0B' },
@@ -95,6 +104,7 @@ export default function ProductHighlightsSection() {
             itemRefs={itemRefs}
             hoveredIndex={hoveredIndex}
             setHoveredIndex={setHoveredIndex}
+            isMobile={isMobile}
             className="sm:col-span-2"
             layout="horizontal"
           />
@@ -106,6 +116,7 @@ export default function ProductHighlightsSection() {
             itemRefs={itemRefs}
             hoveredIndex={hoveredIndex}
             setHoveredIndex={setHoveredIndex}
+            isMobile={isMobile}
           />
 
 
@@ -117,6 +128,7 @@ export default function ProductHighlightsSection() {
             itemRefs={itemRefs}
             hoveredIndex={hoveredIndex}
             setHoveredIndex={setHoveredIndex}
+            isMobile={isMobile}
           />
 
           {/* Tile 3 */}
@@ -126,6 +138,7 @@ export default function ProductHighlightsSection() {
             itemRefs={itemRefs}
             hoveredIndex={hoveredIndex}
             setHoveredIndex={setHoveredIndex}
+            isMobile={isMobile}
           />
 
           {/* Tile 4 */}
@@ -135,6 +148,7 @@ export default function ProductHighlightsSection() {
             itemRefs={itemRefs}
             hoveredIndex={hoveredIndex}
             setHoveredIndex={setHoveredIndex}
+            isMobile={isMobile}
           />
 
           {/* Tile 5 — spans full width, horizontal layout */}
@@ -144,6 +158,7 @@ export default function ProductHighlightsSection() {
             itemRefs={itemRefs}
             hoveredIndex={hoveredIndex}
             setHoveredIndex={setHoveredIndex}
+            isMobile={isMobile}
             className="sm:col-span-2 lg:col-span-3"
             layout="horizontal"
           />
@@ -153,8 +168,8 @@ export default function ProductHighlightsSection() {
   );
 }
 
-function BentoTile({ item, index, itemRefs, hoveredIndex, setHoveredIndex, className = '', layout = 'vertical' }) {
-  const isHovered = hoveredIndex === index;
+function BentoTile({ item, index, itemRefs, hoveredIndex, setHoveredIndex, isMobile, className = '', layout = 'vertical' }) {
+  const isHovered = isMobile || hoveredIndex === index;
   const Icon = item.icon;
 
   return (

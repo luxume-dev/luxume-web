@@ -120,6 +120,11 @@ export default function Footer() {
                     Colour Coated Galvalume Sheets
                   </Link>
                 </li>
+                <li>
+                  <Link href="/products/color-coated-galvalume-coils" className="aloevera-light text-gray-400 text-[16px] hover:text-white transition-colors">
+                    Color Coated Galvalume Coils
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -133,11 +138,11 @@ export default function Footer() {
                 </li>
                 <li className="flex gap-3 aloevera-light text-gray-400 text-[16px] items-center">
                   <FaPhone className="text-gray-400" />
-                  <span>+91 97785 57752</span>
+                  <a href="tel:+919778557752" className="hover:text-white transition-colors">+91 97785 57752</a>
                 </li>
                 <li className="flex gap-3 aloevera-light text-gray-400 text-[16px] items-center">
                   <FaEnvelope className="text-gray-400" />
-                  <span>info@luxume.com</span>
+                  <a href="mailto:info@luxume.com" className="hover:text-white transition-colors">info@luxume.com</a>
                 </li>
               </ul>
             </div>

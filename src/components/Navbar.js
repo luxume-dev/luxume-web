@@ -39,7 +39,7 @@ export default function Navbar() {
       <div className="w-full px-8 md:px-16 lg:px-24 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center" onClick={() => setIsMenuOpen(false)}>
             <img 
               src={useDarkContent ? "/images/logo.png" : "/images/logo-2.png"}
               alt="Luxume" 
@@ -48,7 +48,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Content (Links + Button) - Pushed to right via flex justify-between + grouping */}
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-4 lg:gap-10">
             <Link 
               href="/" 
               className={`text-sm aloevera-light hover:text-pink-400 transition-colors ${pathname === '/' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
@@ -140,16 +140,19 @@ export default function Navbar() {
 
                 { href: '/blog', label: 'Blog' },
                 { href: '/careers', label: 'Careers' },
-              ].map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`text-sm aloevera-light hover:text-pink-400 transition-colors ${pathname === link.href ? 'text-pink-400' : 'text-gray-800'}`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              ].map((link) => {
+                const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`text-sm aloevera-light hover:text-pink-400 transition-colors ${isActive ? 'text-pink-400' : 'text-gray-800'}`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center text-white aloevera-medium rounded transition-all hover:opacity-90"

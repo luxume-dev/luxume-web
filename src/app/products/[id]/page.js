@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import CoatedSteelSection from '@/components/CoatedSteelSection';
 import { useProduct } from '@/hooks/useProducts';
@@ -22,6 +22,19 @@ export default function ProductDetailPage() {
   const [quoteModal, setQuoteModal] = useState({ isOpen: false, profileType: '' });
   const openQuote = (profileTitle) => setQuoteModal({ isOpen: true, profileType: profileTitle });
   const closeQuote = () => setQuoteModal({ isOpen: false, profileType: '' });
+
+  // Ref for the house image — used for mobile scroll-to-image on color pick
+  const houseImageRef = useRef(null);
+
+  const handleColorSelect = (index) => {
+    setSelectedColorIndex(index);
+    // On mobile (below lg breakpoint), scroll to the image so user can see the result
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setTimeout(() => {
+        houseImageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 50);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -255,7 +268,7 @@ export default function ProductDetailPage() {
           {/* Two Column Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Left Side - House Image (Interactive) */}
-            <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
+            <div ref={houseImageRef} className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
               <Image
                 src={colors[selectedColorIndex].houseImage}
                 alt="Beautiful house with colored roofing"
@@ -266,12 +279,12 @@ export default function ProductDetailPage() {
 
             {/* Right Side - Color Swatches Grid */}
             <div className="bg-gray-50 rounded-2xl p-6 md:p-8">
-              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
+              <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                 {colors.map((color, index) => (
                   <div 
                     key={index} 
                     className="flex flex-col items-center group cursor-pointer"
-                    onClick={() => setSelectedColorIndex(index)}
+                    onClick={() => handleColorSelect(index)}
                   >
                     <div className={`w-full aspect-[3/2] mb-2 relative overflow-hidden transition-all duration-300 group-hover:scale-105 ${
                       selectedColorIndex === index ? 'scale-105' : ''
@@ -297,6 +310,7 @@ export default function ProductDetailPage() {
       </section>
 
       {/* Profile Types Section */}
+      {profileTypes.length > 0 && (
       <section className="py-16 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -370,8 +384,10 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Paint Finish Options Section */}
+      {paintFinishOptions.length > 0 && (
       <section className="py-16 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -449,9 +465,10 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Contact CTA Section */}
-      <section className="relative px-4 md:px-8" style={{ backgroundColor: '#C83C64', overflow: 'visible', marginTop: '8rem' }}>
+      <section className="relative px-4 md:px-8 md:mt-6 lg:mt-16 xl:mt-32" style={{ backgroundColor: '#C83C64', overflow: 'visible' }}>
         {/* Image - absolutely positioned at the very bottom-left, ignoring padding */}
         <div className="hidden lg:block absolute bottom-0 left-0" style={{ width: '50%', zIndex: 1 }}>
           <img
@@ -474,7 +491,7 @@ export default function ProductDetailPage() {
             <div className="hidden lg:block" />
 
             {/* Right Side - Text & CTA */}
-            <div className="flex flex-col justify-center px-6 md:px-10 py-20 lg:py-28">
+            <div className="flex flex-col justify-center px-6 md:px-10 py-10 md:py-14 lg:py-14 xl:py-28">
               <h2 className="font-aloevera text-2xl md:text-3xl lg:text-[2.25rem] font-medium text-white leading-tight mb-4" style={{ fontStyle: 'italic' }}>
                 Ready to enhance the aesthetic appeal of your buildings?
               </h2>

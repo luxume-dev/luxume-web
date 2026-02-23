@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { submitContactForm } from '@/services/supabase';
+import { toast } from 'sonner';
 
 /**
  * Initial form state
@@ -74,7 +75,15 @@ export function useContactForm() {
 
     // Validation
     if (!validateForm()) {
-      setSubmitStatus({ type: 'error', message: 'Please fill in all required fields.' });
+      const msg = 'Please fill in all required fields.';
+      setSubmitStatus({ type: 'error', message: msg });
+      toast.error(msg, {
+        style: {
+          background: '#1a1a2e',
+          color: '#ffffff',
+          border: '1px solid #ef4444',
+        },
+      });
       setIsLoading(false);
       return;
     }
@@ -84,6 +93,21 @@ export function useContactForm() {
 
     if (result.success) {
       setFormData(INITIAL_FORM_STATE);
+      toast.success(result.message || 'Message sent successfully!', {
+        style: {
+          background: '#1a1a2e',
+          color: '#ffffff',
+          border: '1px solid #C83C64',
+        },
+      });
+    } else {
+      toast.error(result.message || 'Something went wrong. Please try again.', {
+        style: {
+          background: '#1a1a2e',
+          color: '#ffffff',
+          border: '1px solid #ef4444',
+        },
+      });
     }
 
     setIsLoading(false);

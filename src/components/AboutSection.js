@@ -52,9 +52,17 @@ export default function AboutSection() {
         const spans = headingEl.querySelectorAll('span');
         spans.forEach(span => {
           const text = span.textContent;
-          span.innerHTML = text.split('').map(char => 
-            char === ' ' ? ' ' : `<span class="inline-block" style="opacity:0;transform:translateY(20px) rotateX(40deg)">${char}</span>`
-          ).join('');
+          const words = text.trim().split(/(\s+)/);
+          span.innerHTML = words.map(segment => {
+            // Preserve whitespace segments as-is
+            if (/^\s+$/.test(segment)) return segment;
+            // Wrap each word in a whitespace-nowrap inline-block so the browser
+            // line-breaks between words, not between individual character spans
+            const chars = segment.split('').map(char =>
+              `<span class="inline-block" style="opacity:0;transform:translateY(20px) rotateX(40deg)">${char}</span>`
+            ).join('');
+            return `<span class="inline-block whitespace-nowrap">${chars}</span>`;
+          }).join('');
         });
 
         const chars = headingEl.querySelectorAll('.inline-block');
@@ -113,7 +121,7 @@ export default function AboutSection() {
             Secure &amp; Stylish
           </span>
           <span className="aloevera-bold text-[#1a1a4e]">
-            : The Smart Home Shield
+            {" "}: The Smart Home Shield
           </span>
         </h2>
 

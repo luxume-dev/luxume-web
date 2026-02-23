@@ -327,9 +327,8 @@ export default function ContactSection() {
                 <div>
                   <h3 className="font-lato font-semibold text-gray-800 mb-2">Business Hours</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    Monday - Friday: 9:00 AM - 6:00 PM<br />
-                    Saturday: 9:00 AM - 2:00 PM<br />
-                    Sunday: Closed
+                    Monday - Saturday: 9:00 AM - 6:00 PM<br />
+                    Sunday: 9:00 AM - 2:00 PM
                   </p>
                 </div>
               </div>
@@ -348,19 +347,6 @@ export default function ContactSection() {
               Send us a Message
             </h2>
             
-            {/* Status Messages */}
-            {submitStatus.message && (
-              <div
-                className={`mb-6 p-4 rounded-lg text-sm ${
-                  submitStatus.type === 'success'
-                    ? 'bg-green-50 text-green-700 border border-green-200'
-                    : 'bg-red-50 text-red-700 border border-red-200'
-                }`}
-              >
-                {submitStatus.message}
-              </div>
-            )}
-
             <form className="space-y-6" onSubmit={handleSubmit}>
               {/* Row 1: Full Name & Email */}
               <div 

@@ -144,22 +144,22 @@ export default function CoatedSteelSection() {
           {/* Left Content */}
           <div className="flex flex-col justify-center">
             <p 
-              className="text-sm sm:text-base font-medium mb-2 sm:mb-3"
+              className="text-sm sm:text-base font-medium mb-2 sm:mb-3 text-center lg:text-left"
               style={{ color: '#E91E63' }}
             >
               Inside Luxume's Coated Steel Sheets
             </p>
-            <h2 className="aloevera-bold text-[64px] leading-tight mb-4 sm:mb-6">
+            <h2 className="aloevera-bold text-[36px] sm:text-[48px] lg:text-[64px] leading-tight mb-4 sm:mb-6 text-center lg:text-left">
               <span className="text-[#1C1E54]">Understanding</span>
-              <br />
-              <span className="text-[#1C1E54]">the Layers of</span>
-              <br />
+              <br className='hidden lg:block' />
+              <span className="text-[#1C1E54]">the Layers of </span>
+              <br className='hidden lg:block' />
               <span style={{ color: '#C83C64' }}>Coated Steel</span>
-              <br />
+              <br className='hidden lg:block' />
               <span style={{ color: '#C83C64' }}>Sheets</span>
             </h2>
-            <p className="text-gray-600 text-sm sm:text-base max-w-md">
-              This diagram illustrates the multiple layers involved in the production of coated steel sheets, highlighting their protective and functional coatings.
+            <p className="text-gray-600 text-sm sm:text-base max-w-md mx-auto lg:mx-0 text-center lg:text-left">
+                This diagram illustrates the multiple layers involved in the production of coated steel sheets, highlighting their protective and functional coatings.
             </p>
           </div>
 
