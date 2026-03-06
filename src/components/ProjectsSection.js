@@ -5,10 +5,11 @@ import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { getActiveProjects } from '@/services/supabase';
 import { FaArrowRight, FaMapMarkerAlt } from 'react-icons/fa';
+import Link from 'next/link';
 
 // Fallback image if a project doesn't have an image_url
 const FALLBACK_IMAGE = '/images/roof.jpg';
-export default function ProjectsSection() {
+export default function ProjectsSection({ limit = 6, showViewAll = true }) {
   const { data: projectsData, isLoading, isError } = useQuery({
     queryKey: ['projects', 'active'],
     queryFn: async () => {
@@ -26,7 +27,7 @@ export default function ProjectsSection() {
       <div className="absolute -right-40 bottom-20 w-96 h-96 bg-blue-900/5 rounded-full blur-3xl -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header Section */}
         <div className="text-center mb-16 max-w-3xl mx-auto">
           <motion.div
@@ -55,7 +56,7 @@ export default function ProjectsSection() {
               >
                 {/* Shimmer effect overlay */}
                 <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-                
+
                 {/* Bottom content skeleton */}
                 <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-gray-900/60 to-transparent">
                   <div className="h-6 w-3/4 bg-gray-300 rounded mb-4 animate-pulse"></div>
@@ -83,7 +84,7 @@ export default function ProjectsSection() {
         {/* Projects Grid */}
         {!isLoading && !isError && projectsData?.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projectsData.map((project, index) => (
+            {projectsData.slice(0, limit || projectsData.length).map((project, index) => (
               <motion.div
                 key={project.id}
                 initial={{ opacity: 0, y: 30 }}
@@ -116,7 +117,7 @@ export default function ProjectsSection() {
                         </div>
                       )}
                     </div>
-                    
+
                     {/* Expanded description (hidden by default, reveals smoothly on hover) */}
                     <div className="overflow-hidden transition-all duration-500 ease-out opacity-0 max-h-0 group-hover:opacity-100 group-hover:max-h-40">
                       <p className="font-lato text-gray-400 text-sm leading-relaxed mb-0">
@@ -127,6 +128,20 @@ export default function ProjectsSection() {
                 </div>
               </motion.div>
             ))}
+          </div>
+        )}
+
+        {/* View All Button */}
+        {showViewAll && !isLoading && !isError && projectsData?.length > 0 && (
+          <div className="mt-16 flex justify-center">
+            <Link
+              href="/projects"
+              className="inline-flex items-center justify-center text-white aloevera-medium rounded transition-all hover:bg-opacity-90 hover:-translate-y-1 shadow-md"
+              style={{ padding: '12px 32px', backgroundColor: '#C83C64', fontSize: '18px' }}
+            >
+              View All Projects
+              <FaArrowRight className="ml-3" />
+            </Link>
           </div>
         )}
       </div>

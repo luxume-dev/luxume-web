@@ -8,9 +8,9 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
-  
-  // Force white background on contact page
-  const forceWhiteBg = pathname === '/contact' || pathname.startsWith('/careers') || pathname === '/privacy-policy' || pathname === '/terms-conditions';
+
+  // Force white background on contact page and others
+  const forceWhiteBg = pathname === '/contact' || pathname.startsWith('/careers') || pathname === '/privacy-policy' || pathname === '/terms-conditions' || pathname === '/projects';
   const showWhiteBg = forceWhiteBg || isScrolled || isMenuOpen;
   const useDarkContent = showWhiteBg;
 
@@ -40,42 +40,48 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center" onClick={() => setIsMenuOpen(false)}>
-            <img 
+            <img
               src={useDarkContent ? "/images/logo.png" : "/images/logo-2.png"}
-              alt="Luxume" 
+              alt="Luxume"
               className="h-12 w-auto"
             />
           </Link>
 
           {/* Desktop Content (Links + Button) - Pushed to right via flex justify-between + grouping */}
           <div className="hidden md:flex items-center gap-4 lg:gap-10">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className={`text-sm aloevera-light hover:text-pink-400 transition-colors ${pathname === '/' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
             >
               Home
             </Link>
-            <Link 
-              href="/about" 
+            <Link
+              href="/about"
               className={`text-sm aloevera-light hover:text-pink-400 transition-colors ${pathname === '/about' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
             >
               About Us
             </Link>
-            <Link 
-              href="/products" 
+            <Link
+              href="/products"
               className={`text-sm aloevera-light hover:text-pink-400 transition-colors ${pathname === '/products' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
             >
               Products
             </Link>
+            <Link
+              href="/projects"
+              className={`text-sm aloevera-light hover:text-pink-400 transition-colors ${pathname === '/projects' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
+            >
+              Projects
+            </Link>
 
-            <Link 
-              href="/blog" 
+            <Link
+              href="/blog"
               className={`text-sm aloevera-light hover:text-pink-400 transition-colors ${pathname === '/blog' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
             >
               Blog
             </Link>
-            <Link 
-              href="/careers" 
+            <Link
+              href="/careers"
               className={`text-sm aloevera-light hover:text-pink-400 transition-colors ${pathname === '/careers' ? 'text-pink-400' : useDarkContent ? 'text-gray-800' : 'text-white'}`}
             >
               Careers
@@ -85,10 +91,10 @@ export default function Navbar() {
             <Link
               href="/contact"
               className="inline-flex items-center justify-center text-white aloevera-medium rounded transition-all hover:opacity-90"
-              style={{ 
-                width: '130px', 
-                height: '38px', 
-                padding: '10px', 
+              style={{
+                width: '130px',
+                height: '38px',
+                padding: '10px',
                 gap: '10px',
                 backgroundColor: '#C83C64',
                 fontSize: '16px'
@@ -137,6 +143,7 @@ export default function Navbar() {
                 { href: '/', label: 'Home' },
                 { href: '/about', label: 'About Us' },
                 { href: '/products', label: 'Products' },
+                { href: '/projects', label: 'Projects' },
 
                 { href: '/blog', label: 'Blog' },
                 { href: '/careers', label: 'Careers' },
@@ -156,10 +163,10 @@ export default function Navbar() {
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center text-white aloevera-medium rounded transition-all hover:opacity-90"
-                style={{ 
-                  width: '130px', 
-                  height: '38px', 
-                  padding: '10px', 
+                style={{
+                  width: '130px',
+                  height: '38px',
+                  padding: '10px',
                   gap: '10px',
                   backgroundColor: '#C83C64',
                   fontSize: '16px'
