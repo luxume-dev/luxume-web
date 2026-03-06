@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -136,48 +137,58 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-white/20">
-            <div className="flex flex-col gap-4 pt-4">
-              {[
-                { href: '/', label: 'Home' },
-                { href: '/about', label: 'About Us' },
-                { href: '/products', label: 'Products' },
-                { href: '/projects', label: 'Projects' },
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="md:hidden overflow-hidden"
+            >
+              <div className="mt-4 pb-4 border-t border-white/20">
+                <div className="flex flex-col gap-4 pt-4">
+                  {[
+                    { href: '/', label: 'Home' },
+                    { href: '/about', label: 'About Us' },
+                    { href: '/products', label: 'Products' },
+                    { href: '/projects', label: 'Projects' },
 
-                { href: '/blog', label: 'Blog' },
-                { href: '/careers', label: 'Careers' },
-              ].map((link) => {
-                const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
-                return (
+                    { href: '/blog', label: 'Blog' },
+                    { href: '/careers', label: 'Careers' },
+                  ].map((link) => {
+                    const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className={`text-sm aloevera-light hover:text-pink-400 transition-colors ${isActive ? 'text-pink-400' : 'text-gray-800'}`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
+                    );
+                  })}
                   <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`text-sm aloevera-light hover:text-pink-400 transition-colors ${isActive ? 'text-pink-400' : 'text-gray-800'}`}
+                    href="/contact"
+                    className="inline-flex items-center justify-center text-white aloevera-medium rounded transition-all hover:opacity-90"
+                    style={{
+                      width: '130px',
+                      height: '38px',
+                      padding: '10px',
+                      gap: '10px',
+                      backgroundColor: '#C83C64',
+                      fontSize: '16px'
+                    }}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {link.label}
+                    Contact Us
                   </Link>
-                );
-              })}
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center text-white aloevera-medium rounded transition-all hover:opacity-90"
-                style={{
-                  width: '130px',
-                  height: '38px',
-                  padding: '10px',
-                  gap: '10px',
-                  backgroundColor: '#C83C64',
-                  fontSize: '16px'
-                }}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact Us
-              </Link>
-            </div>
-          </div>
-        )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   );
