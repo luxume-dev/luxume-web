@@ -1,109 +1,104 @@
 'use client';
 
 import Link from 'next/link';
-import { FaPhone, FaInstagram, FaFacebookF, FaYoutube, FaMapMarkerAlt, FaEnvelope, FaPaperPlane } from 'react-icons/fa';
+import { FaPhone, FaInstagram, FaFacebookF, FaYoutube, FaMapMarkerAlt, FaEnvelope, FaPaperPlane, FaArrowRight } from 'react-icons/fa';
 import { useNewsletter } from '@/hooks/useNewsletter';
 
 export default function Footer() {
   const { email, setEmail, isLoading, status, handleSubscribe } = useNewsletter();
 
   return (
-    <footer className="relative z-30">
-      {/* Hero Banner Section */}
-      <div 
-        className="relative pt-8 sm:pt-12 md:pt-16 lg:pt-20 pb-4 sm:pb-6 md:pb-8 lg:pb-10 px-4 sm:px-6 md:px-8"
-        style={{
-          backgroundImage: 'url(/images/footer.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
-        {/* Overlay */}
+    <footer className="relative z-30 bg-[#0B1120] text-gray-300 font-lato">
+      
+      {/* ─── PRE-FOOTER CTA BANNER ───────────────────────────────────────────── */}
+      <div className="relative py-20 lg:py-24 border-b border-white/5">
         <div 
-          className="absolute inset-0"
+          className="absolute inset-0 z-0"
           style={{
-            background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.7) 100%)'
+            backgroundImage: 'url(/images/footer.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
           }}
         />
+        <div className="absolute inset-0 z-0 bg-[#0B1120]/80 mix-blend-multiply" />
+        <div className="absolute inset-0 z-0 bg-gradient-to-t from-[#0B1120] to-transparent" />
 
-        {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto ">
-          {/* Logo */}
-          <div className="flex justify-center my-16 lg:my-24">
-            <img 
-              src="/images/logo-2.png" 
-              alt="Luxume Roofing" 
-              className="h-40 sm:h-56 md:h-72 lg:h-[24rem]"
-            />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="text-center md:text-left max-w-2xl">
+            <h2 className="aloevera-light text-white text-4xl sm:text-5xl lg:text-[55px] leading-tight mb-4">
+              Experience <br className="hidden md:block"/>
+              <span style={{ color: '#C83C64' }}>Strength</span> Above All
+            </h2>
+            <p className="font-lato font-light text-gray-300 text-base sm:text-lg max-w-lg mx-auto md:mx-0">
+              Built with premium steel and precision engineering to deliver unmatched durability, reliability, and performance.
+            </p>
           </div>
-
-          {/* Tagline + Button Row */}
-          <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-8 sm:gap-0">
-            <div className="text-center sm:text-left w-full sm:w-auto sm:max-w-md">
-              <h3 
-                className="aloevera-light text-white mb-2 text-[42px] sm:text-[55px] leading-[1.1] sm:leading-[63px]"
-              >
-                Experience
-              </h3>
-              <h3 
-                className="aloevera-light text-white mb-4 text-[32px] sm:text-[39px] leading-[1.1]"
-              >
-                Strength Above All
-              </h3>
-              <p className="font-lato font-light text-white text-[16px] mb-0 mx-auto sm:mx-0 sm:max-w-[360px]">
-                Built with premium steel and precision engineering to deliver unmatched durability, reliability, and performance.
-              </p>
-            </div>
-            
-            {/* Contact Us Button */}
-            <a 
+          
+          <div className="flex-shrink-0">
+            <Link 
               href="/contact"
-              className="rounded text-white font-medium transition-all duration-300 hover:opacity-90 inline-flex items-center justify-center"
-              style={{ background: '#C83C64', width: '180px', height: '46px', padding: '10px', gap: '10px' }}
+              className="group relative inline-flex items-center justify-center px-8 py-4 font-medium text-white transition-all duration-300 overflow-hidden rounded-full shadow-lg hover:shadow-[0_0_20px_rgba(200,60,100,0.4)]"
+              style={{ backgroundColor: '#C83C64' }}
             >
-              Contact Us
-            </a>
+              <span className="relative flex items-center gap-3">
+                Get a Free Quote
+                <FaArrowRight className="text-sm transition-transform duration-300 group-hover:translate-x-1" />
+              </span>
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* Main Footer */}
-      <div 
-        className="pt-0 pb-12 px-4 sm:pt-0 sm:pb-16 sm:px-6 md:px-8"
-        style={{ background: '#0a0a1a' }}
-      >
+      {/* ─── MAIN FOOTER CONTENT ─────────────────────────────────────────────── */}
+      <div className="pt-20 pb-10 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          {/* Top Section - Logo & Description */}
-          <hr style={{ borderColor: '#D46D64', borderWidth: '0.5px' }} className="mb-6" />
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6">
-            {/* Logo */}
-            <div className="mb-6 lg:mb-0">
-              <img src="/images/logo-2.png" alt="Luxume Roofing" className="h-12 sm:h-14" />
-            </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
             
-            {/* Description */}
-            <p className="text-gray-400 text-sm sm:text-base max-w-md text-center lg:text-right mt-4 lg:mt-0">
-              Luxume produces premium colour-coated sheets to safeguard and enhance structures in the construction industry.
-            </p>
-          </div>
-          <hr style={{ borderColor: '#D46D64', borderWidth: '0.5px' }} className="mb-12" />
+            {/* Column 1: Brand & Description (spans 4 cols) */}
+            <div className="col-span-1 md:col-span-2 lg:col-span-4 lg:pr-8">
+              <Link href="/" className="inline-block mb-6">
+                <img src="/images/logo-2.png" alt="Luxume Roofing" className="h-12 drop-shadow-md" />
+              </Link>
+              <p className="text-gray-400 text-sm leading-relaxed mb-8 max-w-sm">
+                Luxume produces premium colour-coated sheets to safeguard and enhance structures in the construction industry. Uncompromising quality for lasting peace of mind.
+              </p>
+              
+              {/* Socials */}
+              <div className="flex gap-4">
+                {[
+                  { Icon: FaPhone,     href: 'tel:+919778557752', color: '#C83C64' },
+                  { Icon: FaInstagram, href: 'https://www.instagram.com/luxume_roofing/', color: '#E1306C' },
+                  { Icon: FaFacebookF, href: 'https://www.facebook.com/profile.php?id=100069323057371', color: '#1877F2' },
+                  { Icon: FaYoutube,   href: 'https://www.youtube.com/@Luxume_Roofing', color: '#FF0000' },
+                ].map(({ Icon, href, color }, index) => (
+                  <a 
+                    key={index}
+                    href={href}
+                    target={href.startsWith('tel') ? '_self' : '_blank'}
+                    rel="noopener noreferrer"
+                    className="group w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 transition-all duration-300 hover:bg-white/10 hover:-translate-y-1 hover:border-white/20"
+                  >
+                    <Icon className="text-sm transition-colors duration-300" style={{ '--icon-color': color }} onMouseEnter={(e) => e.currentTarget.style.color = color} onMouseLeave={(e) => e.currentTarget.style.color = ''} />
+                  </a>
+                ))}
+              </div>
+            </div>
 
-          {/* Links Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 mb-12">
-            {/* Quick Links */}
-            <div>
-              <h4 className="aloevera-medium text-white text-[16px] mb-4">Quick Links</h4>
-              <ul className="space-y-2">
+            {/* Column 2: Quick Links (spans 2 cols) */}
+            <div className="lg:col-span-2">
+              <h4 className="aloevera-medium text-white text-lg mb-6 tracking-wider">COMPANY</h4>
+              <ul className="space-y-3">
                 {[
                   { name: 'Home', href: '/' },
                   { name: 'About Us', href: '/about' },
                   { name: 'Products', href: '/products' },
-                  { name: 'Contact Us', href: '/contact' },
-                  { name: 'Careers', href: '/careers' }
+                  { name: 'Careers', href: '/careers' },
+                  { name: 'Contact', href: '/contact' }
                 ].map((link) => (
                   <li key={link.name}>
-                    <Link href={link.href} className="aloevera-light text-gray-400 text-[16px] hover:text-white transition-colors">
+                    <Link href={link.href} className="group flex items-center text-sm text-gray-400 hover:text-white transition-colors duration-300">
+                      <span className="w-0 h-[1px] bg-[#C83C64] mr-0 transition-all duration-300 group-hover:w-3 group-hover:mr-2"></span>
                       {link.name}
                     </Link>
                   </li>
@@ -111,90 +106,76 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Popular Products */}
-            <div>
-              <h4 className="aloevera-medium text-white text-[16px] mb-4">Popular Products</h4>
-              <ul className="space-y-2">
-                <li>
-                  <Link href="/products/colour-coated-galvalume-sheets" className="aloevera-light text-gray-400 text-[16px] hover:text-white transition-colors">
-                    Colour Coated Galvalume Sheets
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/products/color-coated-galvalume-coils" className="aloevera-light text-gray-400 text-[16px] hover:text-white transition-colors">
-                    Color Coated Galvalume Coils
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Contact Info */}
-            <div>
-              <h4 className="aloevera-medium text-white text-[16px] mb-4">Contact Info</h4>
+            {/* Column 3: Products (spans 3 cols) */}
+            <div className="lg:col-span-3">
+              <h4 className="aloevera-medium text-white text-lg mb-6 tracking-wider">PRODUCTS</h4>
               <ul className="space-y-3">
-                <li className="flex gap-3 aloevera-light text-gray-400 text-[16px]">
-                  <FaMapMarkerAlt className="text-gray-400 flex-shrink-0 mt-1" />
-                  <span>2nd Floor, SajMahal Building, Madakapilli Lane, Ernakulam South, Ernakulam Pin: 682016</span>
-                </li>
-                <li className="flex gap-3 aloevera-light text-gray-400 text-[16px] items-center">
-                  <FaPhone className="text-gray-400" />
-                  <a href="tel:+919778557752" className="hover:text-white transition-colors">+91 97785 57752</a>
-                </li>
-                <li className="flex gap-3 aloevera-light text-gray-400 text-[16px] items-center">
-                  <FaEnvelope className="text-gray-400" />
-                  <a href="mailto:info@luxume.com" className="hover:text-white transition-colors">info@luxume.com</a>
-                </li>
+                {[
+                  { name: 'Colour Coated Galvalume Sheets', href: '/products/colour-coated-galvalume-sheets' },
+                  { name: 'Color Coated Galvalume Coils', href: '/products/color-coated-galvalume-coils' }
+                ].map((link) => (
+                  <li key={link.name}>
+                    <Link href={link.href} className="group flex items-center text-sm text-gray-400 hover:text-white transition-colors duration-300">
+                      <span className="w-0 h-[1px] bg-[#C83C64] mr-0 transition-all duration-300 group-hover:w-3 group-hover:mr-2"></span>
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
-            {/* Connect Us & Subscribe */}
-            <div>
-              <h4 className="aloevera-medium text-white text-[16px] mb-4">Connect Us</h4>
-              <div className="flex gap-3 sm:gap-2 mb-6">
-                {[
-                  { Icon: FaPhone,     href: 'tel:+919778557752' },
-                  { Icon: FaInstagram, href: 'https://www.instagram.com/luxume_roofing/' },
-                  { Icon: FaFacebookF, href: 'https://www.facebook.com/profile.php?id=100069323057371' },
-                  { Icon: FaYoutube,   href: 'https://www.youtube.com/@Luxume_Roofing' },
-                ].map(({ Icon, href }, index) => (
-                  <a 
-                    key={index}
-                    href={href}
-                    target={href.startsWith('tel') ? '_self' : '_blank'}
-                    rel="noopener noreferrer"
-                    className="w-11 h-11 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:opacity-80"
-                    style={{ background: '#D46D64' }}
-                  >
-                    <Icon className="text-white text-base sm:text-sm" />
-                  </a>
-                ))}
-              </div>
-              
-              <h4 className="aloevera-medium text-white text-[16px] mb-3">Subscribe Now</h4>
-              <form onSubmit={handleSubscribe} className="space-y-2">
-                <div className="flex max-w-xs sm:max-w-none">
+            {/* Column 4: Contact & Newsletter (spans 3 cols) */}
+            <div className="lg:col-span-3">
+              <h4 className="aloevera-medium text-white text-lg mb-6 tracking-wider">CONNECT</h4>
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-start gap-4">
+                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0 mt-0.5" style={{ color: '#C83C64' }}>
+                    <FaMapMarkerAlt className="text-sm" />
+                  </div>
+                  <span className="text-sm text-gray-400 leading-relaxed">
+                    2nd Floor, SajMahal Building, Madakapilli Lane, Ernakulam South, Pin: 682016
+                  </span>
+                </li>
+                <li className="flex items-center gap-4">
+                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0" style={{ color: '#C83C64' }}>
+                    <FaPhone className="text-sm" />
+                  </div>
+                  <a href="tel:+919778557752" className="text-sm text-gray-400 hover:text-white transition-colors">+91 97785 57752</a>
+                </li>
+                <li className="flex items-center gap-4">
+                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0" style={{ color: '#C83C64' }}>
+                    <FaEnvelope className="text-sm" />
+                  </div>
+                  <a href="mailto:info@luxume.com" className="text-sm text-gray-400 hover:text-white transition-colors">info@luxume.com</a>
+                </li>
+              </ul>
+
+              <form onSubmit={handleSubscribe} className="relative mt-8">
+                <label className="block text-xs uppercase tracking-wider text-gray-500 mb-2">Subscribe to News</label>
+                <div className="relative">
                   <input 
                     type="email" 
                     placeholder="Email Address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 min-w-0 px-3 sm:px-4 py-3 sm:py-2.5 bg-transparent border border-gray-700 rounded-l-lg text-white text-sm focus:outline-none focus:border-gray-500"
+                    className="w-full bg-[#111A2D] border border-white/10 rounded-xl px-5 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#C83C64] transition-colors duration-300 pr-14 shadow-inner"
+                    required
                   />
                   <button 
                     type="submit"
                     disabled={isLoading}
-                    className="px-4 py-3 sm:py-2.5 rounded-r-lg transition-all duration-300 hover:opacity-80 disabled:opacity-50 flex-shrink-0"
-                    style={{ background: '#D46D64' }}
+                    className="absolute right-1.5 top-1.5 bottom-1.5 w-11 rounded-lg flex items-center justify-center text-white transition-all duration-300 hover:opacity-90 disabled:opacity-50"
+                    style={{ backgroundColor: '#C83C64' }}
                   >
                     {isLoading ? (
-                      <span className="text-white text-sm">...</span>
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
-                      <FaPaperPlane className="text-white" />
+                      <FaPaperPlane className="text-sm ml-[-2px]" />
                     )}
                   </button>
                 </div>
                 {status.message && (
-                  <p className={`text-xs ${
+                  <p className={`absolute -bottom-6 left-1 text-xs font-medium ${
                     status.type === 'success' ? 'text-green-400' : 
                     status.type === 'info' ? 'text-blue-400' : 
                     'text-red-400'
@@ -207,24 +188,26 @@ export default function Footer() {
           </div>
 
           {/* Bottom Bar */}
-          <div className="pt-8 border-t border-[#D46D64] flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
-            <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">
-              © 2026 Luxume. All Rights Reserved.<br className="sm:hidden" />
-              <span className="hidden sm:inline"> </span>Designed & Developed by{' '}
+          <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-gray-500 text-center md:text-left">
+              &copy; {new Date().getFullYear()} Luxume Roofing. All Rights Reserved. 
+              <span className="mx-2 hidden sm:inline">|</span> 
+              <br className="sm:hidden" />
+              Designed & Developed by{' '}
               <a 
                 href="https://snapinfinity.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:text-white transition-colors underline"
+                className="text-gray-400 hover:text-white font-medium transition-colors"
               >
                 Snap Infinity
               </a>
             </p>
-            <div className="flex gap-4 sm:gap-6">
-              <Link href="/terms-conditions" className="text-gray-500 text-xs sm:text-sm hover:text-white transition-colors">
+            <div className="flex gap-6">
+              <Link href="/terms-conditions" className="text-xs text-gray-500 hover:text-white transition-colors">
                 Terms & Conditions
               </Link>
-              <Link href="/privacy-policy" className="text-gray-500 text-xs sm:text-sm hover:text-white transition-colors">
+              <Link href="/privacy-policy" className="text-xs text-gray-500 hover:text-white transition-colors">
                 Privacy Policy
               </Link>
             </div>

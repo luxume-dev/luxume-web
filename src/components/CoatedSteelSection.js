@@ -244,7 +244,7 @@ export default function CoatedSteelSection() {
             Superior Protection and Style
           </h2>
           <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
-            Making each construction perfect with numerous excellent features. Lux Roofing offers long-lasting strength and quality. Range of Trafford, Cladding, and Sheets.
+            Making each construction perfect with numerous excellent features. Luxume Roofing offers long-lasting strength and quality for the range of trafford and cladding sheets.
           </p>
         </div>
 

@@ -14,11 +14,11 @@ export default function AboutHeroSection() {
       gsap.fromTo(
         missionRef.current,
         { opacity: 0, x: -60, scale: 0.95 },
-        { 
-          opacity: 1, 
-          x: 0, 
+        {
+          opacity: 1,
+          x: 0,
           scale: 1,
-          duration: 0.9, 
+          duration: 0.9,
           ease: 'power3.out',
         }
       );
@@ -27,11 +27,11 @@ export default function AboutHeroSection() {
       gsap.fromTo(
         visionRef.current,
         { opacity: 0, x: 60, scale: 0.95 },
-        { 
-          opacity: 1, 
-          x: 0, 
+        {
+          opacity: 1,
+          x: 0,
           scale: 1,
-          duration: 0.9, 
+          duration: 0.9,
           delay: 0.2,
           ease: 'power3.out',
         }
@@ -46,7 +46,7 @@ export default function AboutHeroSection() {
       {/* Hero Image - full width, no margins */}
       <section className="relative w-full overflow-hidden" style={{ height: '730px' }}>
         <Image
-          src="/images/about.png"
+          src="/images/about-hero.webp"
           alt="About Luxume - Premium steel roofing solutions"
           fill
           priority
@@ -60,12 +60,12 @@ export default function AboutHeroSection() {
       <div className="max-w-5xl mx-auto px-4 sm:px-8 -mt-24 md:-mt-32 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Mission Card */}
-          <div 
+          <div
             ref={missionRef}
             className="bg-white rounded-2xl shadow-lg p-6 md:p-8 hover:shadow-xl transition-shadow duration-500 hover:-translate-y-1"
             style={{ opacity: 0, transition: 'transform 0.4s ease, box-shadow 0.5s ease' }}
           >
-            <h3 
+            <h3
               className="aloevera-medium text-center text-lg mb-4 text-[#C83C64]"
             >
               Mission
@@ -76,12 +76,12 @@ export default function AboutHeroSection() {
           </div>
 
           {/* Vision Card */}
-          <div 
+          <div
             ref={visionRef}
             className="bg-white rounded-2xl shadow-lg p-6 md:p-8 hover:shadow-xl transition-shadow duration-500 hover:-translate-y-1"
             style={{ opacity: 0, transition: 'transform 0.4s ease, box-shadow 0.5s ease' }}
           >
-            <h3 
+            <h3
               className="aloevera-medium text-center text-lg mb-4 text-[#C83C64]"
             >
               Vision

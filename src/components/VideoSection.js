@@ -39,7 +39,7 @@ export default function VideoSection() {
             controls
             poster="/images/Luxume 1920x1080 1 1.png"
           >
-            <source src="/images/LUXUME 20 SEC.mp4" type="video/mp4" />
+            <source src="/images/luxume-video.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>

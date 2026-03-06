@@ -131,7 +131,7 @@ export default function AboutSection() {
           className="max-w-4xl text-sm sm:text-[15px] leading-7 sm:leading-8 text-[#666666] text-center px-2 sm:px-4"
           style={{ opacity: 0 }}
         >
-          Luxume head quartered at Chittoor Road, Ernakulam is a leading manufacturer
+          Luxume headquartered at Chittoor Road, Ernakulam is a leading manufacturer
           of colour-coated steel sheets which is primarily supplied to the construction
           industry. We began our operations in the year 2011. Since then, we have been
           manufacturing high-quality colour coated steel sheets that excel in durability,

@@ -2,15 +2,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const metadata = {
-  title: 'Warranty Terms & Conditions | Luxume Roofing',
-  description: '10-year limited warranty for Luxume colour coated roofing and cladding products. Read the full terms and conditions.',
+  title: 'Guarantee Terms & Conditions | Luxume Roofing',
+  description: '10-year limited guarantee for Luxume colour coated roofing and cladding products. Read the full terms and conditions.',
 };
 
 /* ─── Content Data ─────────────────────────────────────────────── */
 
 const warrantyIntro = {
-  headline: '10-Year Limited Warranty',
-  body: 'LUXUME hereby provides limited WARRANTY to genuine buyers of colour coated coil/sheet for roofing and cladding application, for a period of 10 years against perforation, from the date mentioned in the purchase invoice from authorised dealers, provided terms and conditions mentioned below are found in compliance. This Limited Warranty applies to pre-painted products supplied by LUXUME, using the RMP paint system with a warranty up to 10 years and no previous warranty shall apply to such product.',
+  headline: '10-Year Limited Guarantee',
+  body: 'LUXUME hereby provides limited GUARANTEE to genuine buyers of colour coated coil/sheet for roofing and cladding application, for a period of 10 years against perforation, from the date mentioned in the purchase invoice from authorised dealers, provided terms and conditions mentioned below are found in compliance. This Limited Guarantee applies to pre-painted products supplied by LUXUME, using the RMP paint system with a guarantee up to 10 years and no previous guarantee shall apply to such product.',
 };
 
 const definitions = [
@@ -32,26 +32,26 @@ const definitions = [
 ];
 
 const generalTerms = [
-  'Warranty is not applicable if guard film is not removed at the time of installation.',
+  'Guarantee is not applicable if guard film is not removed at the time of installation.',
   'End user customer must clean the installed sheets on a regular 6-month basis.',
   'The coated metal must not be cleaned with abrasive or chemical cleaners and subjected to water infiltration due to improper packaging.',
-  'Claims under this limited warranty must be sent by the warranty holder in writing to LUXUME and must be received within thirty (30) days after discovery of the initial condition giving rise to the claim.',
-  'The exclusive remedy under this warranty shall be, at the sole discretion of LUXUME, to either repaint the products or provide free of charge replacements (but not installation) for the products.',
-  'LUXUME extends this warranty solely to the original purchaser of the product. This Warranty is non-transferable and non-assignable.',
+  'Claims under this limited guarantee must be sent by the guarantee holder in writing to LUXUME and must be received within thirty (30) days after discovery of the initial condition giving rise to the claim.',
+  'The exclusive remedy under this guarantee shall be, at the sole discretion of LUXUME, to either repaint the products or provide free of charge replacements (but not installation) for the products.',
+  'LUXUME extends this guarantee solely to the original purchaser of the product. This Guarantee is non-transferable and non-assignable.',
   'No terms or conditions other than those stated herein shall be binding on LUXUME unless made in writing and signed by its authorised representative.',
-  'This warranty shall be governed by Indian regulations. Any litigation or dispute will be settled by the law Court of Ernakulam, India.',
+  'This guarantee shall be governed by Indian regulations. Any litigation or dispute will be settled by the law Court of Ernakulam, India.',
 ];
 
 const claimDocs = [
   'Purchase Receipt.',
-  'Duly stamped Warranty Certificate.',
+  'Duly stamped Guarantee Certificate.',
 ];
 
 const conditions = [
-  'The limited warranty shall extend for utilisation within 6 months from the date of shipment or 3 months after application, whichever occurs first.',
+  'The limited guarantee shall extend for utilisation within 6 months from the date of shipment or 3 months after application, whichever occurs first.',
   'Non-uniform colour changes from unequal exposure to sunlight are not covered unless such change meets the definition of Color Change above.',
-  'The durability of the paint is up to 10 years for residential, commercial and school buildings in rural or residential areas. This warranty excludes industrial steel mills, power generating stations, oil fields, oil refineries, ore mines, chemical plants, paper mills, chimneys, or other unusual environmental exposure, or severe marine environments within 5,000 feet from salt water.',
-  'The warranty is valid and applicable for roofing and cladding end application only; wherein the installation is at an incline of not more than 75° from the vertical.',
+  'The durability of the paint is up to 10 years for residential, commercial and school buildings in rural or residential areas. This guarantee excludes industrial steel mills, power generating stations, oil fields, oil refineries, ore mines, chemical plants, paper mills, chimneys, or other unusual environmental exposure, or severe marine environments within 5,000 feet from salt water.',
+  'The guarantee is valid and applicable for roofing and cladding end application only; wherein the installation is at an incline of not more than 75° from the vertical.',
 ];
 
 const notCovered = [
@@ -120,7 +120,7 @@ export default function WarrantyPage() {
           Product Assurance
         </span>
         <h1 className="font-aloevera font-bold text-4xl md:text-5xl lg:text-6xl text-white mb-4">
-          Warranty
+          Guarantee
         </h1>
         <p className="font-lato text-white/70 max-w-xl text-base md:text-lg">
           Terms &amp; Conditions for Luxume colour coated roofing and cladding products.
@@ -129,32 +129,17 @@ export default function WarrantyPage() {
 
       </section>
 
-      {/* Warranty Image */}
+      {/* Guarantee Image */}
       <div className="w-full max-w-4xl mx-auto px-4 md:px-8 -mt-1 pt-12">
         <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-100">
           <Image
             src="/images/warranty-both.png"
-            alt="Luxume Warranty Certificate"
+            alt="Luxume Guarantee Certificate"
             width={1200}
             height={600}
             className="w-full h-auto object-contain"
             priority
           />
-        </div>
-
-        {/* Download Button */}
-        <div className="flex justify-center mt-5">
-          <a
-            href="/documents/Luxume-Warranty.pdf"
-            download
-            className="inline-flex items-center gap-2.5 px-7 py-3 rounded-xl font-lato font-semibold text-sm text-white transition-all duration-300 hover:opacity-90 shadow-md"
-            style={{ backgroundColor: '#1a1b4b' }}
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Download Warranty (PDF)
-          </a>
         </div>
       </div>
 
@@ -168,7 +153,7 @@ export default function WarrantyPage() {
               <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
-              <span className="font-lato text-yellow-400 text-sm font-semibold tracking-wide uppercase">10-Year Limited Warranty</span>
+              <span className="font-lato text-yellow-400 text-sm font-semibold tracking-wide uppercase">10-Year Limited Guarantee</span>
             </div>
             <p className="font-lato text-white/80 text-sm md:text-base leading-relaxed max-w-3xl mx-auto">
               {warrantyIntro.body}
@@ -204,7 +189,7 @@ export default function WarrantyPage() {
           {/* Claim Documents */}
           <SectionCard title="Required Documents for Claims" accent="#2BBAA4">
             <p className="font-lato text-gray-600 text-sm mb-4">
-              In the event of a claim under this limited warranty, the purchaser must provide the original copy of:
+              In the event of a claim under this limited guarantee, the purchaser must provide the original copy of:
             </p>
             <ul className="space-y-0">
               {claimDocs.map((d, i) => (
@@ -223,9 +208,9 @@ export default function WarrantyPage() {
           </SectionCard>
 
           {/* Not Covered */}
-          <SectionCard title="Not Covered Under This Warranty" accent="#C83C64">
+          <SectionCard title="Not Covered Under This Guarantee" accent="#C83C64">
             <p className="font-lato text-gray-600 text-sm mb-4">
-              This limited warranty does not extend to or cover:
+              This limited guarantee does not extend to or cover:
             </p>
             <ul className="space-y-0">
               {notCovered.map((n, i) => (
@@ -234,8 +219,8 @@ export default function WarrantyPage() {
             </ul>
           </SectionCard>
 
-          {/* Warranty Void */}
-          <SectionCard title="Warranty Void If" accent="#C83C64">
+          {/* Guarantee Void */}
+          <SectionCard title="Guarantee Void If" accent="#C83C64">
             <ul className="space-y-0">
               {voidConditions.map((v, i) => (
                 <BulletItem key={i} text={v} icon="x" color="#C83C64" />

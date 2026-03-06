@@ -3,9 +3,11 @@ import AboutSection from '@/components/AboutSection';
 import StatsSection from '@/components/StatsSection';
 import CoreValuesSection from '@/components/CoreValuesSection';
 import CoatedSteelSection from '@/components/CoatedSteelSection';
+import ProjectsSection from '@/components/ProjectsSection';
 import VideoSection from '@/components/VideoSection';
 import ProductHighlightsSection from '@/components/ProductHighlightsSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
+import DownloadsAndResources from '@/components/DownloadsAndResources';
 
 export default function Home() {
 
@@ -18,9 +20,11 @@ export default function Home() {
         <StatsSection />
         <CoreValuesSection />
         <CoatedSteelSection />
+        <ProjectsSection />
         <VideoSection />
         <ProductHighlightsSection />
         <TestimonialsSection />
+        <DownloadsAndResources />
       </div>
     </main>
   );

@@ -16,4 +16,7 @@ export const queryKeys = {
     all: ['blogs'],
     detail: (slug) => ['blogs', slug],
   },
+  testimonials: {
+    all: ['testimonials'],
+  },
 };
