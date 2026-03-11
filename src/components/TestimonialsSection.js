@@ -18,20 +18,8 @@ if (typeof window !== 'undefined') {
 // Helper to detect YouTube URLs and return embed URL
 function getYouTubeEmbedUrl(url) {
   if (!url) return null;
-  let videoId = null;
-  try {
-    const parsed = new URL(url);
-    if (parsed.hostname.includes('youtube.com') && parsed.pathname === '/watch') {
-      videoId = parsed.searchParams.get('v');
-    } else if (parsed.hostname === 'youtu.be') {
-      videoId = parsed.pathname.slice(1);
-    } else if (parsed.hostname.includes('youtube.com') && parsed.pathname.startsWith('/embed/')) {
-      videoId = parsed.pathname.split('/embed/')[1];
-    }
-  } catch {
-    return null;
-  }
-  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]+)/);
+  return match ? `https://www.youtube.com/embed/${match[1]}?rel=0` : null;
 }
 
 export default function TestimonialsSection() {
@@ -178,7 +166,7 @@ export default function TestimonialsSection() {
                     key={activeTestimonial?.video_url}
                     src={getYouTubeEmbedUrl(activeTestimonial?.video_url)}
                     className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                     title={`Testimonial video`}
                   />
