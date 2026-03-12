@@ -4,7 +4,7 @@ export default function HeroSection() {
   return (
     <section className="fixed top-0 left-0 right-0 z-0 h-screen flex items-center">
       {/* Background Image */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-no-repeat bg-right md:bg-center"
         style={{
           backgroundImage: 'url(/images/Luxume%201920x1080%201%201.png)',
@@ -32,14 +32,14 @@ export default function HeroSection() {
           <a
             href="/contact"
             className="group inline-flex items-center gap-3 text-white font-medium rounded-lg transition-all duration-300 shadow-lg hover:shadow-2xl w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 text-sm sm:text-base"
-            style={{ 
+            style={{
               backgroundColor: '#C83C64',
               maxWidth: '250px',
             }}
           >
             <span className="aloevera-medium">Contact Us</span>
-            <svg 
-              className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" 
+            <svg
+              className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
               fill="none" stroke="currentColor" viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />

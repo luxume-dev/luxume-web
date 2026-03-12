@@ -177,17 +177,17 @@ export default function HowWeWorkSection() {
       <div className="max-w-6xl mx-auto">
         {/* Heading - Full width at top with animated underline */}
         <div className="relative inline-block mb-4 lg:mb-6">
-          <h2 
+          <h2
             ref={headingRef}
             className="aloevera-bold text-3xl sm:text-4xl md:text-5xl"
             style={{ color: '#C83C64', opacity: 0 }}
           >
             How We Work
           </h2>
-          <div 
+          <div
             ref={headingUnderlineRef}
             className="h-1 rounded-full mt-2"
-            style={{ 
+            style={{
               background: 'linear-gradient(90deg, #C83C64, #E91E63)',
               transform: 'scaleX(0)'
             }}
@@ -198,7 +198,7 @@ export default function HowWeWorkSection() {
           {/* Left - Steps content (Subtitle + Steps) */}
           <div className="w-full lg:w-3/5">
             {/* Subtitle */}
-            <p 
+            <p
               ref={subtitleRef}
               className="text-gray-600 text-sm sm:text-base mb-10 max-w-md"
               style={{ opacity: 0 }}
@@ -209,17 +209,17 @@ export default function HowWeWorkSection() {
             {/* Steps — with timeline numbers */}
             <div className="space-y-8">
               {steps.map((step, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   ref={el => stepRefs.current[index] = el}
                   className="flex gap-4 sm:gap-6 group"
                 >
                   {/* Number — pops in with bounce */}
-                  <span 
+                  <span
                     ref={el => stepNumberRefs.current[index] = el}
                     className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center lato-regular text-[16px] font-semibold"
-                    style={{ 
-                      color: '#C83C64', 
+                    style={{
+                      color: '#C83C64',
                       backgroundColor: '#C83C6412',
                       border: '2px solid #C83C6430',
                       opacity: 0,
@@ -240,12 +240,12 @@ export default function HowWeWorkSection() {
                   </span>
 
                   {/* Content — clip reveal */}
-                  <div 
+                  <div
                     ref={el => stepContentRefs.current[index] = el}
                     className="flex-1 mt-1"
                     style={{ opacity: 0 }}
                   >
-                    <h3 
+                    <h3
                       className="aloevera-medium text-[36px] mb-2 group-hover:text-[#C83C64] transition-colors duration-300"
                       style={{ color: '#1C1E54' }}
                     >
@@ -261,14 +261,14 @@ export default function HowWeWorkSection() {
           </div>
 
           {/* Right - Image */}
-          <div 
+          <div
             ref={imageRef}
             className="w-full lg:w-2/5"
             style={{ opacity: 0 }}
           >
-            <img 
-              src="/images/man.png" 
-              alt="Worker installing roofing" 
+            <img
+              src="/images/how-we-work.jpg"
+              alt="Worker installing roofing"
               className="w-full rounded-2xl object-cover"
               style={{ height: '100%', objectPosition: 'center' }}
             />
@@ -276,7 +276,7 @@ export default function HowWeWorkSection() {
         </div>
 
         {/* Luxume Focus Paragraph - Bottom centered */}
-        <p 
+        <p
           ref={bottomTextRef}
           className="lato-regular text-gray-600 text-center mt-12 max-w-2xl mx-auto"
           style={{ opacity: 0 }}

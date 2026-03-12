@@ -136,7 +136,7 @@ export default function ProjectsSection({ limit = 6, showViewAll = true }) {
           <div className="mt-16 flex justify-center">
             <Link
               href="/projects"
-              className="inline-flex items-center justify-center text-white aloevera-medium rounded transition-all hover:bg-opacity-90 hover:-translate-y-1 shadow-md"
+              className="inline-flex items-center justify-center text-white aloevera-medium rounded-full transition-all hover:bg-opacity-90 hover:-translate-y-1 shadow-md"
               style={{ padding: '12px 32px', backgroundColor: '#C83C64', fontSize: '18px' }}
             >
               View All Projects

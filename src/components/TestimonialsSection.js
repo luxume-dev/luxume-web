@@ -264,14 +264,24 @@ export default function TestimonialsSection() {
             swiperRef.current = swiper;
             setIsBeginning(swiper.isBeginning);
             setIsEnd(swiper.isEnd);
-            const pages = swiper.snapGrid.length;
-            setTotalPages(pages);
+            setTotalPages(swiper.snapGrid?.length || 1);
             setCurrentPage(1);
           }}
           onSlideChange={(swiper) => {
             setIsBeginning(swiper.isBeginning);
             setIsEnd(swiper.isEnd);
-            setCurrentPage(swiper.snapIndex + 1);
+            setCurrentPage((swiper.snapIndex || 0) + 1);
+          }}
+          onUpdate={(swiper) => {
+            setIsBeginning(swiper.isBeginning);
+            setIsEnd(swiper.isEnd);
+            setTotalPages(swiper.snapGrid?.length || 1);
+          }}
+          onResize={(swiper) => {
+            setIsBeginning(swiper.isBeginning);
+            setIsEnd(swiper.isEnd);
+            setTotalPages(swiper.snapGrid?.length || 1);
+            setCurrentPage((swiper.snapIndex || 0) + 1);
           }}
           modules={[Navigation, Pagination, Autoplay]}
           spaceBetween={24}
