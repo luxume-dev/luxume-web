@@ -86,10 +86,10 @@ export default function AboutUsSection() {
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
           {/* Left - Image */}
           <div className="w-full lg:w-2/5">
-            <img 
+            <img
               ref={imageRef}
-              src="/images/sheet2.png" 
-              alt="Colorful roofing sheets" 
+              src="/images/sheet2.png"
+              alt="Colorful roofing sheets"
               className="w-full h-auto"
               style={{ opacity: 0, transform: 'rotate(10deg)' }}
             />
@@ -98,7 +98,7 @@ export default function AboutUsSection() {
           {/* Right - Text content */}
           <div className="w-full lg:w-3/5">
             {/* About Us heading */}
-            <h2 
+            <h2
               ref={headingRef}
               className="aloevera-bold text-[36px] mb-6"
               style={{ color: '#C83C64', opacity: 0 }}
@@ -106,15 +106,15 @@ export default function AboutUsSection() {
               About Us
             </h2>
 
-            <p 
+            <p
               ref={el => textRefs.current[0] = el}
               className="text-gray-600 text-sm sm:text-base leading-7 mb-4"
               style={{ opacity: 0 }}
             >
-              Luxume head quartered at Chittoor Road, Ernakulam is a leading manufacturer of colour-coated steel sheets which is primarily supplied to the construction industry. We began our operations in the year 2011. Since then, we have been manufacturing high-quality colour coated steel sheets that excel in durability, performance, and aesthetic appeal that safeguard and enhance the elevation of structures in which they are used.
+              Luxume headquartered at Chittoor Road, Ernakulam is a leading manufacturer of colour-coated steel sheets which is primarily supplied to the construction industry. We began our operations in the year 2011. Since then, we have been manufacturing high-quality colour coated steel sheets that excel in durability, performance, and aesthetic appeal that safeguard and enhance the elevation of structures in which they are used.
             </p>
 
-            <p 
+            <p
               ref={el => textRefs.current[1] = el}
               className="text-gray-600 text-sm sm:text-base leading-7 mb-4"
               style={{ opacity: 0 }}
@@ -122,7 +122,7 @@ export default function AboutUsSection() {
               Our product is best suited for roofing, cladding walls, and other fabrication purposes. Profiling of sheets in multiple variations is a value-added service offered by Luxume. Luxume is part of a family business that conducts businesses in flexible packaging, steel, etc.
             </p>
 
-            <p 
+            <p
               ref={el => textRefs.current[2] = el}
               className="text-gray-600 text-sm sm:text-base leading-7"
               style={{ opacity: 0 }}

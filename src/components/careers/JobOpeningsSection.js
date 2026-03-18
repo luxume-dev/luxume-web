@@ -12,7 +12,7 @@ if (typeof window !== 'undefined') {
 
 export default function JobOpeningsSection() {
   const { data: jobs = [], isLoading: loading } = useCareers();
-  
+
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const introRef = useRef(null);
@@ -83,18 +83,18 @@ export default function JobOpeningsSection() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-10">
-          <h2 
+          <h2
             ref={headingRef}
             className="aloevera-bold text-3xl sm:text-4xl mb-4 opacity-0"
             style={{ color: '#C83C64' }}
           >
             Current Openings
           </h2>
-          <p 
+          <p
             ref={introRef}
-            className="font-lato text-gray-600 text-sm sm:text-base max-w-xl opacity-0 font-medium" 
+            className="font-lato text-gray-600 text-sm sm:text-base max-w-xl opacity-0 font-medium"
           >
-            Luxume Pvt. Ltd. an upcoming company dealing in building materials, head quartered at Ernakulam, Kerala is looking for an Assistant Manager - Marketing for its operations. The basic Job Description for this position is as mentioned below:
+            Luxume Pvt. Ltd. an upcoming company dealing in building materials, headquartered at Ernakulam, Kerala is looking for an Assistant Manager - Marketing for its operations. The basic Job Description for this position is as mentioned below:
           </p>
         </div>
 
@@ -143,45 +143,45 @@ export default function JobOpeningsSection() {
         {!loading && jobs.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {jobs.map((job, index) => (
-              <Link 
+              <Link
                 key={job.id}
                 href={`/careers/${job.id}`}
                 className="block"
               >
-              <div 
-                ref={el => cardsRef.current[index] = el}
-                className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300 opacity-0 cursor-pointer"
-              >
-                {/* Job Header */}
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h3 className="font-semibold text-gray-800 text-lg mb-1">
-                      {job.title}{job.department ? ` - ${job.department}` : ''}
-                    </h3>
-                    <p className="text-gray-500 text-sm">{job.location}</p>
+                <div
+                  ref={el => cardsRef.current[index] = el}
+                  className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-300 opacity-0 cursor-pointer"
+                >
+                  {/* Job Header */}
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <h3 className="font-semibold text-gray-800 text-lg mb-1">
+                        {job.title}{job.department ? ` - ${job.department}` : ''}
+                      </h3>
+                      <p className="text-gray-500 text-sm">{job.location}</p>
+                    </div>
+                    <span
+                      className="px-4 py-2 rounded-lg text-white text-sm font-medium transition-all duration-300 hover:opacity-90"
+                      style={{ backgroundColor: '#C83C64' }}
+                    >
+                      Apply Now
+                    </span>
                   </div>
-                  <span 
-                    className="px-4 py-2 rounded-lg text-white text-sm font-medium transition-all duration-300 hover:opacity-90"
-                    style={{ backgroundColor: '#C83C64' }}
-                  >
-                    Apply Now
-                  </span>
-                </div>
 
-                {/* Tags */}
-                {job.tags && job.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {job.tags.map((tag, tagIndex) => (
-                      <span 
-                        key={tagIndex}
-                        className="px-3 py-1 text-xs border border-gray-300 rounded-full text-gray-600"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
+                  {/* Tags */}
+                  {job.tags && job.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {job.tags.map((tag, tagIndex) => (
+                        <span
+                          key={tagIndex}
+                          className="px-3 py-1 text-xs border border-gray-300 rounded-full text-gray-600"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </Link>
             ))}
           </div>

@@ -15,10 +15,10 @@ const dos = [
 const donts = [
   "Do not keep the material on wet floor (water, rain, etc.).",
   "Moisture or water penetration between the sheets through the wooden pallets can cause damage hence it should be avoided.",
-  "Metal-on-metal contact should be avoided whenever possible.",
+  "Unlike metals contact should be avoided whenever possible.",
   "Do not let the sheets come in contact with salt, water, corrosive chemicals, ash, fumes, foundries, plating works, kilns, fertilizers and wet or green lumber.",
   "Do not slide sheet on rough surface or over each other.",
-  "Contact with water and mud should be strictly prohibited.",
+  "Contact with mud and dirt should be strictly prohibited.",
 ];
 
 export default function DosAndDontsPage() {
