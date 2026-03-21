@@ -25,9 +25,9 @@ export default function CoatedSteelSection() {
     const centerY = rect.height / 2;
     const rotateX = ((y - centerY) / centerY) * -8;
     const rotateY = ((x - centerX) / centerX) * 8;
-    
+
     card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
-    
+
     // Inner glow follows cursor
     const glowX = (x / rect.width) * 100;
     const glowY = (y / rect.height) * 100;
@@ -51,7 +51,7 @@ export default function CoatedSteelSection() {
   // GSAP animation when language changes
   useEffect(() => {
     if (imageRef.current) {
-      gsap.fromTo(imageRef.current, 
+      gsap.fromTo(imageRef.current,
         { opacity: 0, scale: 0.95 },
         { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' }
       );
@@ -61,11 +61,11 @@ export default function CoatedSteelSection() {
   // Scroll-triggered animation for feature cards — rotate-in from bottom
   useEffect(() => {
     const cards = featureCardsRef.current;
-    
+
     if (cards.length > 0) {
       // Set initial state — rotated in with perspective
-      gsap.set(cards, { 
-        opacity: 0, 
+      gsap.set(cards, {
+        opacity: 0,
         rotateX: 25,
         y: 80,
         transformPerspective: 800,
@@ -138,12 +138,12 @@ export default function CoatedSteelSection() {
   return (
     <section className="bg-white py-12 sm:py-16 md:py-20 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-16">
-        
+
         {/* Understanding Layers Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16 sm:mb-20 md:mb-24">
           {/* Left Content */}
           <div className="flex flex-col justify-center">
-            <p 
+            <p
               className="text-sm sm:text-base font-medium mb-2 sm:mb-3 text-center lg:text-left"
               style={{ color: '#E91E63' }}
             >
@@ -159,14 +159,14 @@ export default function CoatedSteelSection() {
               <span style={{ color: '#C83C64' }}>Sheets</span>
             </h2>
             <p className="text-gray-600 text-sm sm:text-base max-w-md mx-auto lg:mx-0 text-center lg:text-left">
-                This diagram illustrates the multiple layers involved in the production of coated steel sheets, highlighting their protective and functional coatings.
+              This diagram illustrates the multiple layers involved in the production of coated steel sheets, highlighting their protective and functional coatings.
             </p>
           </div>
 
           {/* Right Content - Diagram */}
           <div className="flex flex-col items-center justify-center">
             {/* Box Container for Image and Buttons */}
-            <div 
+            <div
               className="w-full max-w-md lg:max-w-lg p-6 sm:p-8 rounded-2xl"
               style={{
                 border: '1px solid #E5E5E5',
@@ -174,19 +174,19 @@ export default function CoatedSteelSection() {
               }}
             >
               {/* Diagram Image */}
-              <div className="mb-6 relative" style={{ aspectRatio: '4/3' }}>
-                <img 
+              <div className="mb-6 relative rounded-xl overflow-hidden" style={{ aspectRatio: '1235/1280' }}>
+                <img
                   ref={imageRef}
-                  src={language === 'english' ? '/images/diagram.png' : '/images/malayalam.png'} 
-                  alt={language === 'english' ? 'Coated Steel Layers Diagram' : 'Coated Steel Layers Diagram (Malayalam)'} 
-                  className="w-full h-full object-contain"
+                  src={language === 'english' ? '/images/layers-english.webp' : '/images/layers-malayalam.webp'}
+                  alt={language === 'english' ? 'Coated Steel Layers Diagram' : 'Coated Steel Layers Diagram (Malayalam)'}
+                  className="w-full h-full object-cover"
                 />
               </div>
-              
+
               {/* Language Toggle - Pill Style */}
-              <div 
+              <div
                 className="flex"
-                style={{ 
+                style={{
                   height: '40px',
                   borderRadius: '30px',
                   border: '1px solid #E5E5E5',
@@ -198,7 +198,7 @@ export default function CoatedSteelSection() {
                 <button
                   onClick={() => setLanguage('english')}
                   className="flex-1 text-sm sm:text-base font-medium transition-all duration-300"
-                  style={language === 'english' ? { 
+                  style={language === 'english' ? {
                     color: '#E91E63',
                     boxShadow: '0 0 0 2px #E91E63',
                     background: '#FFFFFF',
@@ -216,7 +216,7 @@ export default function CoatedSteelSection() {
                 <button
                   onClick={() => setLanguage('malayalam')}
                   className="flex-1 text-sm sm:text-base font-medium transition-all duration-300"
-                  style={language === 'malayalam' ? { 
+                  style={language === 'malayalam' ? {
                     color: '#E91E63',
                     boxShadow: '0 0 0 2px #E91E63',
                     background: '#FFFFFF',
@@ -238,7 +238,7 @@ export default function CoatedSteelSection() {
 
         {/* Superior Protection Section */}
         <div className="text-center mb-10 sm:mb-12 md:mb-14">
-          <h2 
+          <h2
             className="aloevera-bold text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 text-[#C83C64]"
           >
             Superior Protection and Style
@@ -251,7 +251,7 @@ export default function CoatedSteelSection() {
         {/* Features Grid — with 3D tilt hover */}
         <div ref={featuresRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
           {features.map((feature, index) => (
-            <div 
+            <div
               key={index}
               ref={el => featureCardsRef.current[index] = el}
               className="p-5 sm:p-6 rounded-xl sm:rounded-2xl cursor-pointer group"
@@ -265,7 +265,7 @@ export default function CoatedSteelSection() {
               onMouseLeave={() => handleMouseLeave(index)}
             >
               {/* Icon */}
-              <div 
+              <div
                 className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6"
                 style={{ background: feature.iconBg }}
               >
