@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, priority = false }) {
   // Use features array as tags (show first 3)
   const tags = Array.isArray(product.features) ? product.features.slice(0, 3) : [];
 
@@ -17,6 +17,8 @@ export default function ProductCard({ product }) {
             src={product.product_image_url}
             alt={product.title}
             fill
+            priority={priority}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : (

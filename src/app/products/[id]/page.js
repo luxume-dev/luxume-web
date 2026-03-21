@@ -203,6 +203,7 @@ export default function ProductDetailPage() {
           alt="Luxume Roofing - Premium roofing solutions"
           fill
           priority
+          sizes="100vw"
           className="object-cover"
         />
         {/* Dark overlay */}
@@ -273,6 +274,7 @@ export default function ProductDetailPage() {
                 src={colors[selectedColorIndex].houseImage}
                 alt="Beautiful house with colored roofing"
                 fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover transition-all duration-500"
               />
             </div>
@@ -292,6 +294,7 @@ export default function ProductDetailPage() {
                         src={color.image}
                         alt={color.name}
                         fill
+                        sizes="(max-width: 768px) 33vw, 25vw"
                         className="object-contain"
                       />
                     </div>
@@ -340,6 +343,7 @@ export default function ProductDetailPage() {
                       src={type.image}
                       alt={type.title}
                       fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-contain p-4"
                       style={{ borderRadius: '30px 30px 0 0' }}
                     />
