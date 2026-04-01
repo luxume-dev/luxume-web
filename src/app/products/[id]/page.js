@@ -179,7 +179,7 @@ export default function ProductDetailPage() {
   const section1Header = product.section1_header;
   const section1Description = product.section1_description;
   const profileTypes = product.profile_types || [];
-  const paintFinishOptions = product.paint_finish_options || [];
+  const paintFinishOptions = product.paint_finishes || [];
 
   const colors = [
     { name: 'Brick Red', image: '/images/image 12.png', houseImage: '/images/roof-images/brick-red.webp' },

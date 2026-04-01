@@ -26,22 +26,68 @@ export async function getProducts() {
 }
 
 /**
- * Fetch a single product by slug (full detail)
+ * Fetch a single product by slug (full detail).
+ * Resolves `profile_type_ids` and `paint_finish_ids` integer arrays into
+ * full records from the `profile_types` and `paint_finishes` tables.
+ *
  * @param {string} slug - The product slug
  * @returns {Promise<{data: Object|null, error: string|null}>}
  */
 export async function getProductBySlug(slug) {
   try {
-    const { data, error } = await supabase
+    // 1. Fetch the base product row
+    const { data: product, error: productError } = await supabase
       .from('products')
       .select('*')
       .eq('slug', slug)
       .limit(1)
       .single();
 
-    if (error) throw error;
+    if (productError) throw productError;
 
-    return { data, error: null };
+    // 2. Resolve profile types —————————————————————————————————————————
+    let profileTypes = [];
+    const profileTypeIds = product.profile_type_ids;
+    if (Array.isArray(profileTypeIds) && profileTypeIds.length > 0) {
+      const { data: ptData, error: ptError } = await supabase
+        .from('profile_types')
+        .select('*')
+        .in('id', profileTypeIds);
+
+      if (ptError) {
+        console.warn('[Products Service] Could not fetch profile_types:', ptError.message);
+      } else {
+        // Preserve the order defined by profile_type_ids
+        profileTypes = profileTypeIds
+          .map((id) => ptData.find((r) => r.id === id))
+          .filter(Boolean);
+      }
+    }
+
+    // 3. Resolve paint finishes ————————————————————————————————————————
+    let paintFinishes = [];
+    const paintFinishIds = product.paint_finish_ids;
+    if (Array.isArray(paintFinishIds) && paintFinishIds.length > 0) {
+      const { data: pfData, error: pfError } = await supabase
+        .from('paint_finishes')
+        .select('*')
+        .in('id', paintFinishIds);
+
+      if (pfError) {
+        console.warn('[Products Service] Could not fetch paint_finishes:', pfError.message);
+      } else {
+        // Preserve the order defined by paint_finish_ids
+        paintFinishes = paintFinishIds
+          .map((id) => pfData.find((r) => r.id === id))
+          .filter(Boolean);
+      }
+    }
+
+    // 4. Return enriched product object
+    return {
+      data: { ...product, profile_types: profileTypes, paint_finishes: paintFinishes },
+      error: null,
+    };
   } catch (error) {
     console.error('[Products Service] Error fetching product by slug:', error);
     return { data: null, error: error.message };
