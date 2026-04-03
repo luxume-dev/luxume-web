@@ -3,9 +3,19 @@
 import Link from 'next/link';
 import { FaPhone, FaInstagram, FaFacebookF, FaYoutube, FaMapMarkerAlt, FaEnvelope, FaPaperPlane, FaArrowRight } from 'react-icons/fa';
 import { useNewsletter } from '@/hooks/useNewsletter';
+import { useProducts } from '@/hooks/useProducts';
+
+// Fallback links in case products haven't loaded yet
+const FALLBACK_PRODUCTS = [
+  { title: 'Colour Coated Galvalume Sheets', slug: 'colour-coated-galvalume-sheets' },
+  { title: 'Color Coated Galvalume Coils', slug: 'color-coated-galvalume-coils' },
+];
 
 export default function Footer() {
   const { email, setEmail, isLoading, status, handleSubscribe } = useNewsletter();
+  const { data: products, isLoading: productsLoading } = useProducts();
+
+  const productLinks = (products && products.length > 0) ? products : FALLBACK_PRODUCTS;
 
   return (
     <footer className="relative z-30 bg-[#0B1120] text-gray-300 font-lato">
@@ -110,17 +120,30 @@ export default function Footer() {
             <div className="lg:col-span-3">
               <h4 className="aloevera-medium text-white text-lg mb-6 tracking-wider">PRODUCTS</h4>
               <ul className="space-y-3">
-                {[
-                  { name: 'Colour Coated Galvalume Sheets', href: '/products/colour-coated-galvalume-sheets' },
-                  { name: 'Color Coated Galvalume Coils', href: '/products/color-coated-galvalume-coils' }
-                ].map((link) => (
-                  <li key={link.name}>
-                    <Link href={link.href} className="group flex items-center text-sm text-gray-400 hover:text-white transition-colors duration-300">
-                      <span className="w-0 h-[1px] bg-[#C83C64] mr-0 transition-all duration-300 group-hover:w-3 group-hover:mr-2"></span>
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
+                {productsLoading ? (
+                  // Skeleton loading state
+                  Array.from({ length: 3 }).map((_, i) => (
+                    <li key={i} className="flex items-center gap-2">
+                      <span className="w-3 h-[1px] bg-white/10 rounded" />
+                      <span
+                        className="h-3 rounded bg-white/10 animate-pulse"
+                        style={{ width: `${60 + i * 20}%` }}
+                      />
+                    </li>
+                  ))
+                ) : (
+                  productLinks.map((product) => (
+                    <li key={product.id ?? product.slug}>
+                      <Link
+                        href={`/products/${product.slug}`}
+                        className="group flex items-center text-sm text-gray-400 hover:text-white transition-colors duration-300"
+                      >
+                        <span className="w-0 h-[1px] bg-[#C83C64] mr-0 transition-all duration-300 group-hover:w-3 group-hover:mr-2" />
+                        {product.title ?? product.name}
+                      </Link>
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
 
