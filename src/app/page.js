@@ -7,6 +7,7 @@ import ProjectsSection from '@/components/ProjectsSection';
 import VideoSection from '@/components/VideoSection';
 import ProductHighlightsSection from '@/components/ProductHighlightsSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
+import AwardsSection from '@/components/AwardsSection';
 import DownloadsAndResources from '@/components/DownloadsAndResources';
 
 export default function Home() {
@@ -24,6 +25,7 @@ export default function Home() {
         <VideoSection />
         <ProductHighlightsSection />
         <TestimonialsSection />
+        <AwardsSection />
         <DownloadsAndResources />
       </div>
     </main>

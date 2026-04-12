@@ -176,6 +176,10 @@ export default function ProductDetailPage() {
 
   // Map DB fields to local variables for the template
   const title = product.title;
+  const description = product.description;
+  const features = Array.isArray(product.features) ? product.features : [];
+  const category = product.category;
+  const productImage = product.product_image_url;
   const section1Header = product.section1_header;
   const section1Description = product.section1_description;
   const profileTypes = product.profile_types || [];
@@ -196,28 +200,73 @@ export default function ProductDetailPage() {
 
   return (
     <main className="bg-white">
-      {/* Hero Section */}
-      <section className="relative w-full overflow-hidden" style={{ height: '730px' }}>
-        <Image
-          src="/images/products-detail-hero.png"
-          alt="Luxume Roofing - Premium roofing solutions"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/55"></div>
+      {/* Product Overview — image left, details right */}
+      <section className="pt-28 pb-16 px-4 md:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          {/* Centered Category + Title */}
+          <div className="text-center mb-12">
+            {category && (
+              <span
+                className="inline-block text-sm font-lato font-semibold px-4 py-1.5 rounded-full mb-4"
+                style={{ backgroundColor: '#FEF2F2', color: '#C83C64' }}
+              >
+                {category}
+              </span>
+            )}
+            <h1 className="font-aloevera text-3xl md:text-4xl lg:text-5xl font-bold" style={{ color: '#1a1b4b' }}>
+              {title}
+            </h1>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side — Product Image */}
+            <div className="relative h-[350px] md:h-[450px] rounded-2xl overflow-hidden shadow-lg">
+              {productImage ? (
+                <Image
+                  src={productImage}
+                  alt={title}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
+                  No Image
+                </div>
+              )}
+            </div>
+
+            {/* Right Side — Description + Features */}
+            <div>
+              {description && (
+                <p className="font-lato text-gray-600 leading-relaxed text-base md:text-lg mb-6">
+                  {description}
+                </p>
+              )}
+
+              {features.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {features.map((feat, i) => (
+                    <span
+                      key={i}
+                      className="inline-flex items-center gap-2 bg-gray-100 text-gray-700 text-sm font-lato px-4 py-2 rounded-full"
+                    >
+                      <svg className="w-4 h-4 flex-shrink-0" style={{ color: '#2BBAA4' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                      {feat}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* A Synonym for Excellence Section */}
       <section className="py-16 px-4 md:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
-          {/* Section Title */}
-          <h2 className="font-aloevera text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12" style={{ color: '#1a1b4b' }}>
-            {title}
-          </h2>
-
           {/* Two Column Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Left Side - Description */}

@@ -26,10 +26,10 @@ export default function ProductCard({ product, priority = false }) {
             No Image
           </div>
         )}
-        {/* Luxume Badge */}
+        {/* Category Badge */}
         <div className="absolute bottom-4 left-4">
           <span className="bg-white/90 backdrop-blur-sm text-[#C83C64] px-6 py-1.5 rounded-full text-sm font-medium shadow-sm">
-            Luxume
+            {product.category || 'Luxume'}
           </span>
         </div>
       </div>
