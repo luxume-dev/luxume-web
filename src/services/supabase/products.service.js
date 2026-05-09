@@ -12,8 +12,8 @@ import { supabase } from '@/lib/supabase';
 export async function getProducts() {
   try {
     const { data, error } = await supabase
-      .from('products')
-      .select('id, title, slug, description, product_image_url, features, category')
+      .from('brands')
+      .select('id, title, slug, description, cover_image_url, features')
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -26,70 +26,51 @@ export async function getProducts() {
 }
 
 /**
- * Fetch a single product by slug (full detail).
- * Resolves `profile_type_ids` and `paint_finish_ids` integer arrays into
- * full records from the `profile_types` and `paint_finishes` tables.
+ * Fetch a single brand by slug (full detail).
+ * Resolves `profile_ids` uuid array into
+ * full records from the `profiles` table.
  *
- * @param {string} slug - The product slug
+ * @param {string} slug - The brand slug
  * @returns {Promise<{data: Object|null, error: string|null}>}
  */
 export async function getProductBySlug(slug) {
   try {
-    // 1. Fetch the base product row
-    const { data: product, error: productError } = await supabase
-      .from('products')
+    // 1. Fetch the base brand row
+    const { data: brand, error: brandError } = await supabase
+      .from('brands')
       .select('*')
       .eq('slug', slug)
       .limit(1)
       .single();
 
-    if (productError) throw productError;
+    if (brandError) throw brandError;
 
-    // 2. Resolve profile types —————————————————————————————————————————
-    let profileTypes = [];
-    const profileTypeIds = product.profile_type_ids;
-    if (Array.isArray(profileTypeIds) && profileTypeIds.length > 0) {
-      const { data: ptData, error: ptError } = await supabase
-        .from('profile_types')
+    // 2. Resolve profiles —————————————————————————————————————————
+    let profiles = [];
+    const profileIds = brand.profile_ids;
+    if (Array.isArray(profileIds) && profileIds.length > 0) {
+      const { data: pData, error: pError } = await supabase
+        .from('profiles')
         .select('*')
-        .in('id', profileTypeIds);
+        .in('id', profileIds);
 
-      if (ptError) {
-        console.warn('[Products Service] Could not fetch profile_types:', ptError.message);
+      if (pError) {
+        console.warn('[Products Service] Could not fetch profiles:', pError.message);
       } else {
-        // Preserve the order defined by profile_type_ids
-        profileTypes = profileTypeIds
-          .map((id) => ptData.find((r) => r.id === id))
+        // Preserve the order defined by profile_ids
+        profiles = profileIds
+          .map((id) => pData.find((r) => r.id === id))
           .filter(Boolean);
       }
     }
 
-    // 3. Resolve paint finishes ————————————————————————————————————————
-    let paintFinishes = [];
-    const paintFinishIds = product.paint_finish_ids;
-    if (Array.isArray(paintFinishIds) && paintFinishIds.length > 0) {
-      const { data: pfData, error: pfError } = await supabase
-        .from('paint_finishes')
-        .select('*')
-        .in('id', paintFinishIds);
-
-      if (pfError) {
-        console.warn('[Products Service] Could not fetch paint_finishes:', pfError.message);
-      } else {
-        // Preserve the order defined by paint_finish_ids
-        paintFinishes = paintFinishIds
-          .map((id) => pfData.find((r) => r.id === id))
-          .filter(Boolean);
-      }
-    }
-
-    // 4. Return enriched product object
+    // 3. Return enriched brand object
     return {
-      data: { ...product, profile_types: profileTypes, paint_finishes: paintFinishes },
+      data: { ...brand, profiles },
       error: null,
     };
   } catch (error) {
-    console.error('[Products Service] Error fetching product by slug:', error);
+    console.error('[Products Service] Error fetching brand by slug:', error);
     return { data: null, error: error.message };
   }
 }

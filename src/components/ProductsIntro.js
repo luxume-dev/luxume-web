@@ -12,7 +12,7 @@ export default function ProductsIntro() {
         </h3>
         
         <h1 
-          className="aloevera-bold text-[48px] leading-tight mb-6"
+          className="aloevera-bold text-4xl md:text-[48px] leading-tight mb-6"
           style={{ 
             color: 'var(--secondary)'
           }}

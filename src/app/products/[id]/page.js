@@ -7,17 +7,17 @@ import CoatedSteelSection from '@/components/CoatedSteelSection';
 import { useProduct } from '@/hooks/useProducts';
 import RequestQuoteModal from '@/components/RequestQuoteModal';
 import DownloadsAndResources from '@/components/DownloadsAndResources';
+import * as LucideIcons from 'lucide-react';
 
 export default function ProductDetailPage() {
   const params = useParams();
   const slug = params.id;
 
-  const { data: product, isLoading, error } = useProduct(slug);
+  const { data: brand, isLoading, error } = useProduct(slug);
 
   // State to track the selected color index
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [hoveredProfileIndex, setHoveredProfileIndex] = useState(null);
-  const [hoveredPaintIndex, setHoveredPaintIndex] = useState(null);
 
   // Quote modal state
   const [quoteModal, setQuoteModal] = useState({ isOpen: false, profileType: '' });
@@ -53,117 +53,21 @@ export default function ProductDetailPage() {
             border-radius: 8px;
           }
         `}</style>
-
-        {/* Hero skeleton */}
-        <div className="shimmer w-full" style={{ height: '730px', borderRadius: 0 }} />
-
-        {/* Title + specs skeleton */}
+        <div className="shimmer w-full" style={{ height: '400px', borderRadius: 0 }} />
+        
         <section className="py-16 px-4 md:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="shimmer h-12 w-2/5 mx-auto mb-12" />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              <div className="space-y-4">
-                <div className="shimmer h-8 w-3/5" />
-                <div className="shimmer h-4 w-full" />
-                <div className="shimmer h-4 w-5/6" />
-                <div className="shimmer h-4 w-4/6" />
-              </div>
-              <div className="border-2 border-gray-100 rounded-lg overflow-hidden space-y-px">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="flex">
-                    <div className="shimmer h-10 w-1/3 m-1" />
-                    <div className="shimmer h-10 w-2/3 m-1" />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <div className="shimmer h-8 w-3/5" />
+            <div className="shimmer h-4 w-full mt-4" />
+            <div className="shimmer h-4 w-5/6 mt-4" />
           </div>
         </section>
-
-        {/* Colours skeleton */}
-        <section className="py-16 px-4 md:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="shimmer h-10 w-1/3 mx-auto mb-4" />
-            <div className="shimmer h-4 w-2/4 mx-auto mb-12" />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="shimmer rounded-2xl" style={{ height: '440px' }} />
-              <div className="bg-gray-50 rounded-2xl p-8 grid grid-cols-4 gap-4">
-                {[...Array(10)].map((_, i) => (
-                  <div key={i} className="space-y-2">
-                    <div className="shimmer aspect-[3/2] w-full" />
-                    <div className="shimmer h-3 w-3/4 mx-auto" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Profile types skeleton — 3 cards */}
-        <section className="py-16 px-4 md:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="shimmer h-10 w-1/3 mx-auto mb-4" />
-            <div className="shimmer h-4 w-2/4 mx-auto mb-12" />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="border border-gray-100 rounded-[20px] overflow-hidden">
-                  <div className="shimmer h-48 m-4 rounded-t-[30px]" />
-                  <div className="p-6 space-y-3">
-                    <div className="shimmer h-5 w-2/3" />
-                    <div className="shimmer h-3 w-full" />
-                    <div className="shimmer h-3 w-5/6" />
-                    <div className="space-y-2 mt-4">
-                      {[...Array(4)].map((_, j) => (
-                        <div key={j} className="flex items-center gap-2">
-                          <div className="shimmer h-5 w-5 rounded-full flex-shrink-0" />
-                          <div className="shimmer h-3 flex-1" />
-                        </div>
-                      ))}
-                    </div>
-                    <div className="shimmer h-10 w-full mt-4 rounded-lg" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Paint finish skeleton — 4 cards */}
-        <section className="py-16 px-4 md:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="shimmer h-10 w-1/3 mx-auto mb-4" />
-            <div className="shimmer h-4 w-2/4 mx-auto mb-12" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="rounded-2xl p-6 space-y-3" style={{ boxShadow: '0px 0px 15px 0px #0000001A' }}>
-                  <div className="flex justify-between">
-                    <div className="shimmer h-7 w-1/3" />
-                    <div className="shimmer h-5 w-1/4 rounded-full" />
-                  </div>
-                  <div className="shimmer h-3 w-3/4" />
-                  <div className="shimmer h-3 w-full" />
-                  <div className="shimmer h-3 w-5/6" />
-                  <div className="shimmer h-3 w-2/3 mb-2" />
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {[...Array(3)].map((_, j) => (
-                      <div key={j} className="shimmer h-6 w-16 rounded-full" />
-                    ))}
-                  </div>
-                  <hr className="border-gray-100 my-2" />
-                  <div className="shimmer h-4 w-1/2" />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA strip skeleton */}
-        <div className="shimmer w-full mt-8" style={{ height: '260px', borderRadius: 0 }} />
       </main>
     );
   }
 
-  if (error || !product) {
+  if (error || !brand) {
     return (
       <main className="bg-white min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -175,15 +79,12 @@ export default function ProductDetailPage() {
   }
 
   // Map DB fields to local variables for the template
-  const title = product.title;
-  const description = product.description;
-  const features = Array.isArray(product.features) ? product.features : [];
-  const category = product.category;
-  const productImage = product.product_image_url;
-  const section1Header = product.section1_header;
-  const section1Description = product.section1_description;
-  const profileTypes = product.profile_types || [];
-  const paintFinishOptions = product.paint_finishes || [];
+  const title = brand.title;
+  const description = brand.description;
+  const coverImage = brand.cover_image_url;
+  const features = Array.isArray(brand.features) ? brand.features : [];
+  const specifications = Array.isArray(brand.specification) ? brand.specification : [];
+  const profiles = brand.profiles || [];
 
   const colors = [
     { name: 'Brick Red', image: '/images/image 12.png', houseImage: '/images/roof-images/brick-red.webp' },
@@ -200,109 +101,78 @@ export default function ProductDetailPage() {
 
   return (
     <main className="bg-white">
-      {/* Product Overview — image left, details right */}
-      <section className="pt-28 pb-16 px-4 md:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          {/* Centered Category + Title */}
-          <div className="text-center mb-12">
-            {category && (
-              <span
-                className="inline-block text-sm font-lato font-semibold px-4 py-1.5 rounded-full mb-4"
-                style={{ backgroundColor: '#FEF2F2', color: '#C83C64' }}
-              >
-                {category}
-              </span>
-            )}
-            <h1 className="font-aloevera text-3xl md:text-4xl lg:text-5xl font-bold" style={{ color: '#1a1b4b' }}>
+      {/* 1. Hero Section */}
+      <section className="relative w-full h-[40vh] min-h-[350px] bg-gray-900 md:rounded-b-[40px] md:overflow-hidden">
+        {coverImage && (
+          <Image
+            src={coverImage}
+            alt={title}
+            fill
+            className="object-cover opacity-70"
+            priority
+          />
+        )}
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full p-6 md:p-12">
+          <div className="max-w-7xl mx-auto">
+            <h1 className="font-aloevera text-3xl md:text-5xl lg:text-6xl font-bold text-white">
               {title}
             </h1>
           </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Side — Product Image */}
-            <div className="relative h-[350px] md:h-[450px] rounded-2xl overflow-hidden shadow-lg">
-              {productImage ? (
-                <Image
-                  src={productImage}
-                  alt={title}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
-                  No Image
-                </div>
-              )}
-            </div>
-
-            {/* Right Side — Description + Features */}
-            <div>
-              {description && (
-                <p className="font-lato text-gray-600 leading-relaxed text-base md:text-lg mb-6">
-                  {description}
-                </p>
-              )}
-
-              {features.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {features.map((feat, i) => (
-                    <span
-                      key={i}
-                      className="inline-flex items-center gap-2 bg-gray-100 text-gray-700 text-sm font-lato px-4 py-2 rounded-full"
-                    >
-                      <svg className="w-4 h-4 flex-shrink-0" style={{ color: '#2BBAA4' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                      </svg>
-                      {feat}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* A Synonym for Excellence Section */}
-      <section className="py-16 px-4 md:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          {/* Two Column Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            {/* Left Side - Description */}
-            <div>
-              <h3 className="font-aloevera text-2xl md:text-3xl font-bold mb-6" style={{ color: '#C83C64' }}>
-                {section1Header}
+      {/* 2. Description Section */}
+      {description && (
+        <section className="py-16 px-4 md:px-8 bg-white overflow-hidden">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-12">
+            <p className="font-lato text-gray-700 leading-relaxed text-lg md:text-xl max-w-4xl relative z-10">
+              {description}
+            </p>
+            {/* Desktop-only decorative icon in the remaining space */}
+            <div className="hidden lg:flex flex-1 justify-center items-center text-[#C83C64] opacity-10">
+              <LucideIcons.Quote size={160} />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 3. Key Features and Benefits */}
+      {features.length > 0 && (
+        <section className="py-16 px-4 md:px-8 bg-gray-50">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-12">
+              <h3 className="font-lato text-sm font-bold uppercase tracking-wider text-[#C83C64] mb-2">
+                Key Features & Benefits
               </h3>
-              <p className="font-lato text-gray-700 leading-relaxed text-base">
-                {section1Description}
-              </p>
+              <h2 className="font-aloevera text-3xl md:text-4xl font-bold" style={{ color: '#1a1b4b' }}>
+                Why choose {title}?
+              </h2>
             </div>
-
-            {/* Right Side - Specifications Table */}
-            {product.specifications && (
-              <div className="bg-white border-2 border-gray-300 rounded-lg overflow-hidden">
-                <table className="w-full">
-                  <tbody>
-                    {Object.entries(product.specifications).map(([key, value], index, arr) => (
-                      <tr key={key} className={index < arr.length - 1 ? 'border-b border-gray-300' : ''}>
-                        <td className="py-3 px-4 font-lato font-semibold text-gray-800 bg-gray-50">
-                          {key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
-                        </td>
-                        <td className="py-3 px-4 font-lato text-gray-700">
-                          {value}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {features.map((feature, index) => {
+                const Icon = LucideIcons[feature.icon] || LucideIcons.CheckCircle;
+                return (
+                  <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6" style={{ backgroundColor: '#FEF2F2', color: '#C83C64' }}>
+                      <Icon size={24} />
+                    </div>
+                    <h3 className="font-aloevera text-xl font-bold mb-3" style={{ color: '#1a1b4b' }}>
+                      {feature.title}
+                    </h3>
+                    <p className="font-lato text-gray-600 leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* Wide Range of Colours Section */}
+      {/* 4. Wide Range of Colours Section */}
       <section className="py-16 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Section Header */}
@@ -359,21 +229,21 @@ export default function ProductDetailPage() {
         </div>
       </section>
 
-      {/* Profile Types Section */}
-      {profileTypes.length > 0 && (
-        <section className="py-16 px-4 md:px-8">
+      {/* 5. Profile Types Section */}
+      {profiles.length > 0 && (
+        <section className="py-16 px-4 md:px-8 bg-gray-50">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="font-aloevera text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style={{ color: '#C83C64' }}>
                 Profile Types
               </h2>
               <p className="font-lato text-gray-600 max-w-3xl mx-auto text-base md:text-lg">
-                Precision-engineered roofing and cladding solutions designed for industrial durability and architectural excellence. Explore our versatile range of trapezoidal profiles.
+                Explore the variety of profiles available for {title}, engineered for strength, aesthetic appeal, and performance.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {profileTypes.map((type, index) => (
+              {profiles.map((profile, index) => (
                 <div
                   key={index}
                   className="bg-white overflow-hidden flex flex-col transition-all duration-300 cursor-default"
@@ -387,44 +257,36 @@ export default function ProductDetailPage() {
                   onMouseLeave={() => setHoveredProfileIndex(null)}
                 >
                   {/* Profile Image */}
-                  <div className="relative h-48 flex items-center justify-center border border-gray-200" style={{ margin: '16px 16px 0 16px', borderRadius: '30px 30px 0 0' }}>
-                    <Image
-                      src={type.image}
-                      alt={type.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-contain p-4"
-                      style={{ borderRadius: '30px 30px 0 0' }}
-                    />
+                  <div className="relative h-48 flex items-center justify-center border border-gray-200 overflow-hidden" style={{ margin: '16px 16px 0 16px', borderRadius: '30px 30px 0 0' }}>
+                    {profile.image_url ? (
+                      <Image
+                        src={profile.image_url}
+                        alt={profile.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover"
+                        style={{ borderRadius: '30px 30px 0 0' }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400 rounded-t-[30px]">
+                        No Image
+                      </div>
+                    )}
                   </div>
 
                   {/* Content */}
                   <div className="p-6 flex flex-col flex-1">
                     <h3 className="lato-medium text-[20px] mb-3" style={{ color: '#0F172B' }}>
-                      {type.title}
+                      {profile.title}
                     </h3>
-                    <p className="font-lato text-gray-600 text-sm leading-relaxed mb-5">
-                      {type.description}
+                    <p className="font-lato text-gray-600 text-sm leading-relaxed mb-6 flex-1">
+                      {profile.description}
                     </p>
-
-                    {/* Features */}
-                    <ul className="space-y-3 mb-6 flex-1">
-                      {(type.points || []).map((feature, fIndex) => (
-                        <li key={fIndex} className="flex items-start gap-3">
-                          <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5" style={{ backgroundColor: '#2BBAA4' }}>
-                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                            </svg>
-                          </span>
-                          <span className="font-lato text-gray-700 text-sm">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
 
                     {/* CTA Button */}
                     <button
-                      onClick={() => openQuote(type.title)}
-                      className="w-full py-3 rounded-lg text-white font-lato font-semibold text-base transition-all duration-300 hover:opacity-90"
+                      onClick={() => openQuote(profile.title)}
+                      className="w-full py-3 rounded-lg text-white font-lato font-semibold text-base transition-all duration-300 hover:opacity-90 mt-auto"
                       style={{ backgroundColor: '#0F172B' }}
                     >
                       Request Quote
@@ -437,88 +299,40 @@ export default function ProductDetailPage() {
         </section>
       )}
 
-      {/* Paint Finish Options Section */}
-      {paintFinishOptions.length > 0 && (
-        <section className="py-16 px-4 md:px-8">
+      {/* 6. Technical Specifications Section */}
+      {specifications.length > 0 && (
+        <section className="py-16 px-4 md:px-8 bg-white">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="font-aloevera text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style={{ color: '#C83C64' }}>
-                Paint Finish Options
+            <div className="mb-10 text-center">
+              <h2 className="font-aloevera text-3xl md:text-4xl font-bold" style={{ color: '#1a1b4b' }}>
+                Technical Specifications
               </h2>
-              <p className="font-lato text-gray-600 max-w-3xl mx-auto text-base md:text-lg">
-                Choose the right coating system for your project requirements, climate conditions, and budget.
-              </p>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {paintFinishOptions.map((option, index) => (
-                <div
-                  key={index}
-                  className="bg-white p-6 flex flex-col transition-all duration-300 cursor-default"
-                  style={{
-                    borderRadius: '16px',
-                    boxShadow: hoveredPaintIndex === index ? '0 12px 28px rgba(231, 0, 11, 0.2), 0 4px 12px rgba(0,0,0,0.05)' : '0px 0px 15px 0px #0000001A',
-                    border: hoveredPaintIndex === index ? '1.5px solid #E7000B' : '1px solid transparent',
-                    transform: hoveredPaintIndex === index ? 'translateY(-6px)' : 'translateY(0)'
-                  }}
-                  onMouseEnter={() => setHoveredPaintIndex(index)}
-                  onMouseLeave={() => setHoveredPaintIndex(null)}
-                >
-                  {/* Header: Name + Durability Badge */}
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-aloevera text-2xl font-bold" style={{ color: '#E7000B' }}>
-                      {option.title}
-                    </h3>
-                    <span
-                      className="text-xs font-lato font-semibold px-3 py-1 rounded-full"
-                      style={{ backgroundColor: '#FEF2F2', color: '#E7000B' }}
-                    >
-                      {option.time_span_range}
-                    </span>
-                  </div>
-
-                  {/* Full Name */}
-                  <p className="font-lato text-sm mb-4" style={{ color: '#4A5565' }}>
-                    {option.subtitle}
-                  </p>
-
-                  {/* Description */}
-                  <p className="font-lato text-sm leading-relaxed mb-5" style={{ color: '#364153' }}>
-                    {option.description}
-                  </p>
-
-                  {/* Key Features */}
-                  <p className="font-lato text-xs font-bold uppercase tracking-wider mb-3" style={{ color: '#6A7282' }}>
-                    KEY FEATURES
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {(option.features || []).map((feature, fIndex) => (
-                      <span
-                        key={fIndex}
-                        className="font-lato text-xs rounded-full px-3 py-1.5"
-                        style={{ color: '#364153', backgroundColor: '#F3F4F6' }}
-                      >
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Separator */}
-                  <hr style={{ borderColor: '#E5E7EB' }} className="mb-4" />
-
-                  {/* Best For */}
-                  <div className="mt-auto flex items-center gap-2">
-                    <span className="font-lato text-sm" style={{ color: '#6A7282' }}>Best for:</span>
-                    <span className="font-lato text-sm font-bold rounded-full" style={{ color: '#101828' }}>{option.best_for}</span>
-                  </div>
-                </div>
-              ))}
+            <div className="overflow-x-auto border-2 border-gray-100 rounded-xl">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 border-b-2 border-gray-100">
+                    <th className="py-4 px-6 font-lato font-bold text-gray-700 uppercase tracking-wider text-sm">Parameter</th>
+                    <th className="py-4 px-6 font-lato font-bold text-gray-700 uppercase tracking-wider text-sm">UOM</th>
+                    <th className="py-4 px-6 font-lato font-bold text-gray-700 uppercase tracking-wider text-sm">Specification</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {specifications.map((spec, idx) => (
+                    <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                      <td className="py-4 px-6 font-lato text-gray-800 font-medium">{spec.parameter}</td>
+                      <td className="py-4 px-6 font-lato text-gray-600">{spec.uom}</td>
+                      <td className="py-4 px-6 font-lato text-gray-600">{spec.specification}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
       )}
 
-      {/* Contact CTA Section */}
+      {/* 7. Contact CTA Section */}
       <section className="relative px-4 md:px-8 md:mt-6 lg:mt-16 xl:mt-32" style={{ backgroundColor: '#C83C64', overflow: 'visible' }}>
         {/* Image - absolutely positioned at the very bottom-left, ignoring padding */}
         <div className="hidden lg:block absolute bottom-0 left-0" style={{ width: '50%', zIndex: 1 }}>
@@ -563,10 +377,10 @@ export default function ProductDetailPage() {
         </div>
       </section>
 
-      {/* Coated Steel Section */}
+      {/* 8. Coated Steel Section */}
       <CoatedSteelSection />
 
-      {/* Downloads & Resources Section */}
+      {/* 9. Downloads & Resources Section */}
       <DownloadsAndResources />
 
       {/* Request Quote Modal */}
