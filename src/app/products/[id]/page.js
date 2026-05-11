@@ -54,7 +54,7 @@ export default function ProductDetailPage() {
           }
         `}</style>
         <div className="shimmer w-full" style={{ height: '400px', borderRadius: 0 }} />
-        
+
         <section className="py-16 px-4 md:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="shimmer h-12 w-2/5 mx-auto mb-12" />
@@ -102,23 +102,30 @@ export default function ProductDetailPage() {
   return (
     <main className="bg-white">
       {/* 1. Hero Section */}
-      <section className="relative w-full h-[40vh] min-h-[350px] bg-gray-900 md:rounded-b-[40px] md:overflow-hidden">
+      <section className="relative w-full h-[50vh] min-h-[380px] bg-gray-900 md:rounded-b-[48px] md:overflow-hidden">
         {coverImage && (
           <Image
             src={coverImage}
             alt={title}
             fill
-            className="object-cover opacity-70"
+            className="object-cover opacity-60"
             priority
           />
         )}
-        <div className="absolute inset-0 bg-black/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full p-6 md:p-12">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
+        {/* Subtle diagonal accent */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#C83C64]/20 via-transparent to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 pb-8 md:pb-14">
           <div className="max-w-7xl mx-auto">
-            <h1 className="font-aloevera text-3xl md:text-5xl lg:text-6xl font-bold text-white">
+            {/* Breadcrumb */}
+            <p className="font-lato text-white/60 text-sm mb-3 tracking-wide uppercase">
+              Products &nbsp;/&nbsp; <span className="text-white/90">{title}</span>
+            </p>
+            <h1 className="font-aloevera text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
               {title}
             </h1>
+            {/* Accent line */}
+            <div className="mt-4 h-1 w-16 rounded-full" style={{ backgroundColor: '#C83C64' }} />
           </div>
         </div>
       </section>
@@ -127,12 +134,15 @@ export default function ProductDetailPage() {
       {description && (
         <section className="py-16 px-4 md:px-8 bg-white overflow-hidden">
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-12">
-            <p className="font-lato text-gray-700 leading-relaxed text-lg md:text-xl max-w-4xl relative z-10">
-              {description}
-            </p>
-            {/* Desktop-only decorative icon in the remaining space */}
-            <div className="hidden lg:flex flex-1 justify-center items-center text-[#C83C64] opacity-10">
-              <LucideIcons.Quote size={160} />
+            <div className="relative max-w-4xl">
+              {/* Left accent bar */}
+              <div className="absolute left-0 top-1 bottom-1 w-1 rounded-full" style={{ backgroundColor: '#C83C64' }} />
+              <p className="font-lato text-gray-700 leading-relaxed text-lg md:text-xl pl-6">
+                {description}
+              </p>
+            </div>
+            <div className="hidden lg:flex flex-1 justify-center items-center text-[#C83C64] opacity-[0.07]">
+              <LucideIcons.Quote size={180} />
             </div>
           </div>
         </section>
@@ -140,28 +150,34 @@ export default function ProductDetailPage() {
 
       {/* 3. Key Features and Benefits */}
       {features.length > 0 && (
-        <section className="py-16 px-4 md:px-8 bg-gray-50">
+        <section className="py-16 px-4 md:px-8" style={{ backgroundColor: '#f8f7ff' }}>
           <div className="max-w-7xl mx-auto">
             <div className="mb-12">
-              <h3 className="font-lato text-sm font-bold uppercase tracking-wider text-[#C83C64] mb-2">
-                Key Features & Benefits
-              </h3>
-              <h2 className="font-aloevera text-3xl md:text-4xl font-bold" style={{ color: '#1a1b4b' }}>
+              <span className="inline-block font-lato text-xs font-bold uppercase tracking-widest text-[#C83C64] mb-3 px-3 py-1 rounded-full bg-pink-50 border border-pink-100">
+                Key Features &amp; Benefits
+              </span>
+              <h2 className="font-aloevera text-3xl md:text-4xl font-bold mt-2" style={{ color: '#1a1b4b' }}>
                 Why choose {title}?
               </h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {features.map((feature, index) => {
                 const Icon = LucideIcons[feature.icon] || LucideIcons.CheckCircle;
                 return (
-                  <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6" style={{ backgroundColor: '#FEF2F2', color: '#C83C64' }}>
-                      <Icon size={24} />
+                  <div
+                    key={index}
+                    className="bg-white p-7 rounded-2xl border border-gray-100 hover:border-pink-100 hover:shadow-lg transition-all duration-300 group"
+                  >
+                    <div
+                      className="w-11 h-11 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300"
+                      style={{ backgroundColor: '#FEF2F2', color: '#C83C64' }}
+                    >
+                      <Icon size={22} />
                     </div>
-                    <h3 className="font-aloevera text-xl font-bold mb-3" style={{ color: '#1a1b4b' }}>
+                    <h3 className="font-aloevera text-lg font-bold mb-2" style={{ color: '#1a1b4b' }}>
                       {feature.title}
                     </h3>
-                    <p className="font-lato text-gray-600 leading-relaxed">
+                    <p className="font-lato text-gray-500 leading-relaxed text-sm">
                       {feature.description}
                     </p>
                   </div>
@@ -173,22 +189,20 @@ export default function ProductDetailPage() {
       )}
 
       {/* 4. Wide Range of Colours Section */}
-      <section className="py-16 px-4 md:px-8">
+      <section className="py-16 px-4 md:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
-          {/* Section Header */}
           <div className="text-center mb-12">
             <h2 className="font-aloevera text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style={{ color: '#C83C64' }}>
               Wide Range of Colours
             </h2>
-            <p className="font-lato text-gray-600 max-w-3xl mx-auto text-base md:text-lg">
-              Choose from our extensive palette of premium finishes, designed to complement any architectural style while providing superior protection and longevity.
+            <p className="font-lato text-gray-500 max-w-2xl mx-auto text-base md:text-lg">
+              Choose from our extensive palette of premium finishes, designed to complement any architectural style.
             </p>
           </div>
 
-          {/* Two Column Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            {/* Left Side - House Image (Interactive) */}
-            <div ref={houseImageRef} className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            {/* House Image */}
+            <div ref={houseImageRef} className="relative h-[340px] sm:h-[420px] md:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
               <Image
                 src={colors[selectedColorIndex].houseImage}
                 alt="Beautiful house with colored roofing"
@@ -196,32 +210,56 @@ export default function ProductDetailPage() {
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover transition-all duration-500"
               />
+              {/* Color name overlay */}
+              <div className="absolute bottom-4 left-4 right-4">
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-sm text-white font-lato text-sm font-medium">
+                  <span className="w-2 h-2 rounded-full bg-[#C83C64]" />
+                  {colors[selectedColorIndex].name}
+                </span>
+              </div>
             </div>
 
-            {/* Right Side - Color Swatches Grid */}
-            <div className="bg-gray-50 rounded-2xl p-6 md:p-8">
-              <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+            {/* Color Swatches */}
+            <div className="rounded-3xl p-5 md:p-7 border border-gray-100 bg-gray-50">
+              <p className="font-lato text-xs uppercase tracking-widest text-gray-400 font-semibold mb-5">
+                Select a colour
+              </p>
+              <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
                 {colors.map((color, index) => (
-                  <div
+                  <button
                     key={index}
-                    className="flex flex-col items-center group cursor-pointer"
+                    className="flex flex-col items-center gap-1.5 group focus:outline-none"
                     onClick={() => handleColorSelect(index)}
+                    aria-label={color.name}
                   >
-                    <div className={`w-full aspect-[3/2] mb-2 relative overflow-hidden transition-all duration-300 group-hover:scale-105 ${selectedColorIndex === index ? 'scale-105' : ''
-                      }`}>
+                    <div
+                      className={`w-full aspect-square relative overflow-hidden rounded-xl transition-all duration-300 ${
+                        selectedColorIndex === index
+                          ? 'ring-2 ring-[#C83C64] ring-offset-2 scale-105 shadow-md'
+                          : 'ring-1 ring-gray-200 group-hover:ring-[#C83C64]/50 group-hover:scale-105'
+                      }`}
+                    >
                       <Image
                         src={color.image}
                         alt={color.name}
                         fill
-                        sizes="(max-width: 768px) 33vw, 25vw"
+                        sizes="80px"
                         className="object-contain"
                       />
+                      {selectedColorIndex === index && (
+                        <div className="absolute inset-0 bg-[#C83C64]/10 flex items-center justify-center">
+                          <LucideIcons.Check size={14} strokeWidth={3} className="text-[#C83C64]" />
+                        </div>
+                      )}
                     </div>
-                    <p className={`font-lato text-center text-sm font-medium transition-colors ${selectedColorIndex === index ? 'text-pink-600 font-bold' : 'text-gray-800'
-                      }`}>
+                    <p
+                      className={`font-lato text-center text-[10px] sm:text-xs font-medium leading-tight transition-colors ${
+                        selectedColorIndex === index ? 'text-[#C83C64] font-bold' : 'text-gray-600'
+                      }`}
+                    >
                       {color.name}
                     </p>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -231,18 +269,18 @@ export default function ProductDetailPage() {
 
       {/* 5. Profile Types Section */}
       {profiles.length > 0 && (
-        <section className="py-16 px-4 md:px-8 bg-gray-50">
+        <section className="py-16 px-4 md:px-8" style={{ backgroundColor: '#f8f7ff' }}>
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="font-aloevera text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style={{ color: '#C83C64' }}>
                 Profile Types
               </h2>
-              <p className="font-lato text-gray-600 max-w-3xl mx-auto text-base md:text-lg">
+              <p className="font-lato text-gray-500 max-w-2xl mx-auto text-base md:text-lg">
                 Explore the variety of profiles available for {title}, engineered for strength, aesthetic appeal, and performance.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               {profiles.map((profile, index) => (
                 <div
                   key={index}
@@ -250,14 +288,18 @@ export default function ProductDetailPage() {
                   style={{
                     borderRadius: '20px',
                     border: hoveredProfileIndex === index ? '1.5px solid #C83C64' : '1px solid #E5E7EB',
-                    boxShadow: hoveredProfileIndex === index ? '0 12px 28px rgba(200, 60, 100, 0.2), 0 4px 12px rgba(0,0,0,0.05)' : 'none',
+                    boxShadow: hoveredProfileIndex === index
+                      ? '0 16px 32px rgba(200, 60, 100, 0.18), 0 4px 12px rgba(0,0,0,0.04)'
+                      : '0 2px 8px rgba(0,0,0,0.04)',
                     transform: hoveredProfileIndex === index ? 'translateY(-6px)' : 'translateY(0)'
                   }}
                   onMouseEnter={() => setHoveredProfileIndex(index)}
                   onMouseLeave={() => setHoveredProfileIndex(null)}
                 >
-                  {/* Profile Image */}
-                  <div className="relative h-48 flex items-center justify-center border border-gray-200 overflow-hidden" style={{ margin: '16px 16px 0 16px', borderRadius: '30px 30px 0 0' }}>
+                  <div
+                    className="relative h-48 overflow-hidden bg-gray-50"
+                    style={{ margin: '14px 14px 0', borderRadius: '14px' }}
+                  >
                     {profile.image_url ? (
                       <Image
                         src={profile.image_url}
@@ -265,28 +307,24 @@ export default function ProductDetailPage() {
                         fill
                         sizes="(max-width: 768px) 100vw, 33vw"
                         className="object-cover"
-                        style={{ borderRadius: '30px 30px 0 0' }}
                       />
                     ) : (
-                      <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400 rounded-t-[30px]">
-                        No Image
+                      <div className="w-full h-full flex items-center justify-center text-gray-300">
+                        <LucideIcons.Image size={40} />
                       </div>
                     )}
                   </div>
 
-                  {/* Content */}
                   <div className="p-6 flex flex-col flex-1">
-                    <h3 className="lato-medium text-[20px] mb-3" style={{ color: '#0F172B' }}>
+                    <h3 className="font-lato font-semibold text-lg mb-2" style={{ color: '#0F172B' }}>
                       {profile.title}
                     </h3>
-                    <p className="font-lato text-gray-600 text-sm leading-relaxed mb-6 flex-1">
+                    <p className="font-lato text-gray-500 text-sm leading-relaxed mb-6 flex-1">
                       {profile.description}
                     </p>
-
-                    {/* CTA Button */}
                     <button
                       onClick={() => openQuote(profile.title)}
-                      className="w-full py-3 rounded-lg text-white font-lato font-semibold text-base transition-all duration-300 hover:opacity-90 mt-auto"
+                      className="w-full py-3 rounded-xl text-white font-lato font-semibold text-sm transition-all duration-300 hover:opacity-90 hover:shadow-md mt-auto"
                       style={{ backgroundColor: '#0F172B' }}
                     >
                       Request Quote
@@ -304,25 +342,58 @@ export default function ProductDetailPage() {
         <section className="py-16 px-4 md:px-8 bg-white">
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
-              <h2 className="font-aloevera text-3xl md:text-4xl font-bold" style={{ color: '#1a1b4b' }}>
+              <span className="inline-block font-lato text-xs font-bold uppercase tracking-widest text-[#C83C64] mb-3 px-3 py-1 rounded-full bg-pink-50 border border-pink-100">
+                Details
+              </span>
+              <h2 className="font-aloevera text-3xl md:text-4xl font-bold mt-2" style={{ color: '#1a1b4b' }}>
                 Technical Specifications
               </h2>
             </div>
-            <div className="overflow-x-auto border-2 border-gray-100 rounded-xl">
+
+            {/* Mobile: card stack */}
+            <div className="flex flex-col gap-3 md:hidden">
+              {specifications.map((spec, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-xl border border-gray-100 bg-gray-50 p-4"
+                >
+                  <div className="flex items-start justify-between gap-3 mb-1.5">
+                    <p className="font-lato font-semibold text-gray-800 text-sm leading-snug flex-1">
+                      {spec.parameter}
+                    </p>
+                    {spec.uom && (
+                      <span className="shrink-0 inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white border border-gray-200 text-gray-500">
+                        {spec.uom}
+                      </span>
+                    )}
+                  </div>
+                  <p className="font-lato text-gray-600 text-sm">{spec.specification}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop: table */}
+            <div className="hidden md:block overflow-hidden border border-gray-100 rounded-2xl shadow-sm">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-gray-50 border-b-2 border-gray-100">
-                    <th className="py-4 px-6 font-lato font-bold text-gray-700 uppercase tracking-wider text-sm">Parameter</th>
-                    <th className="py-4 px-6 font-lato font-bold text-gray-700 uppercase tracking-wider text-sm">UOM</th>
-                    <th className="py-4 px-6 font-lato font-bold text-gray-700 uppercase tracking-wider text-sm">Specification</th>
+                  <tr style={{ backgroundColor: '#1a1b4b' }}>
+                    <th className="py-4 px-6 font-lato font-semibold text-white/90 uppercase tracking-wider text-xs">Parameter</th>
+                    <th className="py-4 px-6 font-lato font-semibold text-white/90 uppercase tracking-wider text-xs">UOM</th>
+                    <th className="py-4 px-6 font-lato font-semibold text-white/90 uppercase tracking-wider text-xs">Specification</th>
                   </tr>
                 </thead>
                 <tbody>
                   {specifications.map((spec, idx) => (
-                    <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                      <td className="py-4 px-6 font-lato text-gray-800 font-medium">{spec.parameter}</td>
-                      <td className="py-4 px-6 font-lato text-gray-600">{spec.uom}</td>
-                      <td className="py-4 px-6 font-lato text-gray-600">{spec.specification}</td>
+                    <tr
+                      key={idx}
+                      className="border-b border-gray-50 transition-colors"
+                      style={{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#fafafa' }}
+                      onMouseEnter={e => e.currentTarget.style.backgroundColor = '#fff5f7'}
+                      onMouseLeave={e => e.currentTarget.style.backgroundColor = idx % 2 === 0 ? '#ffffff' : '#fafafa'}
+                    >
+                      <td className="py-4 px-6 font-lato text-gray-800 font-medium text-sm">{spec.parameter}</td>
+                      <td className="py-4 px-6 font-lato text-gray-500 text-sm">{spec.uom}</td>
+                      <td className="py-4 px-6 font-lato text-gray-600 text-sm">{spec.specification}</td>
                     </tr>
                   ))}
                 </tbody>
