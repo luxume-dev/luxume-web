@@ -189,6 +189,7 @@ export default function ProductDetailPage() {
       )}
 
       {/* 4. Wide Range of Colours Section */}
+      {brand.is_colors_available && (
       <section className="py-16 px-4 md:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -266,6 +267,7 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* 5. Profile Types Section */}
       {profiles.length > 0 && (
@@ -449,10 +451,10 @@ export default function ProductDetailPage() {
       </section>
 
       {/* 8. Coated Steel Section */}
-      <CoatedSteelSection />
+      <CoatedSteelSection isColorsAvailable={brand.is_colors_available} />
 
       {/* 9. Downloads & Resources Section */}
-      <DownloadsAndResources />
+      <DownloadsAndResources brandName={title} />
 
       {/* Request Quote Modal */}
       <RequestQuoteModal

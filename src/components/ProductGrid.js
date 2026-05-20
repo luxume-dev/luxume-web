@@ -3,6 +3,63 @@
 import { useProducts } from '@/hooks/useProducts';
 import ProductCard from './ProductCard';
 
+/* ─── Shimmer skeleton that mirrors ProductCard layout ─── */
+function ProductCardSkeleton() {
+  return (
+    <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 flex flex-col h-full">
+      {/* Image placeholder */}
+      <div className="relative h-80 w-full overflow-hidden bg-gray-100">
+        <div className="absolute inset-0 skeleton-shimmer" />
+      </div>
+
+      {/* Content placeholder */}
+      <div className="p-8 flex flex-col flex-grow gap-4">
+        {/* Title */}
+        <div className="relative h-6 w-3/4 rounded-lg bg-gray-100 overflow-hidden">
+          <div className="absolute inset-0 skeleton-shimmer" />
+        </div>
+
+        {/* Description lines */}
+        <div className="space-y-2">
+          <div className="relative h-3.5 w-full rounded-md bg-gray-100 overflow-hidden">
+            <div className="absolute inset-0 skeleton-shimmer" />
+          </div>
+          <div className="relative h-3.5 w-5/6 rounded-md bg-gray-100 overflow-hidden">
+            <div className="absolute inset-0 skeleton-shimmer" />
+          </div>
+          <div className="relative h-3.5 w-4/6 rounded-md bg-gray-100 overflow-hidden">
+            <div className="absolute inset-0 skeleton-shimmer" />
+          </div>
+        </div>
+
+        {/* Button */}
+        <div className="relative mt-auto h-12 w-full rounded-xl bg-gray-100 overflow-hidden">
+          <div className="absolute inset-0 skeleton-shimmer" />
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes skshimmer {
+          0%   { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        .skeleton-shimmer::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.7) 50%,
+            transparent 100%
+          );
+          animation: skshimmer 1.4s infinite;
+        }
+      `}</style>
+    </div>
+  );
+}
+
 export default function ProductGrid() {
   const { data: products, isLoading } = useProducts();
 
@@ -11,20 +68,8 @@ export default function ProductGrid() {
       <section className="pt-8 pb-16 md:pt-12 md:pb-24 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 animate-pulse">
-                <div className="h-80 bg-gray-200" />
-                <div className="p-8 space-y-4">
-                  <div className="h-6 bg-gray-200 rounded w-3/4" />
-                  <div className="h-4 bg-gray-200 rounded w-full" />
-                  <div className="h-4 bg-gray-200 rounded w-5/6" />
-                  <div className="flex gap-2 mt-4">
-                    <div className="h-8 bg-gray-200 rounded-full w-24" />
-                    <div className="h-8 bg-gray-200 rounded-full w-20" />
-                  </div>
-                  <div className="h-12 bg-gray-200 rounded-xl mt-6" />
-                </div>
-              </div>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
             ))}
           </div>
         </div>

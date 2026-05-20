@@ -55,3 +55,28 @@ export function ZeroMaintenanceIcon() {
     </svg>
   );
 }
+
+export function CustomLengthsIcon() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4.66699 9.33337H23.3337" stroke="#0EA5E9" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M4.66699 14H23.3337" stroke="#0EA5E9" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M4.66699 18.6666H23.3337" stroke="#0EA5E9" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M9.33301 5.83337V7.00004" stroke="#0EA5E9" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M14 5.83337V7.00004" stroke="#0EA5E9" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M18.667 5.83337V7.00004" stroke="#0EA5E9" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M9.33301 21V22.1667" stroke="#0EA5E9" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M14 21V22.1667" stroke="#0EA5E9" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M18.667 21V22.1667" stroke="#0EA5E9" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>
+      <rect x="2.33301" y="4.66663" width="23.3333" height="18.6667" rx="2.33333" stroke="#0EA5E9" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+export function HighStrengthIcon() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15.1673 2.33337L4.66732 16.3334H14.0007L12.834 25.6667L23.334 11.6667H14.0007L15.1673 2.33337Z" stroke="#D97706" strokeWidth="2.33333" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}

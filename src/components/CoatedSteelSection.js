@@ -3,12 +3,12 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { AntiCorrosionIcon, ChoiceOfColoursIcon, PremiumProductIcon, SuperiorPaintIcon, WeatherProofIcon, ZeroMaintenanceIcon } from './icons/CoatedSteelIcons';
+import { AntiCorrosionIcon, ChoiceOfColoursIcon, CustomLengthsIcon, HighStrengthIcon, PremiumProductIcon, SuperiorPaintIcon, WeatherProofIcon, ZeroMaintenanceIcon } from './icons/CoatedSteelIcons';
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
 
-export default function CoatedSteelSection() {
+export default function CoatedSteelSection({ isColorsAvailable = true }) {
   const [language, setLanguage] = useState('english');
   const imageRef = useRef(null);
   const featuresRef = useRef(null);
@@ -103,24 +103,40 @@ export default function CoatedSteelSection() {
       title: 'Anti Corrosion',
       description: 'Resists rust and maintains beauty.',
     },
-    {
-      icon: ChoiceOfColoursIcon,
-      iconBg: '#FFEDD4',
-      title: 'Choice of Colours',
-      description: 'Many vibrant colors to choose from.',
-    },
+    isColorsAvailable
+      ? {
+          icon: ChoiceOfColoursIcon,
+          iconBg: '#FFEDD4',
+          title: 'Choice of Colours',
+          description: 'Many vibrant colors to choose from.',
+        }
+      : {
+          icon: CustomLengthsIcon,
+          iconBg: '#E0F2FE',
+          title: 'Custom Lengths',
+          description: 'Available in custom lengths to suit any project requirement.',
+        },
     {
       icon: PremiumProductIcon,
       iconBg: '#F3E8FF',
       title: 'Premium Product',
-      description: 'Aluminum-zinc color-coated sheets that stand out in quality and appearance.',
+      description: isColorsAvailable
+        ? 'Aluminum-zinc color-coated sheets that stand out in quality and appearance.'
+        : 'Aluminum-zinc sheets that stand out in quality and appearance.',
     },
-    {
-      icon: SuperiorPaintIcon,
-      iconBg: '#FCE7F3',
-      title: 'Superior Paint Technology',
-      description: 'Advanced paint technology that keeps colors bright.',
-    },
+    isColorsAvailable
+      ? {
+          icon: SuperiorPaintIcon,
+          iconBg: '#FCE7F3',
+          title: 'Superior Paint Technology',
+          description: 'Advanced paint technology that keeps colors bright.',
+        }
+      : {
+          icon: SuperiorPaintIcon,
+          iconBg: '#FCE7F3',
+          title: 'Superior Coating Technology',
+          description: 'Advanced coating technology that ensures long-lasting surface protection.',
+        },
     {
       icon: WeatherProofIcon,
       iconBg: '#DBEAFE',
@@ -140,6 +156,7 @@ export default function CoatedSteelSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-16">
 
         {/* Understanding Layers Section */}
+        {isColorsAvailable && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16 sm:mb-20 md:mb-24">
           {/* Left Content */}
           <div className="flex flex-col justify-center">
@@ -235,6 +252,7 @@ export default function CoatedSteelSection() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Superior Protection Section */}
         <div className="text-center mb-10 sm:mb-12 md:mb-14">

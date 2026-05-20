@@ -1,4 +1,4 @@
-export default function DownloadsAndResources() {
+export default function DownloadsAndResources({ brandName = 'Luxume' }) {
     return (
         <section className="py-16 px-4 md:px-8">
             <div
@@ -12,7 +12,7 @@ export default function DownloadsAndResources() {
                     Downloads & Resources
                 </h2>
                 <p className="font-lato text-gray-400 max-w-2xl mx-auto text-sm md:text-base mb-10">
-                    Access essential documents to help you make informed decisions and ensure the best performance of Luxume roofing products.
+                    Access essential documents to help you make informed decisions and ensure the best performance of {brandName} roofing products.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <a
