@@ -410,7 +410,7 @@ export default function ProductDetailPage() {
         {/* Image - absolutely positioned at the very bottom-left, ignoring padding */}
         <div className="hidden lg:block absolute bottom-0 left-0" style={{ width: '50%', zIndex: 1 }}>
           <img
-            src="/images/contact-section-product.webp"
+            src={brand.is_colors_available ? "/images/contact-section-product.webp" : "/images/cta-non-color.webp"}
             alt="Luxume roofing products showcase"
             style={{
               maxHeight: '620px',
