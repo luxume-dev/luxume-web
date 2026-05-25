@@ -6,11 +6,7 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useProducts } from '@/hooks/useProducts';
 
-// Fallback links in case products haven't loaded yet
-const FALLBACK_PRODUCTS = [
-  { title: 'Colour Coated Galvalume Sheets', slug: 'colour-coated-galvalume-sheets' },
-  { title: 'Color Coated Galvalume Coils', slug: 'color-coated-galvalume-coils' },
-];
+
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,8 +16,8 @@ export default function Navbar() {
   const dropdownTimeoutRef = useRef(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const { data: products } = useProducts();
-  const productLinks = (products && products.length > 0) ? products : FALLBACK_PRODUCTS;
+  const { data: products, isLoading: isProductsLoading } = useProducts();
+  const productLinks = products || [];
 
   // Force white background on contact page and others
   const forceWhiteBg = pathname === '/contact' || pathname.startsWith('/careers') || pathname === '/privacy-policy' || pathname === '/terms-conditions' || pathname === '/projects';
@@ -124,19 +120,28 @@ export default function Navbar() {
                     style={{ minWidth: '280px' }}
                   >
                     <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden py-2">
-                      {productLinks.map((product) => (
-                        <Link
-                          key={product.id ?? product.slug}
-                          href={`/products/${product.slug}`}
-                          className="flex items-center gap-3 px-5 py-3 text-sm text-gray-700 hover:bg-pink-50 hover:text-[#C83C64] transition-colors duration-200 font-lato"
-                        >
-                          <span
-                            className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: '#C83C64' }}
-                          />
-                          {product.title}
-                        </Link>
-                      ))}
+                      {isProductsLoading ? (
+                        [1, 2, 3].map((i) => (
+                          <div key={i} className="flex items-center gap-3 px-5 py-3">
+                            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-gray-200" />
+                            <div className="h-4 rounded bg-gray-200 animate-pulse" style={{ width: `${140 + i * 20}px` }} />
+                          </div>
+                        ))
+                      ) : (
+                        productLinks.map((product) => (
+                          <Link
+                            key={product.id ?? product.slug}
+                            href={`/products/${product.slug}`}
+                            className="flex items-center gap-3 px-5 py-3 text-sm text-gray-700 hover:bg-pink-50 hover:text-[#C83C64] transition-colors duration-200 font-lato"
+                          >
+                            <span
+                              className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                              style={{ backgroundColor: '#C83C64' }}
+                            />
+                            {product.title}
+                          </Link>
+                        ))
+                      )}
                       <div className="border-t border-gray-100 mt-1 pt-1">
                         <Link
                           href="/products"
@@ -280,18 +285,26 @@ export default function Navbar() {
                           className="overflow-hidden"
                         >
                           <div className="pl-4 py-1 border-l-2 border-pink-200 ml-2 flex flex-col gap-1">
-                            {productLinks.map((product) => (
-                              <Link
-                                key={product.id ?? product.slug}
-                                href={`/products/${product.slug}`}
-                                className={`text-sm font-lato py-1.5 transition-colors duration-200 ${
-                                  pathname === `/products/${product.slug}` ? 'text-[#C83C64] font-medium' : 'text-gray-600 hover:text-[#C83C64]'
-                                }`}
-                                onClick={() => setIsMenuOpen(false)}
-                              >
-                                {product.title}
-                              </Link>
-                            ))}
+                            {isProductsLoading ? (
+                              [1, 2, 3].map((i) => (
+                                <div key={i} className="py-1.5">
+                                  <div className="h-4 rounded bg-gray-200 animate-pulse" style={{ width: `${100 + i * 20}px` }} />
+                                </div>
+                              ))
+                            ) : (
+                              productLinks.map((product) => (
+                                <Link
+                                  key={product.id ?? product.slug}
+                                  href={`/products/${product.slug}`}
+                                  className={`text-sm font-lato py-1.5 transition-colors duration-200 ${
+                                    pathname === `/products/${product.slug}` ? 'text-[#C83C64] font-medium' : 'text-gray-600 hover:text-[#C83C64]'
+                                  }`}
+                                  onClick={() => setIsMenuOpen(false)}
+                                >
+                                  {product.title}
+                                </Link>
+                              ))
+                            )}
                             <Link
                               href="/products"
                               className="text-sm font-lato font-semibold py-1.5 transition-colors duration-200"
