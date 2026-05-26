@@ -135,7 +135,7 @@ export default function CoatedSteelSection({ isColorsAvailable = true }) {
           icon: SuperiorPaintIcon,
           iconBg: '#FCE7F3',
           title: 'Superior Coating Technology',
-          description: 'Advanced coating technology that ensures long-lasting surface protection.',
+          description: 'Advanced Galvalume coating technology that ensures long-lasting surface protection.',
         },
     {
       icon: WeatherProofIcon,
@@ -154,7 +154,7 @@ export default function CoatedSteelSection({ isColorsAvailable = true }) {
           icon: HighStrengthIcon,
           iconBg: '#FEF3C7',
           title: 'Superior Coating Technology',
-          description: 'Advanced coating technology that ensures long-lasting surface protection.',
+          description: 'Advanced Galvalume coating technology that ensures long-lasting surface protection.',
         }]
       : [])
   ];
