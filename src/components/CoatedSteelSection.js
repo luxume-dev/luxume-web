@@ -148,7 +148,15 @@ export default function CoatedSteelSection({ isColorsAvailable = true }) {
       iconBg: '#DCFCE7',
       title: 'Zero Maintenance',
       description: 'Requires no maintenance.',
-    }
+    },
+    ...(isColorsAvailable
+      ? [{
+          icon: HighStrengthIcon,
+          iconBg: '#FEF3C7',
+          title: 'Superior Coating Technology',
+          description: 'Advanced coating technology that ensures long-lasting surface protection.',
+        }]
+      : [])
   ];
 
   return (
