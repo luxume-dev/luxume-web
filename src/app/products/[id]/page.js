@@ -116,7 +116,7 @@ export default function ProductDetailPage() {
       </section>
 
       {/* Title & Breadcrumb */}
-      <section className="pt-10 pb-4 px-4 md:px-8 bg-white">
+      <section className="pt-10 pb-2 px-4 md:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           {/* Breadcrumb */}
           <p className="font-lato text-gray-500 text-sm mb-3 tracking-wide uppercase">
@@ -125,14 +125,12 @@ export default function ProductDetailPage() {
           <h1 className="font-aloevera text-4xl md:text-5xl lg:text-6xl font-bold leading-tight" style={{ color: '#1a1b4b' }}>
             {title}
           </h1>
-          {/* Accent line */}
-          <div className="mt-4 h-1 w-16 rounded-full" style={{ backgroundColor: '#C83C64' }} />
         </div>
       </section>
 
       {/* 2. Description Section */}
       {description && (
-        <section className="py-16 px-4 md:px-8 bg-white overflow-hidden">
+        <section className="pt-4 pb-16 px-4 md:px-8 bg-white overflow-hidden">
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-12">
             <div className="relative max-w-4xl">
               {/* Left accent bar */}
