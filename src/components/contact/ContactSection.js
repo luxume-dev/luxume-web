@@ -327,8 +327,7 @@ export default function ContactSection() {
                 <div>
                   <h3 className="font-lato font-semibold text-gray-800 mb-2">Business Hours</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    Monday - Saturday: 9:00 AM - 6:00 PM<br />
-                    Sunday: 9:00 AM - 2:00 PM
+                    Monday - Saturday: 9:00 AM - 6:00 PM
                   </p>
                 </div>
               </div>
@@ -391,7 +390,7 @@ export default function ContactSection() {
                     name="phone_number"
                     value={formData.phone_number}
                     onChange={handleChange}
-                    placeholder="+91 98765 43210"
+                    placeholder="+91 98XXX XXXXX"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-[#C83C64] focus:ring-1 focus:ring-[#C83C64]/20 transition-all duration-300"
                   />
                 </div>

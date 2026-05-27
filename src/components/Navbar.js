@@ -20,7 +20,7 @@ export default function Navbar() {
   const productLinks = products || [];
 
   // Force white background on contact page and others
-  const forceWhiteBg = pathname === '/contact' || pathname.startsWith('/careers') || pathname === '/privacy-policy' || pathname === '/terms-conditions' || pathname === '/projects';
+  const forceWhiteBg = pathname === '/contact' || pathname.startsWith('/careers') || pathname === '/privacy-policy' || pathname === '/terms-conditions' || pathname === '/projects' || pathname.startsWith('/products/');
   const showWhiteBg = forceWhiteBg || isScrolled || isMenuOpen;
   const useDarkContent = showWhiteBg;
 

@@ -94,7 +94,7 @@ export default function JobOpeningsSection() {
             ref={introRef}
             className="font-lato text-gray-600 text-sm sm:text-base max-w-xl opacity-0 font-medium"
           >
-            Luxume Pvt. Ltd. an upcoming company dealing in building materials, headquartered at Ernakulam, Kerala is looking for an Assistant Manager - Marketing for its operations. The basic Job Description for this position is as mentioned below:
+            Luxume Pvt. Ltd., an upcoming company dealing in building materials and headquartered in Ernakulam, Kerala, is always looking for talented individuals to join our growing team. Explore our current openings below and apply to be part of our journey.
           </p>
         </div>
 
@@ -155,13 +155,13 @@ export default function JobOpeningsSection() {
                   {/* Job Header */}
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <h3 className="font-semibold text-gray-800 text-lg mb-1">
+                      <h3 className="font-semibold text-gray-800 text-base md:text-lg mb-1">
                         {job.title}{job.department ? ` - ${job.department}` : ''}
                       </h3>
-                      <p className="text-gray-500 text-sm">{job.location}</p>
+                      <p className="text-gray-500 text-xs md:text-sm">{job.location}</p>
                     </div>
                     <span
-                      className="px-4 py-2 rounded-lg text-white text-sm font-medium transition-all duration-300 hover:opacity-90"
+                      className="px-4 py-2 rounded-lg text-white text-xs md:text-sm font-medium transition-all duration-300 hover:opacity-90"
                       style={{ backgroundColor: '#C83C64' }}
                     >
                       Apply Now
@@ -174,7 +174,7 @@ export default function JobOpeningsSection() {
                       {job.tags.map((tag, tagIndex) => (
                         <span
                           key={tagIndex}
-                          className="px-3 py-1 text-xs border border-gray-300 rounded-full text-gray-600"
+                          className="px-3 py-1 text-[10px] md:text-xs border border-gray-300 rounded-full text-gray-600"
                         >
                           {tag}
                         </span>

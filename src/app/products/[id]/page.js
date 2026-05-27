@@ -3,6 +3,7 @@
 import { useParams } from 'next/navigation';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import CoatedSteelSection from '@/components/CoatedSteelSection';
 import { useProduct } from '@/hooks/useProducts';
 import RequestQuoteModal from '@/components/RequestQuoteModal';
@@ -100,33 +101,32 @@ export default function ProductDetailPage() {
   ];
 
   return (
-    <main className="bg-white">
+    <main className="bg-white pt-20">
       {/* 1. Hero Section */}
-      <section className="relative w-full h-[50vh] min-h-[380px] bg-gray-900 md:rounded-b-[48px] md:overflow-hidden">
+      <section className="relative w-full h-[50vh] min-h-[380px] bg-gray-100 md:rounded-b-[48px] md:overflow-hidden">
         {coverImage && (
           <Image
             src={coverImage}
             alt={title}
             fill
-            className="object-cover opacity-60"
+            className="object-cover"
             priority
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
-        {/* Subtle diagonal accent */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#C83C64]/20 via-transparent to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 pb-8 md:pb-14">
-          <div className="max-w-7xl mx-auto">
-            {/* Breadcrumb */}
-            <p className="font-lato text-white/60 text-sm mb-3 tracking-wide uppercase">
-              Products &nbsp;/&nbsp; <span className="text-white/90">{title}</span>
-            </p>
-            <h1 className="font-aloevera text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-              {title}
-            </h1>
-            {/* Accent line */}
-            <div className="mt-4 h-1 w-16 rounded-full" style={{ backgroundColor: '#C83C64' }} />
-          </div>
+      </section>
+
+      {/* Title & Breadcrumb */}
+      <section className="pt-10 pb-4 px-4 md:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          {/* Breadcrumb */}
+          <p className="font-lato text-gray-500 text-sm mb-3 tracking-wide uppercase">
+            <Link href="/products" className="hover:text-[#C83C64] transition-colors">Products</Link> &nbsp;/&nbsp; <span className="text-gray-900 font-semibold">{title}</span>
+          </p>
+          <h1 className="font-aloevera text-4xl md:text-5xl lg:text-6xl font-bold leading-tight" style={{ color: '#1a1b4b' }}>
+            {title}
+          </h1>
+          {/* Accent line */}
+          <div className="mt-4 h-1 w-16 rounded-full" style={{ backgroundColor: '#C83C64' }} />
         </div>
       </section>
 
