@@ -348,6 +348,27 @@ export default function ProductDetailPage() {
               <h2 className="font-aloevera text-3xl md:text-4xl font-bold mt-2" style={{ color: '#1a1b4b' }}>
                 Technical Specifications
               </h2>
+              <button
+                onClick={() => {
+                  const header = ['Parameter', 'UOM', 'Specification'].join(',');
+                  const rows = specifications.map(s =>
+                    [s.parameter, s.uom ?? '', s.specification].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')
+                  );
+                  const csv = [header, ...rows].join('\n');
+                  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `${title} - Technical Data Sheet.csv`;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+                className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-xl font-lato font-semibold text-sm transition-all duration-300 hover:opacity-90 hover:shadow-md"
+                style={{ backgroundColor: '#1a1b4b', color: '#ffffff' }}
+              >
+                <LucideIcons.Download size={16} />
+                Download Technical Data Sheet
+              </button>
             </div>
 
             {/* Mobile: card stack */}
