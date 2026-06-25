@@ -349,19 +349,157 @@ export default function ProductDetailPage() {
                 Technical Specifications
               </h2>
               <button
-                onClick={() => {
-                  const header = ['Parameter', 'UOM', 'Specification'].join(',');
-                  const rows = specifications.map(s =>
-                    [s.parameter, s.uom ?? '', s.specification].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')
-                  );
-                  const csv = [header, ...rows].join('\n');
-                  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = `${title} - Technical Data Sheet.csv`;
-                  a.click();
-                  URL.revokeObjectURL(url);
+                onClick={async () => {
+                  const { default: jsPDF } = await import('jspdf');
+                  const { default: autoTable } = await import('jspdf-autotable');
+
+                  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+                  const W = 210, H = 297, M = 14;
+
+                  // ── HEADER BAND ──────────────────────────────────────
+                  doc.setFillColor(26, 27, 75);
+                  doc.rect(0, 0, W, 40, 'F');
+
+                  // Decorative circle top-right
+                  doc.setFillColor(200, 60, 100);
+                  doc.circle(W - 10, -5, 28, 'F');
+                  doc.setFillColor(255, 255, 255, 0.04);
+                  doc.circle(W - 30, 35, 18, 'F');
+
+                  // Pink bottom stripe on header
+                  doc.setFillColor(200, 60, 100);
+                  doc.rect(0, 37, W, 3, 'F');
+
+                  // Company name
+                  doc.setTextColor(255, 255, 255);
+                  doc.setFontSize(20);
+                  doc.setFont('helvetica', 'bold');
+                  doc.text('LUXUME', M, 18);
+                  doc.setTextColor(200, 60, 100);
+                  doc.text('ROOFING', M + 33, 18);
+
+                  // Subtitle
+                  doc.setFontSize(8.5);
+                  doc.setFont('helvetica', 'normal');
+                  doc.setTextColor(180, 185, 220);
+                  doc.text('TECHNICAL DATA SHEET', M, 27);
+
+
+                  // ── PRODUCT INFO BAND ────────────────────────────────
+                  doc.setFillColor(248, 247, 255);
+                  doc.rect(0, 40, W, 48, 'F');
+
+                  // Left accent bar
+                  doc.setFillColor(200, 60, 100);
+                  doc.rect(M, 50, 3, 28, 'F');
+
+                  // "PRODUCT" label
+                  doc.setFontSize(7.5);
+                  doc.setFont('helvetica', 'bold');
+                  doc.setTextColor(200, 60, 100);
+                  doc.text('PRODUCT', M + 7, 50);
+
+                  // Product title
+                  doc.setFontSize(20);
+                  doc.setFont('helvetica', 'bold');
+                  doc.setTextColor(26, 27, 75);
+                  doc.text(title, M + 7, 61);
+
+                  // Description (2 lines max)
+                  if (description) {
+                    doc.setFontSize(8.5);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(100, 105, 130);
+                    const lines = doc.splitTextToSize(description, W - M * 2 - 55);
+                    doc.text(lines.slice(0, 2), M + 7, 70);
+                  }
+
+                  // Product image (top-right of info band)
+                  if (coverImage) {
+                    try {
+                      const img = new Image();
+                      img.crossOrigin = 'anonymous';
+                      await new Promise((res) => { img.onload = res; img.onerror = res; img.src = coverImage; });
+                      if (img.naturalWidth > 0) {
+                        doc.addImage(img, 'JPEG', W - M - 48, 43, 48, 42);
+                        // Thin border around image
+                        doc.setDrawColor(220, 220, 235);
+                        doc.setLineWidth(0.3);
+                        doc.rect(W - M - 48, 43, 48, 42);
+                      }
+                    } catch (_) {}
+                  }
+
+                  // ── SECTION LABEL ────────────────────────────────────
+                  doc.setFillColor(26, 27, 75);
+                  doc.roundedRect(M, 95, W - M * 2, 9, 2, 2, 'F');
+                  doc.setFontSize(8);
+                  doc.setFont('helvetica', 'bold');
+                  doc.setTextColor(255, 255, 255);
+                  doc.text('TECHNICAL SPECIFICATIONS', W / 2, 101, { align: 'center' });
+
+
+                  // ── SPECS TABLE ──────────────────────────────────────
+                  autoTable(doc, {
+                    startY: 108,
+                    head: [['Parameter', 'Unit (UOM)', 'Specification']],
+                    body: specifications.map((s) => [
+                      s.parameter,
+                      s.uom || '—',
+                      s.specification,
+                    ]),
+                    headStyles: {
+                      fillColor: [26, 27, 75],
+                      textColor: [255, 255, 255],
+                      fontStyle: 'bold',
+                      fontSize: 8.5,
+                      cellPadding: { top: 5, bottom: 5, left: 4, right: 4 },
+                    },
+                    bodyStyles: {
+                      fontSize: 8.5,
+                      cellPadding: { top: 4.5, bottom: 4.5, left: 4, right: 4 },
+                      textColor: [40, 42, 70],
+                    },
+                    alternateRowStyles: { fillColor: [248, 247, 255] },
+                    columnStyles: {
+                      0: { cellWidth: 70, fontStyle: 'bold', textColor: [26, 27, 75] },
+                      1: { cellWidth: 30, textColor: [100, 105, 130], halign: 'center' },
+                      2: { cellWidth: 'auto' },
+                    },
+                    tableLineColor: [220, 220, 235],
+                    tableLineWidth: 0.2,
+                    margin: { left: M, right: M },
+                    didParseCell: (data) => {
+                      if (data.section === 'head' && data.column.index === 1) {
+                        data.cell.styles.halign = 'center';
+                      }
+                    },
+                  });
+
+                  // ── FOOTER ───────────────────────────────────────────
+                  const pageCount = doc.internal.getNumberOfPages();
+                  for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+
+                    // Footer band
+                    doc.setFillColor(26, 27, 75);
+                    doc.rect(0, H - 16, W, 16, 'F');
+                    doc.setFillColor(200, 60, 100);
+                    doc.rect(0, H - 16, W, 1.5, 'F');
+
+                    doc.setFontSize(7.5);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(180, 185, 220);
+                    doc.text('www.luxume.in', M, H - 7);
+
+                    doc.setTextColor(150, 155, 190);
+                    doc.text('For queries: info@luxume.in', W / 2, H - 7, { align: 'center' });
+
+                    doc.setTextColor(200, 205, 230);
+                    doc.text(`Page ${i} / ${pageCount}`, W - M, H - 7, { align: 'right' });
+                  }
+
+                  doc.save(`${title} - Technical Data Sheet.pdf`);
                 }}
                 className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-xl font-lato font-semibold text-sm transition-all duration-300 hover:opacity-90 hover:shadow-md"
                 style={{ backgroundColor: '#1a1b4b', color: '#ffffff' }}
