@@ -81,7 +81,12 @@ export default function ProductDetailPage() {
 
   // Map DB fields to local variables for the template
   const title = brand.title;
-  const description = brand.description;
+  const s_ = (brand.slug || '').toLowerCase();
+  const description = s_.includes('silver')
+    ? 'Luxume Silverlux is a high-performance Aluminium-Zinc alloy coated roofing solution developed for exceptional durability, advanced corrosion resistance, and dependable long-term performance.'
+    : s_.includes('plus') || s_.includes('+')
+    ? 'Luxume+ is an advanced colour-coated steel roofing solution built with premium Aluminium-Zinc coated steel technology, offering enhanced resistance against corrosion, harsh weather conditions, and everyday wear.'
+    : 'Luxume Roofing presents premium colour-coated roofing sheets crafted to deliver dependable strength, long-term durability, and reliable protection across every climate condition.';
   const coverImage = brand.cover_image_url;
   const features = Array.isArray(brand.features) ? brand.features : [];
   const specifications = Array.isArray(brand.specification) ? brand.specification : [];
@@ -385,31 +390,18 @@ export default function ProductDetailPage() {
                   doc.text('TECHNICAL DATA SHEET', M, 27);
 
 
-                  // ── PRODUCT INFO BAND (dynamic height) ───────────────
-                  const descLineHeight = 4.8;
+                  // ── PRODUCT INFO BAND ────────────────────────────────
+                  const pdfDesc = description;
                   const descFontSize = 8.5;
-                  const textAreaW = W - M * 2 - 8;
-
-                  // Pre-calculate description — full sentences that fit in ~2 lines
+                  const descLineHeight = 4.8;
+                  const textAreaW = W - M * 2 - 10;
                   let descLines = [];
-                  if (description) {
+                  if (pdfDesc) {
                     doc.setFontSize(descFontSize);
                     doc.setFont('helvetica', 'normal');
-                    const sentences = description.match(/[^.!?]+[.!?]+/g) || [description];
-                    let fitted = '';
-                    for (const s of sentences) {
-                      const candidate = fitted ? fitted + ' ' + s.trim() : s.trim();
-                      if (doc.splitTextToSize(candidate, textAreaW).length <= 3) {
-                        fitted = candidate;
-                      } else {
-                        break;
-                      }
-                    }
-                    descLines = doc.splitTextToSize(fitted || sentences[0].trim(), textAreaW).slice(0, 3);
+                    descLines = doc.splitTextToSize(pdfDesc, textAreaW);
                   }
-
-                  const descBlockH = descLines.length * descLineHeight;
-                  const bandH = 22 + descBlockH + 12;
+                  const bandH = 22 + descLines.length * descLineHeight + 10;
 
                   doc.setFillColor(248, 247, 255);
                   doc.rect(0, 40, W, bandH, 'F');
@@ -425,17 +417,17 @@ export default function ProductDetailPage() {
                   doc.text('PRODUCT', M + 7, 50);
 
                   // Product title
-                  doc.setFontSize(18);
+                  doc.setFontSize(16);
                   doc.setFont('helvetica', 'bold');
                   doc.setTextColor(26, 27, 75);
-                  doc.text(title, M + 7, 60);
+                  doc.text(title, M + 7, 59);
 
-                  // Full description
+                  // Static description
                   if (descLines.length > 0) {
                     doc.setFontSize(descFontSize);
                     doc.setFont('helvetica', 'normal');
                     doc.setTextColor(100, 105, 130);
-                    doc.text(descLines, M + 7, 68, { lineHeightFactor: 1.5 });
+                    doc.text(descLines, M + 7, 66, { lineHeightFactor: 1.4 });
                   }
 
 
