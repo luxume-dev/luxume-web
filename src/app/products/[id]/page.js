@@ -385,13 +385,38 @@ export default function ProductDetailPage() {
                   doc.text('TECHNICAL DATA SHEET', M, 27);
 
 
-                  // ── PRODUCT INFO BAND ────────────────────────────────
+                  // ── PRODUCT INFO BAND (dynamic height) ───────────────
+                  const descLineHeight = 4.8;
+                  const descFontSize = 8.5;
+                  const textAreaW = W - M * 2 - 8;
+
+                  // Pre-calculate description — full sentences that fit in ~2 lines
+                  let descLines = [];
+                  if (description) {
+                    doc.setFontSize(descFontSize);
+                    doc.setFont('helvetica', 'normal');
+                    const sentences = description.match(/[^.!?]+[.!?]+/g) || [description];
+                    let fitted = '';
+                    for (const s of sentences) {
+                      const candidate = fitted ? fitted + ' ' + s.trim() : s.trim();
+                      if (doc.splitTextToSize(candidate, textAreaW).length <= 3) {
+                        fitted = candidate;
+                      } else {
+                        break;
+                      }
+                    }
+                    descLines = doc.splitTextToSize(fitted || sentences[0].trim(), textAreaW).slice(0, 3);
+                  }
+
+                  const descBlockH = descLines.length * descLineHeight;
+                  const bandH = 22 + descBlockH + 12;
+
                   doc.setFillColor(248, 247, 255);
-                  doc.rect(0, 40, W, 48, 'F');
+                  doc.rect(0, 40, W, bandH, 'F');
 
                   // Left accent bar
                   doc.setFillColor(200, 60, 100);
-                  doc.rect(M, 50, 3, 28, 'F');
+                  doc.rect(M, 48, 3, bandH - 10, 'F');
 
                   // "PRODUCT" label
                   doc.setFontSize(7.5);
@@ -400,48 +425,66 @@ export default function ProductDetailPage() {
                   doc.text('PRODUCT', M + 7, 50);
 
                   // Product title
-                  doc.setFontSize(20);
+                  doc.setFontSize(18);
                   doc.setFont('helvetica', 'bold');
                   doc.setTextColor(26, 27, 75);
-                  doc.text(title, M + 7, 61);
+                  doc.text(title, M + 7, 60);
 
-                  // Description (2 lines max)
-                  if (description) {
-                    doc.setFontSize(8.5);
+                  // Full description
+                  if (descLines.length > 0) {
+                    doc.setFontSize(descFontSize);
                     doc.setFont('helvetica', 'normal');
                     doc.setTextColor(100, 105, 130);
-                    const lines = doc.splitTextToSize(description, W - M * 2 - 55);
-                    doc.text(lines.slice(0, 2), M + 7, 70);
+                    doc.text(descLines, M + 7, 68, { lineHeightFactor: 1.5 });
                   }
 
-                  // Product image (top-right of info band)
-                  if (coverImage) {
-                    try {
-                      const img = new Image();
-                      img.crossOrigin = 'anonymous';
-                      await new Promise((res) => { img.onload = res; img.onerror = res; img.src = coverImage; });
-                      if (img.naturalWidth > 0) {
-                        doc.addImage(img, 'JPEG', W - M - 48, 43, 48, 42);
-                        // Thin border around image
-                        doc.setDrawColor(220, 220, 235);
-                        doc.setLineWidth(0.3);
-                        doc.rect(W - M - 48, 43, 48, 42);
-                      }
-                    } catch (_) {}
-                  }
 
                   // ── SECTION LABEL ────────────────────────────────────
+                  const labelY = 40 + bandH + 6;
                   doc.setFillColor(26, 27, 75);
-                  doc.roundedRect(M, 95, W - M * 2, 9, 2, 2, 'F');
+                  doc.roundedRect(M, labelY, W - M * 2, 9, 2, 2, 'F');
                   doc.setFontSize(8);
                   doc.setFont('helvetica', 'bold');
                   doc.setTextColor(255, 255, 255);
-                  doc.text('TECHNICAL SPECIFICATIONS', W / 2, 101, { align: 'center' });
-
+                  doc.text('TECHNICAL SPECIFICATIONS', W / 2, labelY + 6, { align: 'center' });
 
                   // ── SPECS TABLE ──────────────────────────────────────
+                  // Helper: load image URL → PNG data URL via canvas (most reliable for jsPDF)
+                  const loadImgDataUrl = (src) => new Promise((resolve) => {
+                    const img = new window.Image();
+                    img.crossOrigin = 'anonymous';
+                    img.onload = () => {
+                      try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.naturalWidth;
+                        canvas.height = img.naturalHeight;
+                        canvas.getContext('2d').drawImage(img, 0, 0);
+                        resolve(canvas.toDataURL('image/png'));
+                      } catch (_) { resolve(null); }
+                    };
+                    img.onerror = () => resolve(null);
+                    img.src = src;
+                  });
+
+                  const IMG_SIZE = 10; // mm
+                  const specImages = {};
+                  await Promise.all(
+                    specifications.map(async (s, i) => {
+                      const entry = {};
+                      if (s.logo_image_url) {
+                        const dataUrl = await loadImgDataUrl(s.logo_image_url);
+                        if (dataUrl) entry.logo = dataUrl;
+                      }
+                      if (s.qr_code_image_url) {
+                        const dataUrl = await loadImgDataUrl(s.qr_code_image_url);
+                        if (dataUrl) entry.qr = dataUrl;
+                      }
+                      if (entry.logo || entry.qr) specImages[i] = entry;
+                    })
+                  );
+
                   autoTable(doc, {
-                    startY: 108,
+                    startY: labelY + 13,
                     head: [['Parameter', 'Unit (UOM)', 'Specification']],
                     body: specifications.map((s) => [
                       s.parameter,
@@ -473,6 +516,29 @@ export default function ProductDetailPage() {
                       if (data.section === 'head' && data.column.index === 1) {
                         data.cell.styles.halign = 'center';
                       }
+                      if (data.section === 'body' && data.column.index === 2) {
+                        const imgs = specImages[data.row.index];
+                        if (imgs) {
+                          const leftExtra = imgs.logo ? IMG_SIZE + 2 : 0;
+                          const rightExtra = imgs.qr ? IMG_SIZE + 2 : 0;
+                          data.cell.styles.cellPadding = { top: 3, bottom: 3, left: 4 + leftExtra, right: 4 + rightExtra };
+                          data.cell.styles.minCellHeight = IMG_SIZE + 6;
+                          data.cell.styles.valign = 'middle';
+                        }
+                      }
+                    },
+                    didDrawCell: (data) => {
+                      if (data.section === 'body' && data.column.index === 2) {
+                        const imgs = specImages[data.row.index];
+                        if (!imgs) return;
+                        const imgY = data.cell.y + (data.cell.height - IMG_SIZE) / 2;
+                        if (imgs.logo) {
+                          doc.addImage(imgs.logo, 'PNG', data.cell.x + 4, imgY, IMG_SIZE, IMG_SIZE);
+                        }
+                        if (imgs.qr) {
+                          doc.addImage(imgs.qr, 'PNG', data.cell.x + data.cell.width - 4 - IMG_SIZE, imgY, IMG_SIZE, IMG_SIZE);
+                        }
+                      }
                     },
                   });
 
@@ -501,7 +567,7 @@ export default function ProductDetailPage() {
 
                   doc.save(`${title} - Technical Data Sheet.pdf`);
                 }}
-                className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-xl font-lato font-semibold text-sm transition-all duration-300 hover:opacity-90 hover:shadow-md"
+                className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-xl font-lato font-semibold text-sm transition-all duration-300 hover:opacity-90 hover:shadow-md cursor-pointer"
                 style={{ backgroundColor: '#1a1b4b', color: '#ffffff' }}
               >
                 <LucideIcons.Download size={16} />
@@ -512,10 +578,7 @@ export default function ProductDetailPage() {
             {/* Mobile: card stack */}
             <div className="flex flex-col gap-3 md:hidden">
               {specifications.map((spec, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-xl border border-gray-100 bg-gray-50 p-4"
-                >
+                <div key={idx} className="rounded-xl border border-gray-100 bg-gray-50 p-4">
                   <div className="flex items-start justify-between gap-3 mb-1.5">
                     <p className="font-lato font-semibold text-gray-800 text-sm leading-snug flex-1">
                       {spec.parameter}
@@ -526,7 +589,21 @@ export default function ProductDetailPage() {
                       </span>
                     )}
                   </div>
-                  <p className="font-lato text-gray-600 text-sm">{spec.specification}</p>
+                  {spec.logo_image_url || spec.qr_code_image_url ? (
+                    <div className="flex items-center gap-2 mt-2">
+                      {spec.logo_image_url && (
+                        <img src={spec.logo_image_url} alt="Logo" className="object-contain flex-shrink-0" style={{ height: '48px', width: 'auto', maxWidth: '60px' }} />
+                      )}
+                      {spec.specification && (
+                        <p className="font-lato text-gray-600 text-sm flex-1 min-w-0">{spec.specification}</p>
+                      )}
+                      {spec.qr_code_image_url && (
+                        <img src={spec.qr_code_image_url} alt="QR Code" className="object-contain flex-shrink-0" style={{ width: '48px', height: '48px' }} />
+                      )}
+                    </div>
+                  ) : (
+                    <p className="font-lato text-gray-600 text-sm">{spec.specification}</p>
+                  )}
                 </div>
               ))}
             </div>
@@ -552,7 +629,33 @@ export default function ProductDetailPage() {
                     >
                       <td className="py-4 px-6 font-lato text-gray-800 font-medium text-sm">{spec.parameter}</td>
                       <td className="py-4 px-6 font-lato text-gray-500 text-sm">{spec.uom}</td>
-                      <td className="py-4 px-6 font-lato text-gray-600 text-sm">{spec.specification}</td>
+                      <td className="py-4 px-6 font-lato text-gray-600 text-sm">
+                        {spec.logo_image_url || spec.qr_code_image_url ? (
+                          <div className="flex items-center gap-3 flex-wrap">
+                            {spec.logo_image_url && (
+                              <img
+                                src={spec.logo_image_url}
+                                alt="Logo"
+                                className="object-contain flex-shrink-0"
+                                style={{ height: '48px', width: 'auto', maxWidth: '60px' }}
+                              />
+                            )}
+                            {spec.specification && (
+                              <span>{spec.specification}</span>
+                            )}
+                            {spec.qr_code_image_url && (
+                              <img
+                                src={spec.qr_code_image_url}
+                                alt="QR Code"
+                                className="object-contain flex-shrink-0"
+                                style={{ width: '48px', height: '48px' }}
+                              />
+                            )}
+                          </div>
+                        ) : (
+                          spec.specification
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

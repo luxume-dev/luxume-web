@@ -80,7 +80,7 @@ export default function Footer() {
                   { Icon: FaPhone,     href: 'tel:+919778557752', color: '#C83C64' },
                   { Icon: FaInstagram, href: 'https://www.instagram.com/luxume_roofing/', color: '#E1306C' },
                   { Icon: FaFacebookF, href: 'https://www.facebook.com/profile.php?id=100069323057371', color: '#1877F2' },
-                  { Icon: FaYoutube,   href: 'https://www.youtube.com/@Luxume_Roofing', color: '#FF0000' },
+                  { Icon: FaYoutube,   href: 'https://www.youtube.com/@Luxume-i1d', color: '#FF0000' },
                 ].map(({ Icon, href, color }, index) => (
                   <a 
                     key={index}
@@ -156,7 +156,7 @@ export default function Footer() {
                     <FaMapMarkerAlt className="text-sm" />
                   </div>
                   <span className="text-sm text-gray-400 leading-relaxed">
-                    2nd Floor, SajMahal Building, Madakapilli Lane, Ernakulam South, Pin: 682016
+                    Luxume Roofing, 62/2592, 2nd Floor, Saj Mahal Building, Madakappillil Lane, Near Govt. HSS for Girls, Chittoor Road, Ernakulam-682016, Kerala.
                   </span>
                 </li>
                 <li className="flex items-center gap-4">
@@ -169,7 +169,7 @@ export default function Footer() {
                   <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0" style={{ color: '#C83C64' }}>
                     <FaEnvelope className="text-sm" />
                   </div>
-                  <a href="mailto:info@luxume.com" className="text-sm text-gray-400 hover:text-white transition-colors">info@luxume.com</a>
+                  <a href="mailto:info@luxume.in" className="text-sm text-gray-400 hover:text-white transition-colors">info@luxume.in</a>
                 </li>
               </ul>
 
