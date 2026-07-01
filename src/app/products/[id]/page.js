@@ -451,25 +451,25 @@ export default function ProductDetailPage() {
                         canvas.width = img.naturalWidth;
                         canvas.height = img.naturalHeight;
                         canvas.getContext('2d').drawImage(img, 0, 0);
-                        resolve(canvas.toDataURL('image/png'));
+                        resolve({ dataUrl: canvas.toDataURL('image/png'), w: img.naturalWidth, h: img.naturalHeight });
                       } catch (_) { resolve(null); }
                     };
                     img.onerror = () => resolve(null);
                     img.src = src;
                   });
 
-                  const IMG_SIZE = 10; // mm
+                  const IMG_SIZE = 6; // mm — fixed height for all images
                   const specImages = {};
                   await Promise.all(
                     specifications.map(async (s, i) => {
                       const entry = {};
                       if (s.logo_image_url) {
-                        const dataUrl = await loadImgDataUrl(s.logo_image_url);
-                        if (dataUrl) entry.logo = dataUrl;
+                        const res = await loadImgDataUrl(s.logo_image_url);
+                        if (res) entry.logo = { dataUrl: res.dataUrl, w: (res.w / res.h) * IMG_SIZE };
                       }
                       if (s.qr_code_image_url) {
-                        const dataUrl = await loadImgDataUrl(s.qr_code_image_url);
-                        if (dataUrl) entry.qr = dataUrl;
+                        const res = await loadImgDataUrl(s.qr_code_image_url);
+                        if (res) entry.qr = { dataUrl: res.dataUrl, w: IMG_SIZE };
                       }
                       if (entry.logo || entry.qr) specImages[i] = entry;
                     })
@@ -511,11 +511,18 @@ export default function ProductDetailPage() {
                       if (data.section === 'body' && data.column.index === 2) {
                         const imgs = specImages[data.row.index];
                         if (imgs) {
-                          const leftExtra = imgs.logo ? IMG_SIZE + 2 : 0;
-                          const rightExtra = imgs.qr ? IMG_SIZE + 2 : 0;
-                          data.cell.styles.cellPadding = { top: 3, bottom: 3, left: 4 + leftExtra, right: 4 + rightExtra };
+                          const logoW = imgs.logo ? imgs.logo.w + 2 : 0;
+                          const qrW = imgs.qr ? imgs.qr.w + 2 : 0;
+                          data.cell.styles.cellPadding = { top: 3, bottom: 3, left: 4 + logoW, right: 4 + qrW };
                           data.cell.styles.minCellHeight = IMG_SIZE + 6;
                           data.cell.styles.valign = 'middle';
+                          data.cell.styles.font = 'courier';
+                          data.cell.styles.fontSize = 7;
+                          data.cell.styles.textColor = [50, 55, 70];
+                          data.cell.styles.charSpace = 0.8;
+                          if (data.cell.text) {
+                            data.cell.text = data.cell.text.map(t => t.toUpperCase());
+                          }
                         }
                       }
                     },
@@ -525,10 +532,10 @@ export default function ProductDetailPage() {
                         if (!imgs) return;
                         const imgY = data.cell.y + (data.cell.height - IMG_SIZE) / 2;
                         if (imgs.logo) {
-                          doc.addImage(imgs.logo, 'PNG', data.cell.x + 4, imgY, IMG_SIZE, IMG_SIZE);
+                          doc.addImage(imgs.logo.dataUrl, 'PNG', data.cell.x + 4, imgY, imgs.logo.w, IMG_SIZE);
                         }
                         if (imgs.qr) {
-                          doc.addImage(imgs.qr, 'PNG', data.cell.x + data.cell.width - 4 - IMG_SIZE, imgY, IMG_SIZE, IMG_SIZE);
+                          doc.addImage(imgs.qr.dataUrl, 'PNG', data.cell.x + data.cell.width - 4 - imgs.qr.w, imgY, imgs.qr.w, IMG_SIZE);
                         }
                       }
                     },
@@ -584,13 +591,13 @@ export default function ProductDetailPage() {
                   {spec.logo_image_url || spec.qr_code_image_url ? (
                     <div className="flex items-center gap-2 mt-2">
                       {spec.logo_image_url && (
-                        <img src={spec.logo_image_url} alt="Logo" className="object-contain flex-shrink-0" style={{ height: '48px', width: 'auto', maxWidth: '60px' }} />
+                        <img src={spec.logo_image_url} alt="Logo" className="object-contain flex-shrink-0" style={{ width: '44px', height: '44px' }} />
                       )}
                       {spec.specification && (
-                        <p className="font-lato text-gray-600 text-sm flex-1 min-w-0">{spec.specification}</p>
+                        <p className="font-mono text-xs uppercase tracking-widest text-gray-700 flex-1 min-w-0">{spec.specification}</p>
                       )}
                       {spec.qr_code_image_url && (
-                        <img src={spec.qr_code_image_url} alt="QR Code" className="object-contain flex-shrink-0" style={{ width: '48px', height: '48px' }} />
+                        <img src={spec.qr_code_image_url} alt="QR Code" className="object-contain flex-shrink-0" style={{ width: '44px', height: '44px' }} />
                       )}
                     </div>
                   ) : (
@@ -623,24 +630,24 @@ export default function ProductDetailPage() {
                       <td className="py-4 px-6 font-lato text-gray-500 text-sm">{spec.uom}</td>
                       <td className="py-4 px-6 font-lato text-gray-600 text-sm">
                         {spec.logo_image_url || spec.qr_code_image_url ? (
-                          <div className="flex items-center gap-3 flex-wrap">
+                          <div className="flex items-center gap-3">
                             {spec.logo_image_url && (
                               <img
                                 src={spec.logo_image_url}
                                 alt="Logo"
                                 className="object-contain flex-shrink-0"
-                                style={{ height: '48px', width: 'auto', maxWidth: '60px' }}
+                                style={{ width: '44px', height: '44px' }}
                               />
                             )}
                             {spec.specification && (
-                              <span>{spec.specification}</span>
+                              <span className="font-mono text-xs uppercase tracking-widest text-gray-700">{spec.specification}</span>
                             )}
                             {spec.qr_code_image_url && (
                               <img
                                 src={spec.qr_code_image_url}
                                 alt="QR Code"
                                 className="object-contain flex-shrink-0"
-                                style={{ width: '48px', height: '48px' }}
+                                style={{ width: '44px', height: '44px' }}
                               />
                             )}
                           </div>
