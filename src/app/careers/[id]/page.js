@@ -177,7 +177,7 @@ export default function JobDetailPage() {
 
               <div className="space-y-3">
                 <a 
-                  href="mailto:info@luxume.com"
+                  href="mailto:info@luxume.in"
                   className="flex items-center gap-4 p-4 rounded-lg transition-all duration-300"
                   style={{ backgroundColor: 'rgba(200, 60, 100, 0.2)' }}
                   onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(200, 60, 100, 0.35)'}
@@ -191,7 +191,7 @@ export default function JobDetailPage() {
                   </div>
                   <div>
                     <p className="text-white font-medium">Email</p>
-                    <p className="text-gray-400 text-sm">info@luxume.com</p>
+                    <p className="text-gray-400 text-sm">info@luxume.in</p>
                   </div>
                 </a>
 

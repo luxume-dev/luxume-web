@@ -1,6 +1,13 @@
 import React from 'react';
 
 
+export const metadata = {
+  title: 'Terms & Conditions',
+  description:
+    'The terms and conditions governing use of the Luxume Roofing website and the purchase of our steel roofing products.',
+  alternates: { canonical: '/terms-conditions' },
+};
+
 export default function TermsConditions() {
   return (
     <main className="min-h-screen bg-white">

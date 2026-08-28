@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import QueryProvider from "@/providers/QueryProvider";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { Toaster } from "sonner";
+import { SITE_URL } from "@/lib/site";
 
 const lato = Lato({
   variable: "--font-lato",
@@ -14,8 +15,15 @@ const lato = Lato({
 });
 
 export const metadata = {
-  title: "Luxume Roofing - Premium Steel Roofing Solutions",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Luxume Roofing - Premium Steel Roofing Solutions",
+    template: "%s | Luxume Roofing",
+  },
   description: "Discover the perfect steel solution for every design. Premium quality roofing that combines durability, aesthetics, and innovation.",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({ children }) {

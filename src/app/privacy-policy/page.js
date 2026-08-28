@@ -1,7 +1,14 @@
 import React from 'react';
 
 
-export default function PrivacyPolicy() { 
+export const metadata = {
+  title: 'Privacy Policy',
+  description:
+    'How Luxume Roofing collects, uses, and protects your personal information when you use our website or contact us.',
+  alternates: { canonical: '/privacy-policy' },
+};
+
+export default function PrivacyPolicy() {
   return (
     <main className="min-h-screen bg-white">
 
@@ -38,7 +45,7 @@ export default function PrivacyPolicy() {
             If you have any questions about this Privacy Policy, please contact us at:
           </p>
           <p className="font-medium text-[#0F172B]">
-            Email: info@luxume.com<br />
+            Email: info@luxume.in<br />
             Phone: +91 97785 57752
           </p>
         </div>

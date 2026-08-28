@@ -301,7 +301,7 @@ export default function ContactSection() {
                 <div>
                   <h3 className="font-lato font-semibold text-gray-800 mb-2">Email Us</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    info@luxume.com
+                    info@luxume.in
                   </p>
                 </div>
               </div>

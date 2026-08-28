@@ -2,8 +2,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const metadata = {
-  title: 'Guarantee Terms & Conditions | Luxume Roofing',
+  title: 'Guarantee Terms & Conditions',
   description: '10-year limited guarantee for Luxume colour coated roofing and cladding products. Read the full terms and conditions.',
+  alternates: { canonical: '/guarantee' },
 };
 
 /* ─── Content Data ─────────────────────────────────────────────── */

@@ -1,8 +1,9 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: "Do's & Don'ts | Luxume Roofing",
+  title: "Do's & Don'ts",
   description: "Essential guidelines for proper handling, storage, and maintenance of Luxume roofing products.",
+  alternates: { canonical: '/dos-and-donts' },
 };
 
 const dos = [
