@@ -11,14 +11,14 @@ export default function ProductsIntro() {
           Our Products
         </h3>
         
-        <h1 
+        <h2 
           className="aloevera-bold text-4xl md:text-[48px] leading-tight mb-6"
           style={{ 
             color: 'var(--secondary)'
           }}
         >
           Premium Steel Solutions
-        </h1>
+        </h2>
         
         <p 
           className="lato-regular text-[16px] max-w-2xl mx-auto leading-[28px] mb-8"

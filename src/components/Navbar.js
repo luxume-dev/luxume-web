@@ -68,6 +68,8 @@ export default function Navbar() {
             <img
               src={useDarkContent ? "/images/logo.png" : "/images/logo-2.png"}
               alt="Luxume"
+              width={120}
+              height={48}
               className="h-12 w-auto"
             />
           </Link>

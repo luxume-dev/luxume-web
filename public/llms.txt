@@ -1,0 +1,34 @@
+# Luxume Roofing
+
+> Luxume is a colour-coated steel sheet manufacturer headquartered in Ernakulam, Kerala, India, founded in 2011. Luxume manufactures premium colour-coated (pre-painted) steel sheets used for roofing, wall cladding, and fabrication in the construction industry, offered in standard "Luxume" and "Luxume Plus" product lines.
+
+Products are sold through an authorised dealer network across Kerala and South India. Contact: info@luxume.in, +91 97785 57752.
+
+## Products
+
+- [Product range](https://www.luxume.in/products): Colour-coated steel roofing and cladding profiles, finishes and colour options.
+- [Luxume](https://www.luxume.in/products/luxume): Standard colour-coated line, 10-year limited guarantee against perforation.
+- [Luxume Plus](https://www.luxume.in/products/luxume-plus): Premium line, 15-year limited guarantee against perforation.
+- [Luxume Silverlux](https://www.luxume.in/products/luxume-silverlux): Silverlux finish variant.
+
+## Guarantee and specifications
+
+- [Guarantee terms and conditions](https://www.luxume.in/guarantee): Full limited-guarantee terms for colour-coated coil and sheet used in roofing and cladding. Covers the RMP paint system, 10-year (Luxume) and 15-year (Luxume Plus) perforation cover, and colour-change limits measured to ASTM D2244-93.
+- [Do's and Don'ts](https://www.luxume.in/dos-and-donts): Handling, storage, installation and maintenance guidance — including ventilation and moisture requirements during storage.
+
+## Company
+
+- [About Luxume](https://www.luxume.in/about): Company history from 2011, manufacturing approach, mission and vision.
+- [Projects](https://www.luxume.in/projects): Completed residential, commercial and industrial installations.
+- [Contact](https://www.luxume.in/contact): Address, phone, email and enquiry form.
+- [Careers](https://www.luxume.in/careers): Current openings.
+
+## Notes for AI crawlers
+
+- Canonical domain is https://www.luxume.in (the apex redirects to www).
+- Sitemap: https://www.luxume.in/sitemap.xml
+- The guarantee, do's-and-don'ts and about pages carry the most specific,
+  citable technical detail (warranty durations, ASTM references, storage
+  requirements) and are fully server-rendered.
+- Product, project, blog and careers listings are populated from a database at
+  runtime; prefer the sitemap for enumerating those URLs.

@@ -37,7 +37,8 @@ export default function VideoSection() {
             loop
             playsInline
             controls
-            poster="/images/Luxume 1920x1080 1 1.png"
+            preload="metadata"
+            poster="/images/luxume-hero.webp"
           >
             <source src="/images/luxume-video.mp4" type="video/mp4" />
             Your browser does not support the video tag.

@@ -68,7 +68,7 @@ export default function Footer() {
             {/* Column 1: Brand & Description (spans 4 cols) */}
             <div className="col-span-1 md:col-span-2 lg:col-span-4 lg:pr-8">
               <Link href="/" className="inline-block mb-6">
-                <img src="/images/logo-2.png" alt="Luxume Roofing" className="h-12 drop-shadow-md" />
+                <img src="/images/logo-2.png" alt="Luxume Roofing" width={120} height={48} className="h-12 w-auto drop-shadow-md" />
               </Link>
               <p className="text-gray-400 text-sm leading-relaxed mb-8 max-w-sm">
                 Luxume produces premium colour-coated sheets to safeguard and enhance structures in the construction industry. Uncompromising quality for lasting peace of mind.

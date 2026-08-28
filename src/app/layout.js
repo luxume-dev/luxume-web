@@ -6,6 +6,7 @@ import QueryProvider from "@/providers/QueryProvider";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { Toaster } from "sonner";
 import { SITE_URL } from "@/lib/site";
+import { organizationSchema, websiteSchema } from "@/lib/schema";
 
 const lato = Lato({
   variable: "--font-lato",
@@ -29,6 +30,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([organizationSchema, websiteSchema]),
+          }}
+        />
+      </head>
       <body className={`${lato.variable} antialiased`}>
         <QueryProvider>
           <Navbar />

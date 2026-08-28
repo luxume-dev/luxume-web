@@ -98,13 +98,13 @@ export default function AboutUsSection() {
           {/* Right - Text content */}
           <div className="w-full lg:w-3/5">
             {/* About Us heading */}
-            <h2
+            <h1
               ref={headingRef}
               className="aloevera-bold text-[36px] mb-6"
               style={{ color: '#C83C64', opacity: 0 }}
             >
               About Us
-            </h2>
+            </h1>
 
             <p
               ref={el => textRefs.current[0] = el}

@@ -7,7 +7,7 @@ export default function HeroSection() {
       <div
         className="absolute inset-0 bg-cover bg-no-repeat bg-right md:bg-center"
         style={{
-          backgroundImage: 'url(/images/Luxume%201920x1080%201%201.png)',
+          backgroundImage: 'url(/images/luxume-hero.webp)',
         }}
       >
         {/* Gradient overlay */}
