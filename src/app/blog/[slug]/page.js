@@ -1,6 +1,8 @@
+import { notFound } from 'next/navigation';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { blogQuery } from '@/lib/queries';
+import { postMissing } from '@/lib/exists.server';
 import { summarise } from '@/lib/text';
 import BlogDetailClient from '@/components/blog/BlogDetailClient';
 
@@ -66,6 +68,11 @@ export async function generateMetadata({ params }) {
 
 export default async function BlogDetailPage({ params }) {
   const { slug } = await params;
+
+  // Serve a real 404 for records that do not exist, instead of a 200
+  // shell that search engines would treat as a soft 404.
+  if (await postMissing(slug)) notFound();
+
   const queryClient = await prefetch(getQueryClient(), [blogQuery(slug)]);
 
   return (

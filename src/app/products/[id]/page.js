@@ -1,6 +1,8 @@
+import { notFound } from 'next/navigation';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { productQuery } from '@/lib/queries';
+import { brandMissing } from '@/lib/exists.server';
 import { summarise } from '@/lib/text';
 import ProductDetailClient from '@/components/products/ProductDetailClient';
 
@@ -44,6 +46,11 @@ export async function generateMetadata({ params }) {
 
 export default async function ProductDetailPage({ params }) {
   const { id: slug } = await params;
+
+  // Serve a real 404 for records that do not exist, instead of a 200
+  // shell that search engines would treat as a soft 404.
+  if (await brandMissing(slug)) notFound();
+
   const queryClient = await prefetch(getQueryClient(), [productQuery(slug)]);
 
   return (
