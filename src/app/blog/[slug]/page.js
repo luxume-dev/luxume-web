@@ -1,6 +1,7 @@
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { blogQuery } from '@/lib/queries';
+import { summarise } from '@/lib/text';
 import BlogDetailClient from '@/components/blog/BlogDetailClient';
 
 export const revalidate = 3600;
@@ -17,25 +18,17 @@ async function getPost(slug) {
  * Derive a description from the post body.
  *
  * No post currently sets meta_description, and without this every article
- * would inherit the site-wide default — five identical descriptions. Prefer a
- * real meta_description whenever an author supplies one.
+ * would inherit the site-wide default — five identical descriptions.
  */
-function deriveDescription(content, limit = 155) {
+function deriveDescription(content) {
   if (!Array.isArray(content)) return undefined;
 
   const text = content
     .filter((block) => block?.type === 'paragraph' && typeof block.content === 'string')
-    .map((block) => block.content.trim())
-    .join(' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+    .map((block) => block.content)
+    .join(' ');
 
-  if (!text) return undefined;
-  if (text.length <= limit) return text;
-
-  const clipped = text.slice(0, limit);
-  const lastSpace = clipped.lastIndexOf(' ');
-  return `${clipped.slice(0, lastSpace > 0 ? lastSpace : limit).replace(/[,;:.]$/, '')}…`;
+  return summarise(text);
 }
 
 /**
@@ -52,7 +45,7 @@ export async function generateMetadata({ params }) {
   }
 
   const title = post.meta_title || post.title;
-  const description = post.meta_description || deriveDescription(post.content);
+  const description = summarise(post.meta_description) || deriveDescription(post.content);
 
   return {
     title,

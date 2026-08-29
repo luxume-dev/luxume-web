@@ -1,6 +1,7 @@
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { productQuery } from '@/lib/queries';
+import { summarise } from '@/lib/text';
 import ProductDetailClient from '@/components/products/ProductDetailClient';
 
 export const revalidate = 3600;
@@ -22,8 +23,9 @@ export async function generateMetadata({ params }) {
     return { title: 'Product', alternates: { canonical: `/products/${slug}` } };
   }
 
+  // brand.description runs 700-800 chars, far past what a SERP shows.
   const description =
-    brand.description ||
+    summarise(brand.description) ||
     `${brand.title} colour-coated steel roofing from Luxume — specifications, profiles and finishes.`;
 
   return {

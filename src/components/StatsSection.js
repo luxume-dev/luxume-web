@@ -151,6 +151,12 @@ export default function StatsSection() {
               ref={imageRef}
               src="/images/about-home.webp"
               alt="Steel Roofing"
+              // Below the fold: without this the browser preloads it and
+              // starves the hero background, which is the LCP element.
+              loading="lazy"
+              decoding="async"
+              width={1200}
+              height={384}
               className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover rounded-2xl"
             />
           </div>

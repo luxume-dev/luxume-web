@@ -61,6 +61,10 @@ export default function CoatedSteelSection({ isColorsAvailable = true }) {
                   ref={imageRef}
                   src={language === 'english' ? '/images/layers-english.webp' : '/images/layers-malayalam.webp'}
                   alt={language === 'english' ? 'Coated Steel Layers Diagram' : 'Coated Steel Layers Diagram (Malayalam)'}
+                  loading="lazy"
+                  decoding="async"
+                  width={1235}
+                  height={1280}
                   className="w-full h-full object-cover"
                 />
               </div>
