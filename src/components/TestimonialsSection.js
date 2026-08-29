@@ -166,6 +166,10 @@ export default function TestimonialsSection() {
                     key={activeTestimonial?.video_url}
                     src={getYouTubeEmbedUrl(activeTestimonial?.video_url)}
                     className="w-full h-full"
+                    // Testimonials are server-rendered, so without this the
+                    // ~845KB YouTube player payload is fetched during initial
+                    // page load and competes with the hero for bandwidth.
+                    loading="lazy"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                     title={`Testimonial video`}
