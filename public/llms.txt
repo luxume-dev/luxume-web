@@ -30,5 +30,5 @@ Products are sold through an authorised dealer network across Kerala and South I
 - The guarantee, do's-and-don'ts and about pages carry the most specific,
   citable technical detail (warranty durations, ASTM references, storage
   requirements) and are fully server-rendered.
-- Product, project, blog and careers listings are populated from a database at
-  runtime; prefer the sitemap for enumerating those URLs.
+- Product, project, blog and careers pages are server-rendered with their full
+  content; the sitemap enumerates every URL including detail pages.
