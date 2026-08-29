@@ -1,5 +1,10 @@
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+import { getQueryClient, prefetch } from '@/lib/queryClient.server';
+import { careersQuery } from '@/lib/queries';
 import CareersHeroSection from '@/components/careers/CareersHeroSection';
 import JobOpeningsSection from '@/components/careers/JobOpeningsSection';
+
+export const revalidate = 3600;
 
 export const metadata = {
   title: 'Careers',
@@ -8,11 +13,15 @@ export const metadata = {
   alternates: { canonical: '/careers' },
 };
 
-export default function CareersPage() {
+export default async function CareersPage() {
+  const queryClient = await prefetch(getQueryClient(), [careersQuery()]);
+
   return (
-    <main>
-      <CareersHeroSection />
-      <JobOpeningsSection />
-    </main>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <main>
+        <CareersHeroSection />
+        <JobOpeningsSection />
+      </main>
+    </HydrationBoundary>
   );
 }

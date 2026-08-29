@@ -1,21 +1,13 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { queryKeys } from '@/lib/queryKeys';
-import { getActiveCareers, getCareerById } from '@/services/supabase';
+import { careersQuery, careerQuery } from '@/lib/queries';
 
 /**
  * Fetch all active careers
  */
 export function useCareers() {
-  return useQuery({
-    queryKey: queryKeys.careers.all,
-    queryFn: async () => {
-      const { data, error } = await getActiveCareers();
-      if (error) throw new Error(error);
-      return data;
-    },
-  });
+  return useQuery(careersQuery());
 }
 
 /**
@@ -23,13 +15,5 @@ export function useCareers() {
  * @param {string} id
  */
 export function useCareer(id) {
-  return useQuery({
-    queryKey: queryKeys.careers.detail(id),
-    queryFn: async () => {
-      const { data, error } = await getCareerById(id);
-      if (error) throw new Error(error);
-      return data;
-    },
-    enabled: !!id,
-  });
+  return useQuery(careerQuery(id));
 }

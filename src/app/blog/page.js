@@ -1,5 +1,10 @@
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+import { getQueryClient, prefetch } from '@/lib/queryClient.server';
+import { blogsQuery } from '@/lib/queries';
 import BlogHeroSection from '@/components/blog/BlogHeroSection';
 import BlogSection from '@/components/blog/BlogSection';
+
+export const revalidate = 3600;
 
 export const metadata = {
   title: 'Insights & Updates',
@@ -7,11 +12,15 @@ export const metadata = {
   alternates: { canonical: '/blog' },
 };
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const queryClient = await prefetch(getQueryClient(), [blogsQuery()]);
+
   return (
-    <main>
-      <BlogHeroSection />
-      <BlogSection />
-    </main>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <main>
+        <BlogHeroSection />
+        <BlogSection />
+      </main>
+    </HydrationBoundary>
   );
 }

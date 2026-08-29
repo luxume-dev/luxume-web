@@ -2,22 +2,14 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { useQuery } from '@tanstack/react-query';
-import { getActiveProjects } from '@/services/supabase';
+import { useProjects } from '@/hooks/useProjects';
 import { FaArrowRight, FaMapMarkerAlt } from 'react-icons/fa';
 import Link from 'next/link';
 
 // Fallback image if a project doesn't have an image_url
 const FALLBACK_IMAGE = '/images/roof.jpg';
 export default function ProjectsSection({ limit = 6, showViewAll = true }) {
-  const { data: projectsData, isLoading, isError } = useQuery({
-    queryKey: ['projects', 'active'],
-    queryFn: async () => {
-      const { data, error } = await getActiveProjects();
-      if (error) throw new Error(error);
-      return data || [];
-    },
-  });
+  const { data: projectsData, isLoading, isError } = useProjects();
 
   return (
     <section className="py-24 bg-white relative overflow-hidden">

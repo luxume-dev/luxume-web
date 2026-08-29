@@ -16,6 +16,11 @@ export const queryKeys = {
     all: ['blogs'],
     detail: (slug) => ['blogs', slug],
   },
+  projects: {
+    // Value kept as-is from the previous inline usage so existing cache
+    // entries and any in-flight queries keep matching.
+    all: ['projects', 'active'],
+  },
   testimonials: {
     all: ['testimonials'],
   },

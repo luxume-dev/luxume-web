@@ -5,8 +5,14 @@ import Footer from "@/components/Footer";
 import QueryProvider from "@/providers/QueryProvider";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { Toaster } from "sonner";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { SITE_URL } from "@/lib/site";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
+import { getQueryClient, prefetch } from "@/lib/queryClient.server";
+import { productsQuery } from "@/lib/queries";
+
+// Supabase-backed content is regenerated hourly rather than pinned at build.
+export const revalidate = 3600;
 
 const lato = Lato({
   variable: "--font-lato",
@@ -27,7 +33,12 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  // Navbar and Footer both render the product list, so prefetching here makes
+  // those links server-rendered on every page rather than appearing only after
+  // hydration.
+  const queryClient = await prefetch(getQueryClient(), [productsQuery()]);
+
   return (
     <html lang="en">
       <head>
@@ -40,11 +51,13 @@ export default function RootLayout({ children }) {
       </head>
       <body className={`${lato.variable} antialiased`}>
         <QueryProvider>
-          <Navbar />
-          <div className="relative z-10">
-            {children}
-            <Footer />
-          </div>
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <Navbar />
+            <div className="relative z-10">
+              {children}
+              <Footer />
+            </div>
+          </HydrationBoundary>
           <WhatsAppButton />
           <Toaster
             position="top-right"
