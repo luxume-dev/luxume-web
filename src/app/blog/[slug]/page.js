@@ -4,6 +4,7 @@ import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { blogQuery } from '@/lib/queries';
 import { postMissing } from '@/lib/exists.server';
 import { summarise } from '@/lib/text';
+import { blogPostingSchema, breadcrumbSchema } from '@/lib/schema';
 import BlogDetailClient from '@/components/blog/BlogDetailClient';
 
 export const revalidate = 3600;
@@ -75,9 +76,31 @@ export default async function BlogDetailPage({ params }) {
 
   const queryClient = await prefetch(getQueryClient(), [blogQuery(slug)]);
 
+  const post = queryClient.getQueryData(blogQuery(slug).queryKey);
+  const article = blogPostingSchema(post, slug);
+  const breadcrumbs = breadcrumbSchema([
+    { name: 'Home', path: '' },
+    { name: 'Blog', path: '/blog' },
+    { name: post?.title ?? 'Article', path: `/blog/${slug}` },
+  ]);
+
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <BlogDetailClient />
-    </HydrationBoundary>
+    <>
+      {article && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(article) }}
+        />
+      )}
+      {breadcrumbs && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
+        />
+      )}
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <BlogDetailClient />
+      </HydrationBoundary>
+    </>
   );
 }

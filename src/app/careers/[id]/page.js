@@ -3,6 +3,7 @@ import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { careerQuery } from '@/lib/queries';
 import { jobMissing } from '@/lib/exists.server';
+import { breadcrumbSchema } from '@/lib/schema';
 import JobDetailClient from '@/components/careers/JobDetailClient';
 
 export const revalidate = 3600;
@@ -45,9 +46,27 @@ export default async function JobDetailPage({ params }) {
 
   const queryClient = await prefetch(getQueryClient(), [careerQuery(id)]);
 
+  // JobPosting is intentionally not emitted: the careers table has no
+  // validThrough-equivalent column, so Google would auto-expire the posting
+  // after 30 days. Breadcrumbs are safe to add now.
+  const job = queryClient.getQueryData(careerQuery(id).queryKey);
+  const breadcrumbs = breadcrumbSchema([
+    { name: 'Home', path: '' },
+    { name: 'Careers', path: '/careers' },
+    { name: job?.title ?? 'Opening', path: `/careers/${id}` },
+  ]);
+
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <JobDetailClient />
-    </HydrationBoundary>
+    <>
+      {breadcrumbs && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
+        />
+      )}
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <JobDetailClient />
+      </HydrationBoundary>
+    </>
   );
 }

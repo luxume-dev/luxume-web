@@ -53,3 +53,73 @@ export const websiteSchema = {
   name: 'Luxume Roofing',
   publisher: { '@id': `${SITE_URL}/#organization` },
 };
+
+const ORG_REF = { '@id': `${SITE_URL}/#organization` };
+
+/**
+ * Product schema for a brand detail page.
+ *
+ * Deliberately omits offers/aggregateRating/review: the brands table holds no
+ * price, and no review data source exists — this is a quote/lead flow, not
+ * checkout. Inventing either would breach Google's structured-data policy.
+ */
+export function productSchema(brand) {
+  if (!brand?.title || !brand?.slug) return null;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: brand.title,
+    ...(brand.cover_image_url ? { image: brand.cover_image_url } : {}),
+    ...(brand.description ? { description: brand.description } : {}),
+    brand: { '@type': 'Brand', name: 'Luxume' },
+    manufacturer: ORG_REF,
+    category: 'Colour-Coated Steel Roofing Sheets',
+    url: `${SITE_URL}/products/${brand.slug}`,
+  };
+}
+
+/**
+ * BlogPosting for an article.
+ *
+ * Author is the organisation: no post carries a byline, and attributing one to
+ * a named person we cannot verify would be worse than organisational
+ * authorship. Add real authors when bylines exist.
+ */
+export function blogPostingSchema(post, slug) {
+  if (!post?.title) return null;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.meta_title || post.title,
+    ...(post.image_url ? { image: post.image_url } : {}),
+    ...(post.created_at ? { datePublished: post.created_at } : {}),
+    ...(post.updated_at ? { dateModified: post.updated_at } : {}),
+    author: ORG_REF,
+    publisher: ORG_REF,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${SITE_URL}/blog/${slug}`,
+    },
+    url: `${SITE_URL}/blog/${slug}`,
+  };
+}
+
+/**
+ * BreadcrumbList from [{ name, path }] in trail order.
+ */
+export function breadcrumbSchema(trail) {
+  if (!Array.isArray(trail) || trail.length === 0) return null;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: trail.map(({ name, path }, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name,
+      item: `${SITE_URL}${path}`,
+    })),
+  };
+}

@@ -13,8 +13,6 @@ export default function StatsSection() {
   const imageRef = useRef(null);
   const statsContainerRef = useRef(null);
   const statRefs = useRef([]);
-  const [animatedValues, setAnimatedValues] = useState(['$0', '0', '0', '0%']);
-
   const stats = [
     {
       value: '50+ Million',
@@ -46,6 +44,11 @@ export default function StatsSection() {
       suffix: '%'
     }
   ];
+
+  // Seeded with the real figures so they exist in server-rendered HTML —
+  // crawlers and AI engines previously saw only '$0'/'0'/'0%'. The scroll
+  // animation still counts up: its first onUpdate tick resets to 0.
+  const [animatedValues, setAnimatedValues] = useState(() => stats.map((s) => s.value));
 
   useEffect(() => {
     if (!imageRef.current || !statsContainerRef.current) return;

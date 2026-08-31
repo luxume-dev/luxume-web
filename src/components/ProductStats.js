@@ -12,8 +12,6 @@ if (typeof window !== 'undefined') {
 export default function ProductStats() {
   const statsContainerRef = useRef(null);
   const statRefs = useRef([]);
-  const [animatedValues, setAnimatedValues] = useState(['0', '0', '24/7']);
-
   const stats = [
     {
       id: 1,
@@ -53,6 +51,10 @@ export default function ProductStats() {
       isStatic: true
     }
   ];
+
+  // Real figures in the server-rendered HTML; the scroll animation still
+  // counts up from 0 on its first tick.
+  const [animatedValues, setAnimatedValues] = useState(() => stats.map((s) => s.value));
 
   useEffect(() => {
     if (!statsContainerRef.current) return;

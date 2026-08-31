@@ -4,6 +4,7 @@ import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { productQuery } from '@/lib/queries';
 import { brandMissing } from '@/lib/exists.server';
 import { summarise } from '@/lib/text';
+import { productSchema, breadcrumbSchema } from '@/lib/schema';
 import ProductDetailClient from '@/components/products/ProductDetailClient';
 
 export const revalidate = 3600;
@@ -53,9 +54,32 @@ export default async function ProductDetailPage({ params }) {
 
   const queryClient = await prefetch(getQueryClient(), [productQuery(slug)]);
 
+  // Read back from the prefetched cache rather than refetching.
+  const brand = queryClient.getQueryData(productQuery(slug).queryKey);
+  const product = productSchema(brand);
+  const breadcrumbs = breadcrumbSchema([
+    { name: 'Home', path: '' },
+    { name: 'Products', path: '/products' },
+    { name: brand?.title ?? 'Product', path: `/products/${slug}` },
+  ]);
+
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <ProductDetailClient />
-    </HydrationBoundary>
+    <>
+      {product && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(product) }}
+        />
+      )}
+      {breadcrumbs && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
+        />
+      )}
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <ProductDetailClient />
+      </HydrationBoundary>
+    </>
   );
 }
