@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { FaPhone, FaInstagram, FaFacebookF, FaYoutube, FaMapMarkerAlt, FaEnvelope, FaPaperPlane, FaArrowRight } from 'react-icons/fa';
 import { useNewsletter } from '@/hooks/useNewsletter';
@@ -22,14 +23,16 @@ export default function Footer() {
       
       {/* ─── PRE-FOOTER CTA BANNER ───────────────────────────────────────────── */}
       <div className="relative py-20 lg:py-24 border-b border-white/5">
-        <div 
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: 'url(/images/footer.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
-        />
+        <div className="absolute inset-0 z-0">
+          {/* Decorative banner backdrop; below the fold so it stays lazy. */}
+          <Image
+            src="/images/footer.jpg"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+        </div>
         <div className="absolute inset-0 z-0 bg-[#0B1120]/80 mix-blend-multiply" />
         <div className="absolute inset-0 z-0 bg-gradient-to-t from-[#0B1120] to-transparent" />
 

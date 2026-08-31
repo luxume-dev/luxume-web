@@ -1,15 +1,26 @@
 'use client';
 
+import Image from 'next/image';
+
 export default function HeroSection() {
   return (
     <section className="fixed top-0 left-0 right-0 z-0 h-screen flex items-center">
       {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-no-repeat bg-right md:bg-center"
-        style={{
-          backgroundImage: 'url(/images/luxume-hero.webp)',
-        }}
-      >
+      <div className="absolute inset-0">
+        {/*
+          This is the LCP element, so it carries priority and is served through
+          next/image for AVIF/WebP negotiation and a responsive srcset. The
+          object-position classes reproduce the previous bg-right / md:bg-center.
+          alt is empty: the image is decorative, the h1 carries the meaning.
+        */}
+        <Image
+          src="/images/luxume-hero.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-right md:object-center"
+        />
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-black/55"></div>
       </div>
