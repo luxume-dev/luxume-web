@@ -7,7 +7,7 @@ import QueryProvider from "@/providers/QueryProvider";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { Toaster } from "sonner";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import { SITE_URL } from "@/lib/site";
+import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/site";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
 import { getQueryClient, prefetch } from "@/lib/queryClient.server";
 import { productsQuery } from "@/lib/queries";
@@ -33,6 +33,12 @@ export const metadata = {
   description: "Discover the perfect steel solution for every design. Premium quality roofing that combines durability, aesthetics, and innovation.",
   alternates: {
     canonical: "/",
+  },
+  // Pages that set their own openGraph replace this whole object, so they must
+  // include DEFAULT_OG_IMAGE as their fallback image too.
+  openGraph: {
+    type: "website",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

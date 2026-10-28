@@ -1,8 +1,15 @@
 'use client';
 
 import Image from 'next/image';
+import { useAltLookup } from '@/providers/AltTextProvider';
 
-export default function HeroSection() {
+const HERO_IMAGE = '/images/luxume-hero.webp';
+
+// heading / text come from the dashboard (page_seo.head_text / body_text);
+// the static heading is used when heading is empty.
+export default function HeroSection({ heading = '', text = '' }) {
+  const getAlt = useAltLookup();
+
   return (
     <section className="fixed top-0 left-0 right-0 z-0 h-screen flex items-center">
       {/* Background Image */}
@@ -11,11 +18,12 @@ export default function HeroSection() {
           This is the LCP element, so it carries priority and is served through
           next/image for AVIF/WebP negotiation and a responsive srcset. The
           object-position classes reproduce the previous bg-right / md:bg-center.
-          alt is empty: the image is decorative, the h1 carries the meaning.
+          alt defaults to empty: the image is decorative, the h1 carries the
+          meaning. The dashboard can still set one via its image alt text.
         */}
         <Image
-          src="/images/luxume-hero.webp"
-          alt=""
+          src={HERO_IMAGE}
+          alt={getAlt(HERO_IMAGE, '')}
           fill
           priority
           sizes="100vw"
@@ -29,15 +37,31 @@ export default function HeroSection() {
       <div className="relative z-10 w-full px-6 sm:px-12 md:px-16 lg:px-24">
         <div className="max-w-2xl">
           {/* Main Heading */}
-          <h1 className="aloevera-regular text-white leading-snug mb-6 sm:mb-8 md:mb-10 drop-shadow-lg text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-50">
-            Discover the Perfect
-            <br className="hidden sm:block" />
-            <span className="sm:hidden"> </span>
-            Steel Solution for every
-            <br className="hidden sm:block" />
-            <span className="sm:hidden"> </span>
-            Design Solution
+          <h1
+            className={`aloevera-regular text-white leading-snug drop-shadow-lg text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-50 ${
+              text ? 'mb-4 sm:mb-5' : 'mb-6 sm:mb-8 md:mb-10'
+            }`}
+          >
+            {heading ? (
+              heading
+            ) : (
+              <>
+                Discover the Perfect
+                <br className="hidden sm:block" />
+                <span className="sm:hidden"> </span>
+                Steel Solution for every
+                <br className="hidden sm:block" />
+                <span className="sm:hidden"> </span>
+                Design Solution
+              </>
+            )}
           </h1>
+
+          {text && (
+            <p className="font-lato text-white/85 drop-shadow text-base sm:text-lg leading-relaxed mb-6 sm:mb-8 md:mb-10 whitespace-pre-line">
+              {text}
+            </p>
+          )}
 
           {/* CTA Button */}
           <a

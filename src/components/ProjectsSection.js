@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useProjects } from '@/hooks/useProjects';
+import { useAltLookup } from '@/providers/AltTextProvider';
 import { FaArrowRight, FaMapMarkerAlt } from 'react-icons/fa';
 import Link from 'next/link';
 
@@ -10,6 +11,7 @@ import Link from 'next/link';
 const FALLBACK_IMAGE = '/images/roof.jpg';
 export default function ProjectsSection({ limit = 6, showViewAll = true }) {
   const { data: projectsData, isLoading, isError } = useProjects();
+  const getAlt = useAltLookup();
 
   return (
     <section className="py-24 bg-white relative overflow-hidden">
@@ -90,7 +92,7 @@ export default function ProjectsSection({ limit = 6, showViewAll = true }) {
                   <div className="absolute inset-0 bg-blue-950/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                   <Image
                     src={project.image_url || FALLBACK_IMAGE}
-                    alt={project.title}
+                    alt={getAlt(project.image_url || FALLBACK_IMAGE, project.title)}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-110"

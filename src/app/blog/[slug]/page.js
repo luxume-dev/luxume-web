@@ -4,6 +4,7 @@ import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { blogQuery } from '@/lib/queries';
 import { postMissing } from '@/lib/exists.server';
 import { summarise } from '@/lib/text';
+import { DEFAULT_OG_IMAGE } from '@/lib/site';
 import { blogPostingSchema, breadcrumbSchema } from '@/lib/schema';
 import BlogDetailClient from '@/components/blog/BlogDetailClient';
 
@@ -62,7 +63,7 @@ export async function generateMetadata({ params }) {
       type: 'article',
       url: `/blog/${slug}`,
       ...(post.created_at ? { publishedTime: post.created_at } : {}),
-      ...(post.image_url ? { images: [post.image_url] } : {}),
+      images: [post.image_url || DEFAULT_OG_IMAGE],
     },
   };
 }
