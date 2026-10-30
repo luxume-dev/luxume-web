@@ -4,6 +4,7 @@ import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { productQuery } from '@/lib/queries';
 import { brandMissing } from '@/lib/exists.server';
 import { summarise } from '@/lib/text';
+import { DEFAULT_OG_IMAGE } from '@/lib/site';
 import { productSchema, breadcrumbSchema } from '@/lib/schema';
 import ProductDetailClient from '@/components/products/ProductDetailClient';
 
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }) {
       description,
       type: 'website',
       url: `/products/${slug}`,
-      ...(brand.cover_image_url ? { images: [brand.cover_image_url] } : {}),
+      images: [brand.cover_image_url || DEFAULT_OG_IMAGE],
     },
   };
 }

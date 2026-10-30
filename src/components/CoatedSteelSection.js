@@ -2,9 +2,11 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
+import { useAltLookup } from '@/providers/AltTextProvider';
 
 export default function CoatedSteelSection({ isColorsAvailable = true }) {
   const [language, setLanguage] = useState('english');
+  const getAlt = useAltLookup();
   const imageRef = useRef(null);
 
   useEffect(() => {
@@ -60,7 +62,11 @@ export default function CoatedSteelSection({ isColorsAvailable = true }) {
                 <img
                   ref={imageRef}
                   src={language === 'english' ? '/images/layers-english.webp' : '/images/layers-malayalam.webp'}
-                  alt={language === 'english' ? 'Coated Steel Layers Diagram' : 'Coated Steel Layers Diagram (Malayalam)'}
+                  alt={
+                    language === 'english'
+                      ? getAlt('/images/layers-english.webp', 'Coated Steel Layers Diagram')
+                      : getAlt('/images/layers-malayalam.webp', 'Coated Steel Layers Diagram (Malayalam)')
+                  }
                   loading="lazy"
                   decoding="async"
                   width={1235}

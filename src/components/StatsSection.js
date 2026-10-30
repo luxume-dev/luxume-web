@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useAltLookup } from '@/providers/AltTextProvider';
 
 // Register ScrollTrigger plugin
 if (typeof window !== 'undefined') {
@@ -10,6 +11,7 @@ if (typeof window !== 'undefined') {
 }
 
 export default function StatsSection() {
+  const getAlt = useAltLookup();
   const imageRef = useRef(null);
   const statsContainerRef = useRef(null);
   const statRefs = useRef([]);
@@ -153,7 +155,7 @@ export default function StatsSection() {
             <img
               ref={imageRef}
               src="/images/about-home.webp"
-              alt="Steel Roofing"
+              alt={getAlt('/images/about-home.webp', 'Steel Roofing')}
               // Below the fold: without this the browser preloads it and
               // starves the hero background, which is the LCP element.
               loading="lazy"

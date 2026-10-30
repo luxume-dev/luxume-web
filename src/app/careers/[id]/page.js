@@ -3,6 +3,7 @@ import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { careerQuery } from '@/lib/queries';
 import { jobMissing } from '@/lib/exists.server';
+import { DEFAULT_OG_IMAGE } from '@/lib/site';
 import { breadcrumbSchema } from '@/lib/schema';
 import JobDetailClient from '@/components/careers/JobDetailClient';
 
@@ -33,7 +34,13 @@ export async function generateMetadata({ params }) {
     title: job.title,
     description,
     alternates: { canonical: `/careers/${id}` },
-    openGraph: { title: job.title, description, type: 'website', url: `/careers/${id}` },
+    openGraph: {
+      title: job.title,
+      description,
+      type: 'website',
+      url: `/careers/${id}`,
+      images: [DEFAULT_OG_IMAGE],
+    },
   };
 }
 

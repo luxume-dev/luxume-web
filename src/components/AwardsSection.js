@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useAltLookup } from '@/providers/AltTextProvider';
 
 const awards = [
   {
@@ -18,6 +19,8 @@ const awards = [
 ];
 
 export default function AwardsSection() {
+  const getAlt = useAltLookup();
+
   return (
     <section className="py-20 px-4 md:px-8 bg-[#fafafa]">
       <div className="max-w-7xl mx-auto">
@@ -52,7 +55,7 @@ export default function AwardsSection() {
               <div className="relative w-full aspect-[4/3] overflow-hidden bg-gray-100">
                 <Image
                   src={award.image}
-                  alt={award.title}
+                  alt={getAlt(award.image, award.title)}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
