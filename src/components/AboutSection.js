@@ -3,13 +3,26 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { parseHtml } from '@/lib/parseHtml';
 
 // Register ScrollTrigger plugin
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export default function AboutSection() {
+const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+const escapeHtml = (text) => text.replace(/[&<>"']/g, (c) => HTML_ESCAPES[c]);
+
+// Title and description come from the dashboard (home_page smart_home_* fields).
+// There are no static fallbacks: an empty field hides its element, and the
+// section is skipped when both are empty. The title is split at the first
+// ":" — the part before it is pink, the rest navy. It stays plain text because
+// the heading animation rewrites each span's text into per-letter spans.
+export default function AboutSection({ title = '', description = '' }) {
+  const colonIndex = title.indexOf(':');
+  const accent = colonIndex === -1 ? title : title.slice(0, colonIndex).trimEnd();
+  const rest = colonIndex === -1 ? '' : title.slice(colonIndex);
+
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const descriptionRef = useRef(null);
@@ -58,8 +71,10 @@ export default function AboutSection() {
             if (/^\s+$/.test(segment)) return segment;
             // Wrap each word in a whitespace-nowrap inline-block so the browser
             // line-breaks between words, not between individual character spans
-            const chars = segment.split('').map(char =>
-              `<span class="inline-block" style="opacity:0;transform:translateY(20px) rotateX(40deg)">${char}</span>`
+            // Characters come from the dashboard, so escape them before they
+            // go into innerHTML
+            const chars = Array.from(segment).map(char =>
+              `<span class="inline-block" style="opacity:0;transform:translateY(20px) rotateX(40deg)">${escapeHtml(char)}</span>`
             ).join('');
             return `<span class="inline-block whitespace-nowrap">${chars}</span>`;
           }).join('');
@@ -77,17 +92,19 @@ export default function AboutSection() {
       }
 
       // Description — blur-to-sharp fade
-      contentTl.fromTo(descriptionRef.current,
-        { opacity: 0, filter: 'blur(8px)', y: 15 },
-        { 
-          opacity: 1, 
-          filter: 'blur(0px)',
-          y: 0, 
-          duration: 1, 
-          ease: 'power2.out'
-        },
-        '-=0.3'
-      );
+      if (descriptionRef.current) {
+        contentTl.fromTo(descriptionRef.current,
+          { opacity: 0, filter: 'blur(8px)', y: 15 },
+          {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            duration: 1,
+            ease: 'power2.out'
+          },
+          '-=0.3'
+        );
+      }
 
     }, sectionRef);
 
@@ -112,35 +129,35 @@ export default function AboutSection() {
         />
 
         {/* Heading */}
-        <h2 
-          ref={headingRef}
-          className="mb-5 text-2xl sm:text-3xl md:text-4xl lg:text-[44px] leading-tight"
-          style={{ perspective: '600px' }}
-        >
-          <span className="aloevera-bold text-[#C83C64]">
-            Secure &amp; Stylish
-          </span>
-          <span className="aloevera-bold text-[#1a1a4e]">
-            {" "}: The Smart Home Shield
-          </span>
-        </h2>
+        {title && (
+          <h2
+            ref={headingRef}
+            className="mb-5 text-2xl sm:text-3xl md:text-4xl lg:text-[44px] leading-tight"
+            style={{ perspective: '600px' }}
+          >
+            {accent && (
+              <span className="aloevera-bold text-[#C83C64]">
+                {accent}
+              </span>
+            )}
+            {rest && (
+              <span className="aloevera-bold text-[#1a1a4e]">
+                {accent ? ' ' : ''}{rest}
+              </span>
+            )}
+          </h2>
+        )}
 
         {/* Description */}
-        <p 
-          ref={descriptionRef}
-          className="max-w-4xl text-sm sm:text-[15px] leading-7 sm:leading-8 text-[#666666] text-center px-2 sm:px-4"
-          style={{ opacity: 0 }}
-        >
-          Luxume headquartered at Chittoor Road, Ernakulam is a leading manufacturer
-          of colour-coated steel sheets which is primarily supplied to the construction
-          industry. We began our operations in the year 2011. Since then, we have been
-          manufacturing high-quality colour coated steel sheets that excel in durability,
-          performance, and aesthetic appeal that safeguard and enhance the elevation of
-          structures in which they are used. Our product is best suited for roofing,
-          cladding walls, and other fabrication purposes. Profiling of sheets in multiple
-          variations is a value-added service offered by Luxume. Luxume is part of a
-          family business that conducts businesses in flexible packaging, steel, etc.
-        </p>
+        {description && (
+          <p
+            ref={descriptionRef}
+            className="max-w-4xl text-sm sm:text-[15px] leading-7 sm:leading-8 text-[#666666] text-center px-2 sm:px-4 whitespace-pre-line"
+            style={{ opacity: 0 }}
+          >
+            {parseHtml(description)}
+          </p>
+        )}
 
       </div>
     </section>

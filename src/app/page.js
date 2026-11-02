@@ -3,7 +3,7 @@ import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { projectsQuery, testimonialsQuery } from '@/lib/queries';
 import { getHomePageSeoCached } from '@/lib/pageSeo.server';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
-import { getHomeHero } from '@/services/supabase';
+import { getHomeContent } from '@/services/supabase';
 import AltTextProvider from '@/providers/AltTextProvider';
 import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
@@ -28,10 +28,10 @@ export async function generateMetadata() {
 export default async function Home() {
   // Featured Projects and Testimonials both fetched client-side, so the
   // homepage shipped skeletons to crawlers. Prefetch them here instead.
-  const [queryClient, seo, { data: hero }] = await Promise.all([
+  const [queryClient, seo, { data: content }] = await Promise.all([
     prefetch(getQueryClient(), [projectsQuery(), testimonialsQuery()]),
     getHomePageSeoCached(),
-    getHomeHero(),
+    getHomeContent(),
   ]);
 
   const faqs = visibleFaqs(seo);
@@ -51,16 +51,25 @@ export default async function Home() {
       {/* Hero content comes from home_page (dashboard); empty fields fall back
           to the SEO head text, then to the static defaults in HeroSection. */}
       <HeroSection
-        heading={hero?.hero_title?.trim() || seo?.head_text?.trim()}
+        heading={content?.hero_title?.trim() || seo?.head_text?.trim()}
         text={seo?.body_text?.trim()}
-        banner={hero?.hero_banner?.trim()}
-        buttonLabel={hero?.hero_button_label?.trim()}
-        buttonLink={hero?.hero_button_link?.trim()}
+        banner={content?.hero_banner?.trim()}
+        buttonLabel={content?.hero_button_label?.trim()}
+        buttonLink={content?.hero_button_link?.trim()}
       />
 
       <div className="relative w-full mt-[100vh] bg-white">
-        <AboutSection />
-        <StatsSection />
+        {/* Smart Home intro + progress block come from home_page (dashboard);
+            there are no static fallbacks, an empty field hides its element. */}
+        <AboutSection
+          title={content?.smart_home_title?.trim()}
+          description={content?.smart_home_description?.trim()}
+        />
+        <StatsSection
+          titles={content?.progress_title}
+          labels={content?.progress_label}
+          image={content?.progress_image?.trim()}
+        />
         <CoreValuesSection />
         <CoatedSteelSection />
         <ProjectsSection />

@@ -2,19 +2,25 @@ import { supabase } from '@/lib/supabase';
 
 /**
  * Home Page Service
- * Reads the home page hero managed in the dashboard (public / read-only).
+ * Reads the home page content managed in the dashboard (public / read-only).
  * Like getHomePageSeo, the first home_page row is the one the dashboard edits.
  */
 
 /**
- * Fetch the home page hero fields.
- * @returns {Promise<{data: {hero_banner, hero_title, hero_button_label, hero_button_link}|null, error: string|null}>}
+ * Fetch the home page content fields: the hero, plus the Smart Home intro and
+ * progress (stats) section right below it.
+ * @returns {Promise<{data: {hero_banner, hero_title, hero_button_label, hero_button_link,
+ *   smart_home_title, smart_home_description, progress_label, progress_title, progress_image}|null,
+ *   error: string|null}>}
  */
-export async function getHomeHero() {
+export async function getHomeContent() {
     try {
         const { data, error } = await supabase
             .from('home_page')
-            .select('hero_banner, hero_title, hero_button_label, hero_button_link')
+            .select(
+                'hero_banner, hero_title, hero_button_label, hero_button_link, ' +
+                'smart_home_title, smart_home_description, progress_label, progress_title, progress_image'
+            )
             .order('created_at', { ascending: true })
             .limit(1)
             .maybeSingle();
@@ -23,7 +29,7 @@ export async function getHomeHero() {
 
         return { data: data ?? null, error: null };
     } catch (error) {
-        console.error('[Home Page Service] Error fetching home hero:', error);
+        console.error('[Home Page Service] Error fetching home content:', error);
         return { data: null, error: error.message };
     }
 }

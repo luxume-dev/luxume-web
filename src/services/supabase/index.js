@@ -12,4 +12,4 @@ export { submitQuoteRequest } from './quotes.service';
 export { getActiveProjects } from './projects.service';
 export { getTestimonials } from './testimonials.service';
 export { getHomePageSeo } from './pageSeo.service';
-export { getHomeHero } from './homePage.service';
+export { getHomeContent } from './homePage.service';
