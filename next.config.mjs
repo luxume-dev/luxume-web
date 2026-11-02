@@ -1,15 +1,17 @@
 // Content-Security-Policy scoped to what the app actually loads: Supabase
-// (data + realtime), YouTube embeds, and Next's own inline hydration payload.
+// (data + realtime), YouTube embeds, Google Tag Manager / GA4, and Next's own
+// inline hydration payload. Tags added inside the GTM container that call other
+// hosts need those hosts added here too.
 // 'unsafe-inline'/'unsafe-eval' on script-src are required by Next's inlined
 // bootstrap; tightening those needs a nonce-based setup via middleware.
 const contentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com https://www.googletagmanager.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com https://i.ytimg.com",
+  "img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com https://i.ytimg.com https://*.googletagmanager.com https://*.google-analytics.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
-  "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
+  "frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.googletagmanager.com",
   "media-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",
