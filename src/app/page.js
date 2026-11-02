@@ -3,6 +3,7 @@ import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { projectsQuery, testimonialsQuery } from '@/lib/queries';
 import { getHomePageSeoCached } from '@/lib/pageSeo.server';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
+import { getHomeHero } from '@/services/supabase';
 import AltTextProvider from '@/providers/AltTextProvider';
 import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
@@ -27,9 +28,10 @@ export async function generateMetadata() {
 export default async function Home() {
   // Featured Projects and Testimonials both fetched client-side, so the
   // homepage shipped skeletons to crawlers. Prefetch them here instead.
-  const [queryClient, seo] = await Promise.all([
+  const [queryClient, seo, { data: hero }] = await Promise.all([
     prefetch(getQueryClient(), [projectsQuery(), testimonialsQuery()]),
     getHomePageSeoCached(),
+    getHomeHero(),
   ]);
 
   const faqs = visibleFaqs(seo);
@@ -46,7 +48,15 @@ export default async function Home() {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
       )}
 
-      <HeroSection heading={seo?.head_text?.trim()} text={seo?.body_text?.trim()} />
+      {/* Hero content comes from home_page (dashboard); empty fields fall back
+          to the SEO head text, then to the static defaults in HeroSection. */}
+      <HeroSection
+        heading={hero?.hero_title?.trim() || seo?.head_text?.trim()}
+        text={seo?.body_text?.trim()}
+        banner={hero?.hero_banner?.trim()}
+        buttonLabel={hero?.hero_button_label?.trim()}
+        buttonLink={hero?.hero_button_link?.trim()}
+      />
 
       <div className="relative w-full mt-[100vh] bg-white">
         <AboutSection />
