@@ -70,7 +70,13 @@ export default async function Home() {
           labels={content?.progress_label}
           image={content?.progress_image?.trim()}
         />
-        <CoreValuesSection />
+        <CoreValuesSection
+          title={content?.core_value_title?.trim()}
+          description={content?.core_value_description?.trim()}
+          cardTitles={content?.core_value_card_title}
+          cardDescriptions={content?.core_value_card_description}
+          icons={content?.core_value_icon}
+        />
         <CoatedSteelSection />
         <ProjectsSection />
         <VideoSection />
