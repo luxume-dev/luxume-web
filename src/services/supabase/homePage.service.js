@@ -11,7 +11,7 @@ import { supabase } from '@/lib/supabase';
  * progress (stats) section right below it, the Core Values section and the
  * Coated Steel Layers section, the Featured Projects heading, the video and
  * the Product Highlights section, the Testimonials section headings and the
- * Recognition (awards) section.
+ * Recognition (awards) section and the Downloads & Resources section.
  * @returns {Promise<{data: {hero_banner, hero_title, hero_button_label, hero_button_link,
  *   smart_home_title, smart_home_description, progress_label, progress_title, progress_image,
  *   core_value_title, core_value_description, core_value_card_title, core_value_card_description,
@@ -20,7 +20,8 @@ import { supabase } from '@/lib/supabase';
  *   home_video, hlghlight_title, hlghlight_description, hlghlight_card_title, hlghlight_card_description,
  *   hlghlight_card_icon, testimonial_title, testimonial_description, testimonial_text_title,
  *   testimonial_short_text, recognition_label, recognition_title, recognition_description,
- *   award_title, award_description, award_image}|null,
+ *   award_title, award_description, award_image, download_title, download_description,
+ *   button_label, button_media, button_link}|null,
  *   error: string|null}>}
  */
 export async function getHomeContent() {
@@ -36,7 +37,8 @@ export async function getHomeContent() {
                 'home_video, ' +
                 'hlghlight_title, hlghlight_description, hlghlight_card_title, hlghlight_card_description, hlghlight_card_icon, ' +
                 'testimonial_title, testimonial_description, testimonial_text_title, testimonial_short_text, ' +
-                'recognition_label, recognition_title, recognition_description, award_title, award_description, award_image'
+                'recognition_label, recognition_title, recognition_description, award_title, award_description, award_image, ' +
+                'download_title, download_description, button_label, button_media, button_link'
             )
             .order('created_at', { ascending: true })
             .limit(1)

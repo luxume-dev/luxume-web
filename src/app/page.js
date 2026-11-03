@@ -122,7 +122,16 @@ export default async function Home() {
           awardImages={content?.award_image}
         />
         <FaqSection faqs={faqs} />
-        <DownloadsAndResources />
+        {/* Downloads & Resources comes from home_page (dashboard); there are no
+            static fallbacks, an empty field hides its element. */}
+        <DownloadsAndResources
+          fromDashboard
+          title={content?.download_title?.trim()}
+          description={content?.download_description?.trim()}
+          buttonLabels={content?.button_label}
+          buttonMedia={content?.button_media}
+          buttonLinks={content?.button_link}
+        />
       </div>
     </main>
     </AltTextProvider>
