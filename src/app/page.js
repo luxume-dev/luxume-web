@@ -1,6 +1,6 @@
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { getQueryClient, prefetch } from '@/lib/queryClient.server';
-import { projectsQuery, testimonialsQuery } from '@/lib/queries';
+import { homeFeaturedProjectsQuery, testimonialsQuery } from '@/lib/queries';
 import { getHomePageSeoCached } from '@/lib/pageSeo.server';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
 import { getHomeContent } from '@/services/supabase';
@@ -29,7 +29,7 @@ export default async function Home() {
   // Featured Projects and Testimonials both fetched client-side, so the
   // homepage shipped skeletons to crawlers. Prefetch them here instead.
   const [queryClient, seo, { data: content }] = await Promise.all([
-    prefetch(getQueryClient(), [projectsQuery(), testimonialsQuery()]),
+    prefetch(getQueryClient(), [homeFeaturedProjectsQuery(), testimonialsQuery()]),
     getHomePageSeoCached(),
     getHomeContent(),
   ]);
@@ -86,7 +86,13 @@ export default async function Home() {
           images={content?.coated_steel_images}
           imageLabels={content?.coated_steel_img_label}
         />
-        <ProjectsSection />
+        {/* Heading comes from home_page (dashboard); the cards are the active
+            projects marked "Show on Home Page" (projects.is_home_featured). */}
+        <ProjectsSection
+          label={content?.project_label?.trim()}
+          title={content?.project_title?.trim()}
+          description={content?.project_description?.trim()}
+        />
         <VideoSection />
         <ProductHighlightsSection />
         <TestimonialsSection />

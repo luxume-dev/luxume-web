@@ -2,16 +2,34 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { useProjects } from '@/hooks/useProjects';
+import { useHomeFeaturedProjects } from '@/hooks/useProjects';
+import { parseHtml } from '@/lib/parseHtml';
 import { useAltLookup } from '@/providers/AltTextProvider';
 import { FaArrowRight, FaMapMarkerAlt } from 'react-icons/fa';
 import Link from 'next/link';
 
 // Fallback image if a project doesn't have an image_url
 const FALLBACK_IMAGE = '/images/roof.jpg';
-export default function ProjectsSection({ limit = 6, showViewAll = true }) {
-  const { data: projectsData, isLoading, isError } = useProjects();
+
+// Default heading, used when the dashboard fields (home_page project_*) are empty
+const DEFAULT_LABEL = 'Portfolio';
+const DEFAULT_TITLE = 'Featured <span>Projects</span>';
+const DEFAULT_DESCRIPTION =
+  'Explore our diverse range of structural installations showcasing the strength, durability, and aesthetic perfection of Luxume premium roofing solutions.';
+
+// Home page Featured Projects: shows the active projects marked "Show on Home
+// Page" in the dashboard (projects.is_home_featured). The heading comes from
+// home_page; text wrapped in <span>...</span> in the title is bold. The whole
+// section is hidden when no project is featured.
+export default function ProjectsSection({ label, title, description, limit, showViewAll = true }) {
+  const { data: projectsData, isLoading, isError } = useHomeFeaturedProjects();
   const getAlt = useAltLookup();
+
+  if (!isLoading && !isError && !projectsData?.length) return null;
+
+  const headingLabel = label || DEFAULT_LABEL;
+  const headingTitle = title || DEFAULT_TITLE;
+  const headingDescription = description || DEFAULT_DESCRIPTION;
 
   return (
     <section className="py-24 bg-white relative overflow-hidden">
@@ -30,12 +48,12 @@ export default function ProjectsSection({ limit = 6, showViewAll = true }) {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h5 className="text-[#C83C64] uppercase tracking-widest font-medium text-sm mb-4">Portfolio</h5>
-            <h2 className="aloevera-light text-4xl md:text-5xl lg:text-6xl text-[#0a0a1a] mb-6">
-              Featured <span className="font-medium">Projects</span>
+            <h5 className="text-[#C83C64] uppercase tracking-widest font-medium text-sm mb-4">{headingLabel}</h5>
+            <h2 className="aloevera-light text-4xl md:text-5xl lg:text-6xl text-[#0a0a1a] mb-6 whitespace-pre-line [&_span]:font-medium">
+              {parseHtml(headingTitle)}
             </h2>
-            <p className="font-lato text-gray-600 text-lg">
-              Explore our diverse range of structural installations showcasing the strength, durability, and aesthetic perfection of Luxume premium roofing solutions.
+            <p className="font-lato text-gray-600 text-lg whitespace-pre-line">
+              {parseHtml(headingDescription)}
             </p>
           </motion.div>
         </div>
@@ -65,13 +83,6 @@ export default function ProjectsSection({ limit = 6, showViewAll = true }) {
         {isError && (
           <div className="text-center py-20">
             <p className="text-red-500 font-lato">Failed to load projects. Please try again later.</p>
-          </div>
-        )}
-
-        {/* Empty State */}
-        {!isLoading && !isError && projectsData?.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-gray-500 font-lato">No active projects found.</p>
           </div>
         )}
 

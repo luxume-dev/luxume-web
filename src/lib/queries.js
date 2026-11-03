@@ -15,6 +15,7 @@ import {
   getActiveCareers,
   getCareerById,
   getActiveProjects,
+  getHomeFeaturedProjects,
   getTestimonials,
 } from '@/services/supabase';
 
@@ -92,6 +93,12 @@ export const careerQuery = (id) => ({
 export const projectsQuery = () => ({
   queryKey: queryKeys.projects.all,
   queryFn: async () => (await unwrap(getActiveProjects())) || [],
+});
+
+/** Active projects with is_home_featured = true, for the home page */
+export const homeFeaturedProjectsQuery = () => ({
+  queryKey: queryKeys.projects.homeFeatured,
+  queryFn: async () => (await unwrap(getHomeFeaturedProjects())) || [],
 });
 
 export const testimonialsQuery = () => ({

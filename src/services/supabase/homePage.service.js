@@ -9,12 +9,12 @@ import { supabase } from '@/lib/supabase';
 /**
  * Fetch the home page content fields: the hero, plus the Smart Home intro and
  * progress (stats) section right below it, the Core Values section and the
- * Coated Steel Layers section.
+ * Coated Steel Layers section and the Featured Projects heading.
  * @returns {Promise<{data: {hero_banner, hero_title, hero_button_label, hero_button_link,
  *   smart_home_title, smart_home_description, progress_label, progress_title, progress_image,
  *   core_value_title, core_value_description, core_value_card_title, core_value_card_description,
  *   core_value_icon, coated_steel_label, coated_steel_title, coated_steel_description,
- *   coated_steel_images, coated_steel_img_label}|null,
+ *   coated_steel_images, coated_steel_img_label, project_label, project_title, project_description}|null,
  *   error: string|null}>}
  */
 export async function getHomeContent() {
@@ -25,7 +25,8 @@ export async function getHomeContent() {
                 'hero_banner, hero_title, hero_button_label, hero_button_link, ' +
                 'smart_home_title, smart_home_description, progress_label, progress_title, progress_image, ' +
                 'core_value_title, core_value_description, core_value_card_title, core_value_card_description, core_value_icon, ' +
-                'coated_steel_label, coated_steel_title, coated_steel_description, coated_steel_images, coated_steel_img_label'
+                'coated_steel_label, coated_steel_title, coated_steel_description, coated_steel_images, coated_steel_img_label, ' +
+                'project_label, project_title, project_description'
             )
             .order('created_at', { ascending: true })
             .limit(1)

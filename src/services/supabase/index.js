@@ -9,7 +9,7 @@ export { getActiveCareers, getCareerById } from './careers.service';
 export { getPublishedBlogs, getBlogBySlug } from './blogs.service';
 
 export { submitQuoteRequest } from './quotes.service';
-export { getActiveProjects } from './projects.service';
+export { getActiveProjects, getHomeFeaturedProjects } from './projects.service';
 export { getTestimonials } from './testimonials.service';
 export { getHomePageSeo } from './pageSeo.service';
 export { getHomeContent } from './homePage.service';
