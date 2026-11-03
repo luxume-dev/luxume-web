@@ -7,6 +7,7 @@ import { summarise } from '@/lib/text';
 import { DEFAULT_OG_IMAGE } from '@/lib/site';
 import { productSchema, breadcrumbSchema } from '@/lib/schema';
 import ProductDetailClient from '@/components/products/ProductDetailClient';
+import { getHomeContent } from '@/services/supabase';
 
 export const revalidate = 3600;
 
@@ -53,7 +54,18 @@ export default async function ProductDetailPage({ params }) {
   // shell that search engines would treat as a soft 404.
   if (await brandMissing(slug)) notFound();
 
-  const queryClient = await prefetch(getQueryClient(), [productQuery(slug)]);
+  // The Coated Steel Layers section is edited once, on the dashboard's home page
+  const [queryClient, { data: homeContent }] = await Promise.all([
+    prefetch(getQueryClient(), [productQuery(slug)]),
+    getHomeContent(),
+  ]);
+  const coatedSteel = {
+    label: homeContent?.coated_steel_label?.trim(),
+    title: homeContent?.coated_steel_title?.trim(),
+    description: homeContent?.coated_steel_description?.trim(),
+    images: homeContent?.coated_steel_images,
+    imageLabels: homeContent?.coated_steel_img_label,
+  };
 
   // Read back from the prefetched cache rather than refetching.
   const brand = queryClient.getQueryData(productQuery(slug).queryKey);
@@ -79,7 +91,7 @@ export default async function ProductDetailPage({ params }) {
         />
       )}
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <ProductDetailClient />
+        <ProductDetailClient coatedSteel={coatedSteel} />
       </HydrationBoundary>
     </>
   );

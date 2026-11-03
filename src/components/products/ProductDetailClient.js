@@ -10,7 +10,7 @@ import RequestQuoteModal from '@/components/RequestQuoteModal';
 import DownloadsAndResources from '@/components/DownloadsAndResources';
 import * as LucideIcons from 'lucide-react';
 
-export default function ProductDetailClient() {
+export default function ProductDetailClient({ coatedSteel }) {
   const params = useParams();
   const slug = params.id;
 
@@ -710,7 +710,7 @@ export default function ProductDetailClient() {
       </section>
 
       {/* 8. Coated Steel Section */}
-      <CoatedSteelSection isColorsAvailable={brand.is_colors_available} />
+      <CoatedSteelSection isColorsAvailable={brand.is_colors_available} {...coatedSteel} />
 
       {/* 9. Downloads & Resources Section */}
       <DownloadsAndResources brandName={title} />

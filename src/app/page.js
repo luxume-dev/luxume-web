@@ -77,7 +77,15 @@ export default async function Home() {
           cardDescriptions={content?.core_value_card_description}
           icons={content?.core_value_icon}
         />
-        <CoatedSteelSection />
+        {/* Coated Steel Layers content comes from home_page (dashboard); there
+            are no static fallbacks, an empty field hides its element. */}
+        <CoatedSteelSection
+          label={content?.coated_steel_label?.trim()}
+          title={content?.coated_steel_title?.trim()}
+          description={content?.coated_steel_description?.trim()}
+          images={content?.coated_steel_images}
+          imageLabels={content?.coated_steel_img_label}
+        />
         <ProjectsSection />
         <VideoSection />
         <ProductHighlightsSection />
