@@ -1,14 +1,36 @@
 'use client';
 
-import { useProjects } from '@/hooks/useProjects';
+import { useProjectsInfinite } from '@/hooks/useProjects';
+import { PROJECTS_PAGE_SIZE } from '@/lib/queries';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { FaMapMarkerAlt } from 'react-icons/fa';
+import { parseHtml } from '@/lib/parseHtml';
 
 const FALLBACK_IMAGE = '/images/roof.jpg';
 
-export default function ProjectsPageContent() {
-    const { data: projectsData, isLoading, isError } = useProjects();
+// Default heading, used when the dashboard fields (project_page) are empty
+const DEFAULT_LABEL = 'Portfolio';
+const DEFAULT_TITLE = 'Our <span>Projects</span>';
+const DEFAULT_DESCRIPTION =
+    'Explore our complete collection of structural installations showcasing the strength, durability, and aesthetic perfection of Luxume premium roofing solutions.';
+
+// Heading from project_page (text wrapped in <span>...</span> in the title is
+// bold); the cards are the active rows of the projects table.
+export default function ProjectsPageContent({ label, title, description }) {
+    const {
+        data,
+        isLoading,
+        isError,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isFetchNextPageError,
+    } = useProjectsInfinite();
+
+    // All batches loaded so far, in order
+    const projectsData = data?.pages.flatMap((page) => page.projects);
+    const total = data?.pages[0]?.total ?? 0;
 
     return (
         <main className="min-h-screen bg-gray-50 pt-32 pb-24">
@@ -23,12 +45,12 @@ export default function ProjectsPageContent() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <h5 className="text-[#C83C64] uppercase tracking-widest font-medium text-sm mb-4">Portfolio</h5>
-                        <h1 className="aloevera-light text-4xl md:text-5xl lg:text-6xl text-[#0a0a1a] mb-6">
-                            Our <span className="font-medium">Projects</span>
+                        <h5 className="text-[#C83C64] uppercase tracking-widest font-medium text-sm mb-4">{label || DEFAULT_LABEL}</h5>
+                        <h1 className="aloevera-light text-4xl md:text-5xl lg:text-6xl text-[#0a0a1a] mb-6 whitespace-pre-line [&_span]:font-medium">
+                            {parseHtml(title || DEFAULT_TITLE)}
                         </h1>
-                        <p className="font-lato text-gray-600 text-lg">
-                            Explore our complete collection of structural installations showcasing the strength, durability, and aesthetic perfection of Luxume premium roofing solutions.
+                        <p className="font-lato text-gray-600 text-lg whitespace-pre-line">
+                            {parseHtml(description || DEFAULT_DESCRIPTION)}
                         </p>
                     </motion.div>
                 </div>
@@ -64,7 +86,8 @@ export default function ProjectsPageContent() {
                                 key={project.id}
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                // Stagger within each batch, so loaded-in cards don't wait on earlier ones
+                                transition={{ duration: 0.5, delay: (index % PROJECTS_PAGE_SIZE) * 0.1 }}
                                 className="group relative rounded-2xl overflow-hidden bg-white shadow-xl flex flex-col h-auto md:h-[400px] transition-all duration-500"
                             >
                                 {/* Image Container - fixed height on mobile, absolute full coverage on md+ */}
@@ -103,6 +126,31 @@ export default function ProjectsPageContent() {
                                 </div>
                             </motion.div>
                         ))}
+                    </div>
+                )}
+
+                {/* Load More */}
+                {!isLoading && !isError && projectsData?.length > 0 && (
+                    <div className="mt-14 flex flex-col items-center gap-4">
+                        <p className="font-lato text-sm text-gray-500" aria-live="polite">
+                            Showing {projectsData.length} of {total} projects
+                        </p>
+                        {isFetchNextPageError && (
+                            <p className="font-lato text-sm text-red-500">Couldn&apos;t load more projects. Please try again.</p>
+                        )}
+                        {hasNextPage && (
+                            <button
+                                type="button"
+                                onClick={() => fetchNextPage()}
+                                disabled={isFetchingNextPage}
+                                className="inline-flex items-center gap-3 px-8 py-3 rounded-full bg-[#C83C64] text-white font-lato font-medium hover:bg-[#a83254] transition-colors duration-300 disabled:opacity-60 disabled:cursor-wait"
+                            >
+                                {isFetchingNextPage && (
+                                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                                )}
+                                {isFetchingNextPage ? 'Loading...' : 'Load More Projects'}
+                            </button>
+                        )}
                     </div>
                 )}
             </div>

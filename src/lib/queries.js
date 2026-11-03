@@ -15,6 +15,7 @@ import {
   getActiveCareers,
   getCareerById,
   getActiveProjects,
+  getActiveProjectsPage,
   getHomeFeaturedProjects,
   getTestimonials,
 } from '@/services/supabase';
@@ -93,6 +94,24 @@ export const careerQuery = (id) => ({
 export const projectsQuery = () => ({
   queryKey: queryKeys.projects.all,
   queryFn: async () => (await unwrap(getActiveProjects())) || [],
+});
+
+/** Projects shown per batch on the Projects page (fills the 3- and 2-column grids) */
+export const PROJECTS_PAGE_SIZE = 9;
+
+/**
+ * Active projects in batches for the Projects page "Load More" button.
+ * Each page is { projects, total }; the page param is the row offset.
+ * Use with useInfiniteQuery / prefetchInfiniteQuery.
+ */
+export const projectsInfiniteQuery = () => ({
+  queryKey: queryKeys.projects.infinite,
+  queryFn: ({ pageParam }) => unwrap(getActiveProjectsPage(pageParam, PROJECTS_PAGE_SIZE)),
+  initialPageParam: 0,
+  getNextPageParam: (lastPage, allPages) => {
+    const loaded = allPages.reduce((sum, page) => sum + page.projects.length, 0);
+    return lastPage.projects.length > 0 && loaded < lastPage.total ? loaded : undefined;
+  },
 });
 
 /** Active projects with is_home_featured = true, for the home page */

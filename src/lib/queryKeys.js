@@ -20,6 +20,8 @@ export const queryKeys = {
     // Value kept as-is from the previous inline usage so existing cache
     // entries and any in-flight queries keep matching.
     all: ['projects', 'active'],
+    // Projects page, loaded in batches ("Load More")
+    infinite: ['projects', 'active', 'infinite'],
     homeFeatured: ['projects', 'home-featured'],
   },
   testimonials: {
