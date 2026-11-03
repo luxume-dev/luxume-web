@@ -12,7 +12,7 @@ const contentSecurityPolicy = [
   "font-src 'self' data:",
   "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com",
   "frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.googletagmanager.com",
-  "media-src 'self'",
+  "media-src 'self' https://*.supabase.co",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
