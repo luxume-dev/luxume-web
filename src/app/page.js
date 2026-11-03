@@ -111,7 +111,16 @@ export default async function Home() {
           textTitle={content?.testimonial_text_title?.trim()}
           shortText={content?.testimonial_short_text?.trim()}
         />
-        <AwardsSection />
+        {/* Recognition content comes from home_page (dashboard); there are no
+            static fallbacks, an empty field hides its element. */}
+        <AwardsSection
+          label={content?.recognition_label?.trim()}
+          title={content?.recognition_title?.trim()}
+          description={content?.recognition_description?.trim()}
+          awardTitles={content?.award_title}
+          awardDescriptions={content?.award_description}
+          awardImages={content?.award_image}
+        />
         <FaqSection faqs={faqs} />
         <DownloadsAndResources />
       </div>
