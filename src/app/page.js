@@ -103,7 +103,14 @@ export default async function Home() {
           cardDescriptions={content?.hlghlight_card_description}
           icons={content?.hlghlight_card_icon}
         />
-        <TestimonialsSection />
+        {/* Headings come from home_page (dashboard); the testimonials are the
+            active ones picked on the dashboard Home Page (is_home_featured). */}
+        <TestimonialsSection
+          title={content?.testimonial_title?.trim()}
+          description={content?.testimonial_description?.trim()}
+          textTitle={content?.testimonial_text_title?.trim()}
+          shortText={content?.testimonial_short_text?.trim()}
+        />
         <AwardsSection />
         <FaqSection faqs={faqs} />
         <DownloadsAndResources />

@@ -6,7 +6,9 @@ import { supabase } from '@/lib/supabase';
  */
 
 /**
- * Fetch all active testimonials ordered by sort_order
+ * Fetch the active testimonials picked for the home page in the dashboard
+ * (is_home_featured), in the order set there: sort_order (1..n, counted
+ * separately for video and text), then newest first
  * @returns {Promise<{data: Array|null, error: string|null}>}
  */
 export async function getTestimonials() {
@@ -15,7 +17,9 @@ export async function getTestimonials() {
             .from('testimonials')
             .select('id, type, name, location, quote, rating, video_url, profile_url, sort_order')
             .eq('is_active', true)
-            .order('sort_order', { ascending: true });
+            .eq('is_home_featured', true)
+            .order('sort_order', { ascending: true })
+            .order('created_at', { ascending: false });
 
         if (error) throw error;
 

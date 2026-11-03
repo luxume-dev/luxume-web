@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { useTestimonials } from '@/hooks/useTestimonials';
+import { parseHtml } from '@/lib/parseHtml';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -22,7 +23,12 @@ function getYouTubeEmbedUrl(url) {
   return match ? `https://www.youtube.com/embed/${match[1]}?rel=0` : null;
 }
 
-export default function TestimonialsSection() {
+// Home page Testimonials: the video player, then the text testimonials
+// carousel. Shows the active testimonials picked on the dashboard Home Page
+// (testimonials.is_home_featured), in the order set there. The headings come
+// from home_page with no static fallbacks: an empty field hides its element.
+// Text wrapped in <span>...</span> in the title is pink. Each block is hidden when it has no testimonials, the whole section when neither does.
+export default function TestimonialsSection({ title, description, textTitle, shortText }) {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const descRef = useRef(null);
@@ -37,11 +43,14 @@ export default function TestimonialsSection() {
   const [totalPages, setTotalPages] = useState(1);
 
   // Fetch testimonials from Supabase
-  const { data: allTestimonials = [], isLoading } = useTestimonials();
+  const { data: allTestimonials = [], isLoading, isError } = useTestimonials();
 
   // Split by type
   const testimonials = allTestimonials.filter(t => t.type === 'video');
   const textTestimonials = allTestimonials.filter(t => t.type === 'text');
+  const hidden = !isLoading && !isError && allTestimonials.length === 0;
+  const hasTitle = Boolean(title);
+  const hasDescription = Boolean(description);
 
   // Spotlight hover effect
   const handleMouseMove = useCallback((e, index) => {
@@ -99,8 +108,12 @@ export default function TestimonialsSection() {
   useEffect(() => {
     if (!sectionRef.current) return;
 
+    // Heading and description are optional; trigger on whichever is shown
+    const trigger = headingRef.current || descRef.current;
+    if (!trigger) return;
+
     const ctx = gsap.context(() => {
-      gsap.fromTo(headingRef.current,
+      if (headingRef.current) gsap.fromTo(headingRef.current,
         { opacity: 0, y: 30 },
         {
           opacity: 1, y: 0,
@@ -113,7 +126,7 @@ export default function TestimonialsSection() {
         }
       );
 
-      gsap.fromTo(descRef.current,
+      if (descRef.current) gsap.fromTo(descRef.current,
         { opacity: 0, y: 30 },
         {
           opacity: 1, y: 0,
@@ -121,7 +134,7 @@ export default function TestimonialsSection() {
           delay: 0.2,
           ease: 'power3.out',
           scrollTrigger: {
-            trigger: headingRef.current,
+            trigger,
             start: 'top 85%',
           }
         }
@@ -129,9 +142,12 @@ export default function TestimonialsSection() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+    // Re-run when the section appears, e.g. testimonials arriving after an empty render
+  }, [hidden, hasTitle, hasDescription]);
 
   const activeTestimonial = testimonials.length > 0 ? testimonials[activeIndex % testimonials.length] : null;
+
+  if (hidden) return null;
 
   return (
     <section ref={sectionRef} className="bg-white py-16 sm:py-20 md:py-24 lg:py-28 relative overflow-hidden">
@@ -140,18 +156,24 @@ export default function TestimonialsSection() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
         {/* Header */}
+        {(title || description) && (
         <div className="text-center mb-12 sm:mb-16">
+          {title && (
           <h2
             ref={headingRef}
-            className="aloevera-bold text-4xl sm:text-5xl md:text-[60px] mb-4"
+            className="aloevera-bold text-4xl sm:text-5xl md:text-[60px] mb-4 text-[#1C1E54] whitespace-pre-line [&_span]:text-[#C83C64]"
             style={{ opacity: 0 }}
           >
-            <span style={{ color: '#1C1E54' }}>Trusted by</span> <span style={{ color: '#C83C64' }}>Millions</span>
+            {parseHtml(title)}
           </h2>
-          <p ref={descRef} className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto mt-4 sm:mt-6" style={{ opacity: 0 }}>
-            Hear firsthand experiences from our valued customers about the undeniable strength and premium finish of Luxume roofing sheets.
+          )}
+          {description && (
+          <p ref={descRef} className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto mt-4 sm:mt-6 whitespace-pre-line" style={{ opacity: 0 }}>
+            {parseHtml(description)}
           </p>
+          )}
         </div>
+        )}
 
         {/* Video Player Display */}
         {testimonials.length > 0 && (
@@ -227,14 +249,17 @@ export default function TestimonialsSection() {
       </div>
 
       {/* Text Testimonials — Swiper Carousel */}
+      {textTestimonials.length > 0 && (
       <div className="text-testimonials-carousel mt-20 md:mt-28 max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
         {/* Section sub-heading + arrows */}
         <div className="mb-8 flex items-end justify-between">
           <div>
-            <h3 className="aloevera-bold text-2xl sm:text-3xl md:text-4xl" style={{ color: '#1C1E54' }}>
-              What Our Clients Say
-            </h3>
-            <p className="text-gray-500 text-sm mt-2">Swipe or use arrows to explore more reviews</p>
+            {textTitle && (
+              <h3 className="aloevera-bold text-2xl sm:text-3xl md:text-4xl" style={{ color: '#1C1E54' }}>
+                {textTitle}
+              </h3>
+            )}
+            {shortText && <p className="text-gray-500 text-sm mt-2">{shortText}</p>}
           </div>
           <div className="flex gap-3">
             <button
@@ -435,6 +460,7 @@ export default function TestimonialsSection() {
 
         </div>
       </div>
+      )}
     </section>
   );
 }
