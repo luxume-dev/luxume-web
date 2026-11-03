@@ -1,11 +1,4 @@
-// The projects page itself is a client component, so its metadata lives here.
-export const metadata = {
-  title: 'Projects',
-  description:
-    'See Luxume steel roofing in place — completed residential, commercial, and industrial projects showcasing our profiles, finishes, and colour range.',
-  alternates: { canonical: '/projects' },
-};
-
+// Metadata for /projects lives in page.js (generateMetadata, from the dashboard's page_seo).
 export default function ProjectsLayout({ children }) {
   return children;
 }

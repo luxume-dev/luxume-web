@@ -7,16 +7,9 @@ import { motion } from 'framer-motion';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { parseHtml } from '@/lib/parseHtml';
 
-const FALLBACK_IMAGE = '/images/roof.jpg';
-
-// Default heading, used when the dashboard fields (project_page) are empty
-const DEFAULT_LABEL = 'Portfolio';
-const DEFAULT_TITLE = 'Our <span>Projects</span>';
-const DEFAULT_DESCRIPTION =
-    'Explore our complete collection of structural installations showcasing the strength, durability, and aesthetic perfection of Luxume premium roofing solutions.';
-
 // Heading from project_page (text wrapped in <span>...</span> in the title is
-// bold); the cards are the active rows of the projects table.
+// bold); the cards are the active rows of the projects table. There are no
+// static fallbacks: an empty field hides its element.
 export default function ProjectsPageContent({ label, title, description }) {
     const {
         data,
@@ -39,21 +32,29 @@ export default function ProjectsPageContent({ label, title, description }) {
             <div className="absolute -left-40 top-40 w-96 h-96 bg-[#C83C64]/5 rounded-full blur-3xl -z-10" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-16 max-w-3xl mx-auto">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <h5 className="text-[#C83C64] uppercase tracking-widest font-medium text-sm mb-4">{label || DEFAULT_LABEL}</h5>
-                        <h1 className="aloevera-light text-4xl md:text-5xl lg:text-6xl text-[#0a0a1a] mb-6 whitespace-pre-line [&_span]:font-medium">
-                            {parseHtml(title || DEFAULT_TITLE)}
-                        </h1>
-                        <p className="font-lato text-gray-600 text-lg whitespace-pre-line">
-                            {parseHtml(description || DEFAULT_DESCRIPTION)}
-                        </p>
-                    </motion.div>
-                </div>
+                {(label || title || description) && (
+                    <div className="text-center mb-16 max-w-3xl mx-auto">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                        >
+                            {label && (
+                                <h5 className="text-[#C83C64] uppercase tracking-widest font-medium text-sm mb-4">{label}</h5>
+                            )}
+                            {title && (
+                                <h1 className="aloevera-light text-4xl md:text-5xl lg:text-6xl text-[#0a0a1a] mb-6 whitespace-pre-line [&_span]:font-medium">
+                                    {parseHtml(title)}
+                                </h1>
+                            )}
+                            {description && (
+                                <p className="font-lato text-gray-600 text-lg whitespace-pre-line">
+                                    {parseHtml(description)}
+                                </p>
+                            )}
+                        </motion.div>
+                    </div>
+                )}
 
                 {/* Loading State */}
                 {isLoading && (
@@ -93,13 +94,18 @@ export default function ProjectsPageContent({ label, title, description }) {
                                 {/* Image Container - fixed height on mobile, absolute full coverage on md+ */}
                                 <div className="relative w-full h-[250px] md:h-full md:absolute md:inset-0 md:z-0 overflow-hidden">
                                     <div className="hidden md:block absolute inset-0 bg-blue-950/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
-                                    <Image
-                                        src={project.image_url || FALLBACK_IMAGE}
-                                        alt={project.title}
-                                        fill
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                        className="object-cover transition-transform duration-700 md:group-hover:scale-110"
-                                    />
+                                    {/* next/image throws on an empty src: no image leaves a plain background */}
+                                    {project.image_url ? (
+                                        <Image
+                                            src={project.image_url}
+                                            alt={project.title}
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            className="object-cover transition-transform duration-700 md:group-hover:scale-110"
+                                        />
+                                    ) : (
+                                        <div className="absolute inset-0 bg-gray-200" />
+                                    )}
                                 </div>
 
                                 {/* Content Overlay/Section */}
@@ -117,11 +123,13 @@ export default function ProjectsPageContent({ label, title, description }) {
                                         </div>
 
                                         {/* Expanded description on md+, visible on mobile */}
-                                        <div className="mt-2 md:mt-0 md:overflow-hidden md:transition-all md:duration-500 md:ease-out md:opacity-0 md:max-h-0 md:group-hover:opacity-100 md:group-hover:max-h-40">
-                                            <p className="font-lato text-gray-600 md:text-gray-400 text-sm leading-relaxed mb-0">
-                                                {project.description || 'View details of this project.'}
-                                            </p>
-                                        </div>
+                                        {project.description && (
+                                            <div className="mt-2 md:mt-0 md:overflow-hidden md:transition-all md:duration-500 md:ease-out md:opacity-0 md:max-h-0 md:group-hover:opacity-100 md:group-hover:max-h-40">
+                                                <p className="font-lato text-gray-600 md:text-gray-400 text-sm leading-relaxed mb-0">
+                                                    {project.description}
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </motion.div>

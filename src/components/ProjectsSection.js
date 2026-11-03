@@ -8,28 +8,16 @@ import { useAltLookup } from '@/providers/AltTextProvider';
 import { FaArrowRight, FaMapMarkerAlt } from 'react-icons/fa';
 import Link from 'next/link';
 
-// Fallback image if a project doesn't have an image_url
-const FALLBACK_IMAGE = '/images/roof.jpg';
-
-// Default heading, used when the dashboard fields (home_page project_*) are empty
-const DEFAULT_LABEL = 'Portfolio';
-const DEFAULT_TITLE = 'Featured <span>Projects</span>';
-const DEFAULT_DESCRIPTION =
-  'Explore our diverse range of structural installations showcasing the strength, durability, and aesthetic perfection of Luxume premium roofing solutions.';
-
 // Home page Featured Projects: shows the active projects marked "Show on Home
 // Page" in the dashboard (projects.is_home_featured). The heading comes from
 // home_page; text wrapped in <span>...</span> in the title is bold. The whole
-// section is hidden when no project is featured.
+// section is hidden when no project is featured. There are no static
+// fallbacks: an empty field hides its element.
 export default function ProjectsSection({ label, title, description, limit, showViewAll = true }) {
   const { data: projectsData, isLoading, isError } = useHomeFeaturedProjects();
   const getAlt = useAltLookup();
 
   if (!isLoading && !isError && !projectsData?.length) return null;
-
-  const headingLabel = label || DEFAULT_LABEL;
-  const headingTitle = title || DEFAULT_TITLE;
-  const headingDescription = description || DEFAULT_DESCRIPTION;
 
   return (
     <section className="py-24 bg-white relative overflow-hidden">
@@ -41,22 +29,30 @@ export default function ProjectsSection({ label, title, description, limit, show
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header Section */}
-        <div className="text-center mb-16 max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h5 className="text-[#C83C64] uppercase tracking-widest font-medium text-sm mb-4">{headingLabel}</h5>
-            <h2 className="aloevera-light text-4xl md:text-5xl lg:text-6xl text-[#0a0a1a] mb-6 whitespace-pre-line [&_span]:font-medium">
-              {parseHtml(headingTitle)}
-            </h2>
-            <p className="font-lato text-gray-600 text-lg whitespace-pre-line">
-              {parseHtml(headingDescription)}
-            </p>
-          </motion.div>
-        </div>
+        {(label || title || description) && (
+          <div className="text-center mb-16 max-w-3xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              {label && (
+                <h5 className="text-[#C83C64] uppercase tracking-widest font-medium text-sm mb-4">{label}</h5>
+              )}
+              {title && (
+                <h2 className="aloevera-light text-4xl md:text-5xl lg:text-6xl text-[#0a0a1a] mb-6 whitespace-pre-line [&_span]:font-medium">
+                  {parseHtml(title)}
+                </h2>
+              )}
+              {description && (
+                <p className="font-lato text-gray-600 text-lg whitespace-pre-line">
+                  {parseHtml(description)}
+                </p>
+              )}
+            </motion.div>
+          </div>
+        )}
 
         {/* Loading State - Shimmer Skeleton */}
         {isLoading && (
@@ -101,13 +97,18 @@ export default function ProjectsSection({ label, title, description, limit, show
                 {/* Image Container */}
                 <div className="absolute inset-0 z-0 overflow-hidden">
                   <div className="absolute inset-0 bg-blue-950/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
-                  <Image
-                    src={project.image_url || FALLBACK_IMAGE}
-                    alt={getAlt(project.image_url || FALLBACK_IMAGE, project.title)}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
+                  {/* next/image throws on an empty src: no image leaves a plain background */}
+                  {project.image_url ? (
+                    <Image
+                      src={project.image_url}
+                      alt={getAlt(project.image_url, project.title)}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gray-300" />
+                  )}
                 </div>
 
                 {/* Content Overlay */}
@@ -124,11 +125,13 @@ export default function ProjectsSection({ label, title, description, limit, show
                     </div>
 
                     {/* Expanded description (hidden by default, reveals smoothly on hover) */}
-                    <div className="overflow-hidden transition-all duration-500 ease-out opacity-0 max-h-0 group-hover:opacity-100 group-hover:max-h-40">
-                      <p className="font-lato text-gray-400 text-sm leading-relaxed mb-0">
-                        {project.description || 'View details of this project.'}
-                      </p>
-                    </div>
+                    {project.description && (
+                      <div className="overflow-hidden transition-all duration-500 ease-out opacity-0 max-h-0 group-hover:opacity-100 group-hover:max-h-40">
+                        <p className="font-lato text-gray-400 text-sm leading-relaxed mb-0">
+                          {project.description}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </motion.div>

@@ -48,10 +48,10 @@ export default async function Home() {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
       )}
 
-      {/* Hero content comes from home_page (dashboard); empty fields fall back
-          to the SEO head text, then to the static defaults in HeroSection. */}
+      {/* Hero content comes from the dashboard (home_page hero fields, page_seo
+          body_text); there are no fallbacks, an empty field hides its element. */}
       <HeroSection
-        heading={content?.hero_title?.trim() || seo?.head_text?.trim()}
+        heading={content?.hero_title?.trim()}
         text={seo?.body_text?.trim()}
         banner={content?.hero_banner?.trim()}
         buttonLabel={content?.hero_button_label?.trim()}

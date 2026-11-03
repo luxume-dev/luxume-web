@@ -3,7 +3,9 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
-export default function BlogHeroSection() {
+// All content comes from the dashboard (blog_page). There are no static
+// fallbacks: an empty field hides its element (no banner = plain dark hero).
+export default function BlogHeroSection({ title, description, bannerImage }) {
   const bgRef = useRef(null);
   const headingRef = useRef(null);
   const subtitleRef = useRef(null);
@@ -17,7 +19,7 @@ export default function BlogHeroSection() {
       );
 
       // Heading — clip-path wipe + slide up
-      gsap.fromTo(headingRef.current,
+      if (headingRef.current) gsap.fromTo(headingRef.current,
         {
           opacity: 0,
           y: 50,
@@ -34,7 +36,7 @@ export default function BlogHeroSection() {
       );
 
       // Subtitle — fade in + slide up
-      gsap.fromTo(subtitleRef.current,
+      if (subtitleRef.current) gsap.fromTo(subtitleRef.current,
         {
           opacity: 0,
           y: 30,
@@ -58,9 +60,7 @@ export default function BlogHeroSection() {
       <div 
         ref={bgRef}
         className="w-full h-[350px] sm:h-[380px] md:h-[420px] bg-cover bg-center bg-no-repeat overflow-hidden relative"
-        style={{
-          backgroundImage: 'url(/images/blog.png)',
-        }}
+        style={bannerImage ? { backgroundImage: `url("${bannerImage}")` } : undefined}
       >
         {/* Dark overlay */}
         <div 
@@ -72,21 +72,25 @@ export default function BlogHeroSection() {
 
         {/* Content */}
         <div className="relative z-10 h-full flex flex-col items-start justify-center text-left px-4 sm:px-8 md:px-16 lg:px-24">
-          <h1 
-            ref={headingRef}
-            className="aloevera-bold text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-2 sm:mb-3 md:mb-4"
-            style={{ opacity: 0 }}
-          >
-            Luxume Insights & Updates
-          </h1>
-          
-          <p 
-            ref={subtitleRef}
-            className="text-white/80 text-xs sm:text-sm md:text-base max-w-md sm:max-w-lg md:max-w-xl leading-relaxed"
-            style={{ opacity: 0 }}
-          >
-            Stay informed with expert knowledge on roofing solutions, product innovations, industry trends, and professional guidance for all your steel roofing needs.
-          </p>
+          {title && (
+            <h1
+              ref={headingRef}
+              className="aloevera-bold text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-2 sm:mb-3 md:mb-4 whitespace-pre-line"
+              style={{ opacity: 0 }}
+            >
+              {title}
+            </h1>
+          )}
+
+          {description && (
+            <p
+              ref={subtitleRef}
+              className="text-white/80 text-xs sm:text-sm md:text-base max-w-md sm:max-w-lg md:max-w-xl leading-relaxed whitespace-pre-line"
+              style={{ opacity: 0 }}
+            >
+              {description}
+            </p>
+          )}
         </div>
       </div>
     </section>
