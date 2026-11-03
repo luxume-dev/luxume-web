@@ -11,6 +11,9 @@ import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/site";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
 import { getQueryClient, prefetch } from "@/lib/queryClient.server";
 import { productsQuery } from "@/lib/queries";
+import { buildMediaAltMap } from "@/lib/pageSeo";
+import { getMediaAlts } from "@/services/supabase";
+import AltTextProvider from "@/providers/AltTextProvider";
 
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
 
@@ -46,7 +49,11 @@ export default async function RootLayout({ children }) {
   // Navbar and Footer both render the product list, so prefetching here makes
   // those links server-rendered on every page rather than appearing only after
   // hydration.
-  const queryClient = await prefetch(getQueryClient(), [productsQuery()]);
+  const [queryClient, { data: mediaAlts }] = await Promise.all([
+    prefetch(getQueryClient(), [productsQuery()]),
+    // Alt text set per file in the dashboard Media Library, used site-wide
+    getMediaAlts(),
+  ]);
 
   return (
     <html lang="en">
@@ -91,11 +98,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         {/* End Google Tag Manager (noscript) */}
         <QueryProvider>
           <HydrationBoundary state={dehydrate(queryClient)}>
-            <Navbar />
-            <div className="relative z-10">
-              {children}
-              <Footer />
-            </div>
+            <AltTextProvider alts={buildMediaAltMap(mediaAlts)}>
+              <Navbar />
+              <div className="relative z-10">
+                {children}
+                <Footer />
+              </div>
+            </AltTextProvider>
           </HydrationBoundary>
           <WhatsAppButton />
           <Toaster

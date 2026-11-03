@@ -84,7 +84,18 @@ export function normaliseImageSrc(src) {
   }
 }
 
-/** { normalisedSrc: alt } from alt_image rows, for AltTextProvider. */
+/** { normalisedSrc: alt } from the dashboard Media Library's media_alt rows. */
+export function buildMediaAltMap(rows) {
+  const map = {};
+  for (const row of rows ?? []) {
+    const src = normaliseImageSrc(row.url);
+    const alt = clean(row.alt_text);
+    if (src && alt) map[src] = alt;
+  }
+  return map;
+}
+
+/** { normalisedSrc: alt } from a page's alt_image rows, for AltTextProvider. */
 export function buildAltMap(seo) {
   const map = {};
   for (const row of seo?.alt_image ?? []) {

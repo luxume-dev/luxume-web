@@ -13,3 +13,4 @@ export { getActiveProjects, getHomeFeaturedProjects } from './projects.service';
 export { getTestimonials } from './testimonials.service';
 export { getHomePageSeo } from './pageSeo.service';
 export { getHomeContent } from './homePage.service';
+export { getMediaAlts } from './mediaAlt.service';

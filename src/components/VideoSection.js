@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useAltLookup } from '@/providers/AltTextProvider';
 
 // The video comes from home_page.home_video (dashboard). There is no static
 // fallback: with no video set the whole section is hidden.
 export default function VideoSection({ src = '' }) {
+  const getAlt = useAltLookup();
   const videoRef = useRef(null);
   const isVisibleRef = useRef(false);
 
@@ -72,6 +74,7 @@ export default function VideoSection({ src = '' }) {
             playsInline
             controls
             preload="metadata"
+            aria-label={getAlt(src, 'Luxume roofing video') || undefined}
             // src is set rather than a <source> child: React updating the
             // attribute triggers a load, whereas appending <source> would
             // additionally require calling video.load().
