@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import { getHomePageSeo } from '@/services/supabase';
+import { getAboutPageSeo, getHomePageSeo } from '@/services/supabase';
 
 /**
  * Per-request cached page SEO lookups for server components.
@@ -8,3 +8,4 @@ import { getHomePageSeo } from '@/services/supabase';
  * them share one Supabase request instead of two.
  */
 export const getHomePageSeoCached = cache(async () => (await getHomePageSeo()).data);
+export const getAboutPageSeoCached = cache(async () => (await getAboutPageSeo()).data);

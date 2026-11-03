@@ -18,13 +18,15 @@ function sortPageSeo(seo) {
 }
 
 /**
- * Fetch the home page SEO. The first home_page row is the one the dashboard edits.
+ * Fetch the SEO linked to a single-row page table (home_page, about_page, ...).
+ * The first row is the one the dashboard edits.
+ * @param {string} table
  * @returns {Promise<{data: Object|null, error: string|null}>}
  */
-export async function getHomePageSeo() {
+async function getPageSeo(table) {
     try {
         const { data, error } = await supabase
-            .from('home_page')
+            .from(table)
             .select(`page_seo(${PAGE_SEO_SELECT})`)
             .order('created_at', { ascending: true })
             .limit(1)
@@ -35,7 +37,17 @@ export async function getHomePageSeo() {
         const seo = data?.page_seo ?? null;
         return { data: seo ? sortPageSeo(seo) : null, error: null };
     } catch (error) {
-        console.error('[Page SEO Service] Error fetching home page SEO:', error);
+        console.error(`[Page SEO Service] Error fetching ${table} SEO:`, error);
         return { data: null, error: error.message };
     }
+}
+
+/** Fetch the home page SEO (home_page -> page_seo). */
+export function getHomePageSeo() {
+    return getPageSeo('home_page');
+}
+
+/** Fetch the About page SEO (about_page -> page_seo). */
+export function getAboutPageSeo() {
+    return getPageSeo('about_page');
 }

@@ -3,12 +3,17 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useAltLookup } from '@/providers/AltTextProvider';
+import { parseHtml } from '@/lib/parseHtml';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export default function HowWeWorkSection() {
+// Heading, description, image, work points and bottom text come from
+// about_page in the dashboard; anything left empty is simply not rendered.
+// Points are numbered 01, 02, ... in order.
+export default function HowWeWorkSection({ title, description, image, points, bottomText }) {
   const sectionRef = useRef(null);
   const headingRef = useRef(null);
   const headingUnderlineRef = useRef(null);
@@ -19,30 +24,18 @@ export default function HowWeWorkSection() {
   const imageRef = useRef(null);
   const bottomTextRef = useRef(null);
 
-  const steps = [
-    {
-      number: '01',
-      title: 'Connect With Us',
-      description: 'Reach out to Luxume to share your roofing requirements. Our team will understand your project needs, application type, and quantity requirements to guide you toward the right product selection.'
-    },
-    {
-      number: '02',
-      title: 'Choose the Right Roofing Solution',
-      description: 'Based on your requirements, we help you select the most suitable roofing sheets, profiles, and finishes. You\'ll receive clear product details, specifications, and a competitive quotation for review.'
-    },
-    {
-      number: '03',
-      title: 'Order & Delivery',
-      description: 'Once the order is confirmed, we process it efficiently and ensure timely delivery of high-quality Luxume roofing sheets to your location, ready for installation by your preferred contractor.'
-    }
-  ];
+  const steps = (points ?? []).map((point, index) => ({
+    ...point,
+    number: String(index + 1).padStart(2, '0'),
+  }));
+  const getAlt = useAltLookup();
 
   useEffect(() => {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
       // Heading — fade in then underline draws
-      gsap.fromTo(headingRef.current,
+      if (headingRef.current) gsap.fromTo(headingRef.current,
         { opacity: 0, y: 20 },
         {
           opacity: 1, y: 0,
@@ -75,7 +68,7 @@ export default function HowWeWorkSection() {
       }
 
       // Subtitle — smooth fade up
-      gsap.fromTo(subtitleRef.current,
+      if (subtitleRef.current) gsap.fromTo(subtitleRef.current,
         { opacity: 0, y: 20 },
         {
           opacity: 1, y: 0,
@@ -172,39 +165,45 @@ export default function HowWeWorkSection() {
     return () => ctx.revert();
   }, []);
 
+  if (!title && !description && !image && !steps.length && !bottomText) return null;
+
   return (
     <section ref={sectionRef} className="bg-white pt-8 md:pt-12 pb-16 md:pb-24 px-4 sm:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Heading - Full width at top with animated underline */}
-        <div className="relative inline-block mb-4 lg:mb-6">
-          <h2
-            ref={headingRef}
-            className="aloevera-bold text-3xl sm:text-4xl md:text-5xl"
-            style={{ color: '#C83C64', opacity: 0 }}
-          >
-            How We Work
-          </h2>
-          <div
-            ref={headingUnderlineRef}
-            className="h-1 rounded-full mt-2"
-            style={{
-              background: 'linear-gradient(90deg, #C83C64, #E91E63)',
-              transform: 'scaleX(0)'
-            }}
-          />
-        </div>
+        {title && (
+          <div className="relative inline-block mb-4 lg:mb-6">
+            <h2
+              ref={headingRef}
+              className="aloevera-bold text-3xl sm:text-4xl md:text-5xl"
+              style={{ color: '#C83C64', opacity: 0 }}
+            >
+              {title}
+            </h2>
+            <div
+              ref={headingUnderlineRef}
+              className="h-1 rounded-full mt-2"
+              style={{
+                background: 'linear-gradient(90deg, #C83C64, #E91E63)',
+                transform: 'scaleX(0)'
+              }}
+            />
+          </div>
+        )}
 
         <div className="flex flex-col lg:flex-row items-stretch gap-8 lg:gap-16">
           {/* Left - Steps content (Subtitle + Steps) */}
-          <div className="w-full lg:w-3/5">
+          <div className={`w-full ${image ? 'lg:w-3/5' : ''}`}>
             {/* Subtitle */}
-            <p
-              ref={subtitleRef}
-              className="text-gray-600 text-sm sm:text-base mb-10 max-w-md"
-              style={{ opacity: 0 }}
-            >
-              Our process is designed to be simple, transparent, and customer-focused, ensuring you get the right roofing solution with ease.
-            </p>
+            {description && (
+              <p
+                ref={subtitleRef}
+                className="text-gray-600 text-sm sm:text-base mb-10 max-w-md whitespace-pre-line"
+                style={{ opacity: 0 }}
+              >
+                {parseHtml(description)}
+              </p>
+            )}
 
             {/* Steps — with timeline numbers */}
             <div className="space-y-8">
@@ -245,15 +244,19 @@ export default function HowWeWorkSection() {
                     className="flex-1 mt-1"
                     style={{ opacity: 0 }}
                   >
-                    <h3
-                      className="aloevera-medium text-[36px] mb-2 group-hover:text-[#C83C64] transition-colors duration-300"
-                      style={{ color: '#1C1E54' }}
-                    >
-                      {step.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {step.description}
-                    </p>
+                    {step.title && (
+                      <h3
+                        className="aloevera-medium text-[36px] mb-2 group-hover:text-[#C83C64] transition-colors duration-300"
+                        style={{ color: '#1C1E54' }}
+                      >
+                        {step.title}
+                      </h3>
+                    )}
+                    {step.description && (
+                      <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
+                        {parseHtml(step.description)}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -261,28 +264,33 @@ export default function HowWeWorkSection() {
           </div>
 
           {/* Right - Image */}
-          <div
-            ref={imageRef}
-            className="w-full lg:w-2/5"
-            style={{ opacity: 0 }}
-          >
-            <img
-              src="/images/how-we-work.jpg"
-              alt="Worker installing roofing"
-              className="w-full rounded-2xl object-cover"
-              style={{ height: '100%', objectPosition: 'center' }}
-            />
-          </div>
+          {image && (
+            <div
+              ref={imageRef}
+              className="w-full lg:w-2/5"
+              style={{ opacity: 0 }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={image}
+                alt={getAlt(image, 'Worker installing roofing')}
+                className="w-full rounded-2xl object-cover"
+                style={{ height: '100%', objectPosition: 'center' }}
+              />
+            </div>
+          )}
         </div>
 
         {/* Luxume Focus Paragraph - Bottom centered */}
-        <p
-          ref={bottomTextRef}
-          className="lato-regular text-gray-600 text-center mt-12 max-w-2xl mx-auto"
-          style={{ opacity: 0 }}
-        >
-          Luxume focuses on delivering premium roofing materials engineered for durability, performance, and long-term value.
-        </p>
+        {bottomText && (
+          <p
+            ref={bottomTextRef}
+            className="lato-regular text-gray-600 text-center mt-12 max-w-2xl mx-auto whitespace-pre-line"
+            style={{ opacity: 0 }}
+          >
+            {parseHtml(bottomText)}
+          </p>
+        )}
       </div>
     </section>
   );
