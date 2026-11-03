@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-const VIDEO_SRC = '/images/luxume-video.mp4';
-
-export default function VideoSection() {
+// The video comes from home_page.home_video (dashboard). There is no static
+// fallback: with no video set the whole section is hidden.
+export default function VideoSection({ src = '' }) {
   const videoRef = useRef(null);
   const isVisibleRef = useRef(false);
 
@@ -48,7 +48,7 @@ export default function VideoSection() {
       loader.disconnect();
       player.disconnect();
     };
-  }, []);
+  }, [src]);
 
   // Once the source is ready, start playing if the section is still in view.
   const handleCanPlay = () => {
@@ -56,6 +56,8 @@ export default function VideoSection() {
       videoRef.current?.play().catch(() => {});
     }
   };
+
+  if (!src) return null;
 
   return (
     <section className="bg-[#0a0a1a] py-12 sm:py-16 md:py-20 lg:py-24">
@@ -70,11 +72,10 @@ export default function VideoSection() {
             playsInline
             controls
             preload="metadata"
-            poster="/images/luxume-hero.webp"
             // src is set rather than a <source> child: React updating the
             // attribute triggers a load, whereas appending <source> would
             // additionally require calling video.load().
-            src={shouldLoad ? VIDEO_SRC : undefined}
+            src={shouldLoad ? src : undefined}
             onCanPlay={handleCanPlay}
           >
             Your browser does not support the video tag.

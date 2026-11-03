@@ -93,8 +93,16 @@ export default async function Home() {
           title={content?.project_title?.trim()}
           description={content?.project_description?.trim()}
         />
-        <VideoSection />
-        <ProductHighlightsSection />
+        {/* Video and Product Highlights come from home_page (dashboard); there
+            are no static fallbacks, an empty field hides its element. */}
+        <VideoSection src={content?.home_video?.trim()} />
+        <ProductHighlightsSection
+          title={content?.hlghlight_title?.trim()}
+          description={content?.hlghlight_description?.trim()}
+          cardTitles={content?.hlghlight_card_title}
+          cardDescriptions={content?.hlghlight_card_description}
+          icons={content?.hlghlight_card_icon}
+        />
         <TestimonialsSection />
         <AwardsSection />
         <FaqSection faqs={faqs} />
