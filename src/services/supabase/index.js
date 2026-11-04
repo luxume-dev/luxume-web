@@ -27,4 +27,5 @@ export { getProjectPageContent } from './projectPage.service';
 export { getBlogPageContent } from './blogPage.service';
 export { getCareersPageContent } from './careersPage.service';
 export { getContactPageContent } from './contactPage.service';
+export { getCompanyPage } from './companyPage.service';
 export { getMediaAlts } from './mediaAlt.service';

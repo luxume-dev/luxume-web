@@ -1,14 +1,29 @@
 import React from 'react';
+import CompanyPage, { companyPageMetadata } from '@/components/CompanyPage';
 
+export const revalidate = 3600;
 
-export const metadata = {
-  title: 'Terms & Conditions',
-  description:
-    'The terms and conditions governing use of the Luxume Roofing website and the purchase of our steel roofing products.',
-  alternates: { canonical: '/terms-conditions' },
-};
+const SLUG = 'terms-conditions';
+
+// Content and SEO are managed from the dashboard (company_page, slug
+// 'terms-conditions' -> page_seo). The text below is only used until it is saved there.
+export function generateMetadata() {
+  return companyPageMetadata(SLUG, {
+    title: 'Terms & Conditions',
+    description:
+      'The terms and conditions governing use of the Luxume Roofing website and the purchase of our steel roofing products.',
+  });
+}
 
 export default function TermsConditions() {
+  return (
+    <CompanyPage slug={SLUG} fallbackTitle="Terms & Conditions">
+      <BuiltInTermsConditions />
+    </CompanyPage>
+  );
+}
+
+function BuiltInTermsConditions() {
   return (
     <main className="min-h-screen bg-white">
 

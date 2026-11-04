@@ -9,13 +9,14 @@ import { supabase } from '@/lib/supabase';
  *   contact_page.page_seo_id                   -> page_seo.id
  *   blogs.blog_id                              -> page_seo.id (one per post)
  *   careers.page_seo_id                        -> page_seo.id (one per job opening)
+ *   company_page.page_seo_id                   -> page_seo.id (one per company page)
  */
 
-const PAGE_SEO_SELECT =
+export const PAGE_SEO_SELECT =
     '*, page_faqs!page_seo_id(id, questions, answers), alt_image!page_seo_id(id, source, image_alt)';
 
 // Embedded rows come back unordered; keep them in the order they were added
-function sortPageSeo(seo) {
+export function sortPageSeo(seo) {
     seo.page_faqs?.sort((a, b) => a.id - b.id);
     seo.alt_image?.sort((a, b) => a.id - b.id);
     return seo;

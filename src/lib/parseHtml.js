@@ -21,6 +21,27 @@ import { createElement, Fragment } from 'react';
  * @returns {import('react').ReactNode}
  */
 export function parseHtml(input) {
+  return renderHtml(input, INLINE_CONFIG);
+}
+
+/**
+ * Like parseHtml, for longer content written in the dashboard's rich-text
+ * editor (company pages): paragraphs, headings, lists, quotes, rules and links.
+ *
+ * - Only RICH_TAGS become elements, each with the site's styling (RICH_CLASSES).
+ * - Links keep their href only when it is http(s), mailto, tel or a path on
+ *   this site; anything else (javascript: ...) renders as plain text.
+ * - text-align (left / center / right / justify) is the only style kept.
+ * - Every other attribute is dropped.
+ *
+ * @param {string} input
+ * @returns {import('react').ReactNode}
+ */
+export function parseRichHtml(input) {
+  return renderHtml(input, RICH_CONFIG);
+}
+
+function renderHtml(input, config) {
   if (typeof input !== 'string' || input === '') return null;
 
   const root = { tag: null, allowed: false, children: [] };
@@ -38,7 +59,7 @@ export function parseHtml(input) {
     const frame = stack.pop();
     const parent = current();
     if (frame.allowed) {
-      parent.children.push(createElement(frame.tag, { key: key++ }, ...frame.children));
+      parent.children.push(createElement(frame.tag, { key: key++, ...frame.props }, ...frame.children));
     } else {
       parent.children.push(...frame.children);
     }
@@ -50,7 +71,7 @@ export function parseHtml(input) {
     pushText(input.slice(lastIndex, match.index));
     lastIndex = TAG_PATTERN.lastIndex;
 
-    const [, closing, rawName, selfClosing] = match;
+    const [, closing, rawName, rawAttrs, selfClosing] = match;
     if (!rawName) continue; // HTML comment
 
     const tag = rawName.toLowerCase();
@@ -75,13 +96,17 @@ export function parseHtml(input) {
     }
 
     if (VOID_TAGS.has(tag) || selfClosing) {
-      if (ALLOWED_TAGS.has(tag)) {
-        current().children.push(createElement(tag, { key: key++ }));
+      if (config.tags.has(tag)) {
+        current().children.push(createElement(tag, { key: key++, ...config.props(tag, rawAttrs) }));
       }
       continue;
     }
 
-    stack.push({ tag, allowed: ALLOWED_TAGS.has(tag), children: [] });
+    let allowed = config.tags.has(tag);
+    const props = allowed ? config.props(tag, rawAttrs) : undefined;
+    // false = drop the tag but keep its text (e.g. a link without a safe href)
+    if (props === false) allowed = false;
+    stack.push({ tag, allowed, props: props || undefined, children: [] });
   }
 
   pushText(input.slice(lastIndex));
@@ -104,9 +129,81 @@ const VOID_TAGS = new Set(['br', 'hr', 'img', 'input', 'meta', 'link', 'wbr', 's
 
 const DROP_WITH_CONTENT = new Set(['script', 'style', 'iframe', 'object', 'template', 'noscript', 'textarea', 'title', 'svg', 'math']);
 
-// Groups: 1 = "/" for a closing tag, 2 = tag name, 3 = "/" for self-closing.
+// Groups: 1 = "/" for a closing tag, 2 = tag name, 3 = attributes, 4 = "/" for self-closing.
 // Requires a letter after "<", so text like "5 < 6" stays text.
-const TAG_PATTERN = /<!--[\s\S]*?-->|<(\/?)([a-zA-Z][a-zA-Z0-9-]*)\b(?:[^>"']|"[^"]*"|'[^']*')*?(\/?)>/g;
+const TAG_PATTERN = /<!--[\s\S]*?-->|<(\/?)([a-zA-Z][a-zA-Z0-9-]*)\b((?:[^>"']|"[^"]*"|'[^']*')*?)(\/?)>/g;
+
+const INLINE_CONFIG = { tags: ALLOWED_TAGS, props: () => undefined };
+
+// ==================== RICH TEXT ====================
+
+// Tags of the dashboard's rich-text editor, with the classes the website styles them with
+const RICH_CLASSES = {
+  p: 'mb-4',
+  h2: 'aloevera-medium text-2xl text-[#0F172B] mt-8 mb-4',
+  h3: 'aloevera-medium text-xl text-[#0F172B] mt-6 mb-3',
+  h4: 'aloevera-medium text-lg text-[#0F172B] mt-5 mb-2',
+  ul: 'list-disc pl-6 mb-4 space-y-2 [&_ul]:list-[circle] [&_ul]:mt-2 [&_ul]:mb-0 [&_ol]:mt-2 [&_ol]:mb-0',
+  ol: 'list-decimal pl-6 mb-4 space-y-2 [&_ul]:mt-2 [&_ul]:mb-0 [&_ol]:mt-2 [&_ol]:mb-0',
+  li: 'pl-1',
+  a: 'text-[#C83C64] underline underline-offset-2 hover:text-[#a83254]',
+  blockquote: 'border-l-4 border-[#C83C64] pl-4 my-6 italic text-gray-700',
+  hr: 'my-8 border-gray-200',
+  strong: 'font-semibold text-[#0F172B]',
+  s: 'line-through',
+};
+
+const RICH_TAGS = new Set([...Object.keys(RICH_CLASSES), 'br', 'b', 'em', 'i', 'u', 'sub', 'sup']);
+
+const ALIGNABLE = new Set(['p', 'h2', 'h3', 'h4', 'li']);
+
+const RICH_CONFIG = {
+  tags: RICH_TAGS,
+  // Props for an element; false drops the tag (its text is kept)
+  props(tag, rawAttrs) {
+    const props = RICH_CLASSES[tag] ? { className: RICH_CLASSES[tag] } : {};
+    const attrs = readAttributes(rawAttrs);
+
+    if (tag === 'a') {
+      const href = safeHref(attrs.href);
+      if (!href) return false;
+      props.href = href;
+      if (/^https?:/i.test(href)) {
+        props.target = '_blank';
+        props.rel = 'noopener noreferrer';
+      }
+    }
+
+    if (ALIGNABLE.has(tag)) {
+      const align = /text-align\s*:\s*(left|center|right|justify)/i.exec(attrs.style ?? '');
+      if (align) props.style = { textAlign: align[1].toLowerCase() };
+    }
+
+    return props;
+  },
+};
+
+// http(s), mailto, tel, or a path / anchor on this site
+function safeHref(raw) {
+  // Control characters and spaces can hide a "javascript:" scheme
+  const href = (raw ?? '').replace(/[\u0000- \u007f]/g, '');
+  if (/^(https?:|mailto:|tel:)/i.test(href)) return href;
+  if (href.startsWith('/') && !href.startsWith('//')) return href;
+  if (href.startsWith('#')) return href;
+  return null;
+}
+
+// name="value" pairs of a tag: lower-case names, entities decoded
+function readAttributes(raw) {
+  const attrs = {};
+  if (!raw) return attrs;
+  const pattern = /([^\s"'=<>/]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+  let m;
+  while ((m = pattern.exec(raw)) !== null) {
+    attrs[m[1].toLowerCase()] = decodeEntities(m[2] ?? m[3] ?? m[4] ?? '');
+  }
+  return attrs;
+}
 
 // ==================== ENTITIES ====================
 

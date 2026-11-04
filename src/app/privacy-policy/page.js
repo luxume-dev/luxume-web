@@ -1,14 +1,29 @@
 import React from 'react';
+import CompanyPage, { companyPageMetadata } from '@/components/CompanyPage';
 
+export const revalidate = 3600;
 
-export const metadata = {
-  title: 'Privacy Policy',
-  description:
-    'How Luxume Roofing collects, uses, and protects your personal information when you use our website or contact us.',
-  alternates: { canonical: '/privacy-policy' },
-};
+const SLUG = 'privacy-policy';
+
+// Content and SEO are managed from the dashboard (company_page, slug
+// 'privacy-policy' -> page_seo). The text below is only used until it is saved there.
+export function generateMetadata() {
+  return companyPageMetadata(SLUG, {
+    title: 'Privacy Policy',
+    description:
+      'How Luxume Roofing collects, uses, and protects your personal information when you use our website or contact us.',
+  });
+}
 
 export default function PrivacyPolicy() {
+  return (
+    <CompanyPage slug={SLUG} fallbackTitle="Privacy Policy">
+      <BuiltInPrivacyPolicy />
+    </CompanyPage>
+  );
+}
+
+function BuiltInPrivacyPolicy() {
   return (
     <main className="min-h-screen bg-white">
 
