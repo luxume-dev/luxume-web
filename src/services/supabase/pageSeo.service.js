@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase';
  * text (public / read-only). Each page row links to one page_seo row:
  *   home_page.id, about_page.id, blog_page.id, careers_page.id -> page_seo.id
  *   project_page.page_seo_id                   -> page_seo.id
+ *   contact_page.page_seo_id                   -> page_seo.id
  *   blogs.blog_id                              -> page_seo.id (one per post)
  *   careers.page_seo_id                        -> page_seo.id (one per job opening)
  */
@@ -70,6 +71,11 @@ export function getCareersPageSeo() {
 /** Fetch the Projects page SEO (project_page.page_seo_id -> page_seo). */
 export function getProjectPageSeo() {
     return getPageSeo('project_page', 'page_seo!project_page_page_seo_id_fkey');
+}
+
+/** Fetch the Contact page SEO (contact_page.page_seo_id -> page_seo). */
+export function getContactPageSeo() {
+    return getPageSeo('contact_page', 'page_seo!contact_page_page_seo_id_fkey');
 }
 
 /**

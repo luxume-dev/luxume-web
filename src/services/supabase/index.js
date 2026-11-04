@@ -17,6 +17,7 @@ export {
   getBlogPageSeo,
   getCareersPageSeo,
   getProjectPageSeo,
+  getContactPageSeo,
   getBlogPostSeo,
   getCareerSeo,
 } from './pageSeo.service';
@@ -25,4 +26,5 @@ export { getAboutContent } from './aboutPage.service';
 export { getProjectPageContent } from './projectPage.service';
 export { getBlogPageContent } from './blogPage.service';
 export { getCareersPageContent } from './careersPage.service';
+export { getContactPageContent } from './contactPage.service';
 export { getMediaAlts } from './mediaAlt.service';
