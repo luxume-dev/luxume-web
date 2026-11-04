@@ -4,9 +4,10 @@ import { supabase } from '@/lib/supabase';
  * Page SEO Service
  * Reads the SEO managed in the dashboard: page_seo plus its FAQs and image alt
  * text (public / read-only). Each page row links to one page_seo row:
- *   home_page.id, about_page.id, blog_page.id -> page_seo.id
+ *   home_page.id, about_page.id, blog_page.id, careers_page.id -> page_seo.id
  *   project_page.page_seo_id                   -> page_seo.id
  *   blogs.blog_id                              -> page_seo.id (one per post)
+ *   careers.page_seo_id                        -> page_seo.id (one per job opening)
  */
 
 const PAGE_SEO_SELECT =
@@ -61,9 +62,39 @@ export function getBlogPageSeo() {
     return getPageSeo('blog_page', 'page_seo!blog_page_id_fkey');
 }
 
+/** Fetch the Careers page SEO (careers_page -> page_seo). */
+export function getCareersPageSeo() {
+    return getPageSeo('careers_page', 'page_seo!careers_page_id_fkey');
+}
+
 /** Fetch the Projects page SEO (project_page.page_seo_id -> page_seo). */
 export function getProjectPageSeo() {
     return getPageSeo('project_page', 'page_seo!project_page_page_seo_id_fkey');
+}
+
+/**
+ * Fetch one active job opening's SEO (careers.page_seo_id -> page_seo).
+ * @param {string} id
+ * @returns {Promise<{data: Object|null, error: string|null}>}
+ */
+export async function getCareerSeo(id) {
+    try {
+        const { data, error } = await supabase
+            .from('careers')
+            .select(`page_seo:page_seo!careers_page_seo_id_fkey(${PAGE_SEO_SELECT})`)
+            .eq('id', id)
+            .eq('is_active', true)
+            .limit(1)
+            .maybeSingle();
+
+        if (error) throw error;
+
+        const seo = data?.page_seo ?? null;
+        return { data: seo ? sortPageSeo(seo) : null, error: null };
+    } catch (error) {
+        console.error('[Page SEO Service] Error fetching job opening SEO:', error);
+        return { data: null, error: error.message };
+    }
 }
 
 /**

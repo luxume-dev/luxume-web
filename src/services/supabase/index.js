@@ -15,11 +15,14 @@ export {
   getHomePageSeo,
   getAboutPageSeo,
   getBlogPageSeo,
+  getCareersPageSeo,
   getProjectPageSeo,
   getBlogPostSeo,
+  getCareerSeo,
 } from './pageSeo.service';
 export { getHomeContent } from './homePage.service';
 export { getAboutContent } from './aboutPage.service';
 export { getProjectPageContent } from './projectPage.service';
 export { getBlogPageContent } from './blogPage.service';
+export { getCareersPageContent } from './careersPage.service';
 export { getMediaAlts } from './mediaAlt.service';

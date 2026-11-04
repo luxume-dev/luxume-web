@@ -4,7 +4,9 @@ import { useParams } from 'next/navigation';
 import { FaClock, FaMapMarkerAlt, FaBriefcase, FaEnvelope, FaWhatsapp } from 'react-icons/fa';
 import { useCareer } from '@/hooks/useCareers';
 
-export default function JobDetailClient() {
+// bannerImage is the job's own banner (careers.banner_image), else the Careers
+// page banner, both managed in the dashboard; without one the header is plain dark.
+export default function JobDetailClient({ bannerImage }) {
   const { id } = useParams();
   const { data: job, isLoading: loading } = useCareer(id);
 
@@ -30,7 +32,7 @@ export default function JobDetailClient() {
       <section 
         className="relative pt-24 sm:pt-28 pb-16 px-4 sm:px-8"
         style={{
-          backgroundImage: 'url(/images/luxumeteam.png)',
+          ...(bannerImage ? { backgroundImage: `url("${bannerImage}")` } : {}),
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}

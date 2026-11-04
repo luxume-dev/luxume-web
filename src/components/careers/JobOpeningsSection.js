@@ -10,7 +10,9 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export default function JobOpeningsSection() {
+// Title and description come from the dashboard (careers_page). There are no
+// static fallbacks: an empty field hides its element.
+export default function JobOpeningsSection({ title, description }) {
   const { data: jobs = [], isLoading: loading } = useCareers();
 
   const sectionRef = useRef(null);
@@ -24,7 +26,7 @@ export default function JobOpeningsSection() {
 
     const ctx = gsap.context(() => {
       // Header Animation
-      gsap.fromTo(headingRef.current,
+      if (headingRef.current) gsap.fromTo(headingRef.current,
         { opacity: 0, y: 30 },
         {
           opacity: 1,
@@ -39,7 +41,7 @@ export default function JobOpeningsSection() {
         }
       );
 
-      gsap.fromTo(introRef.current,
+      if (introRef.current) gsap.fromTo(introRef.current,
         { opacity: 0, y: 20 },
         {
           opacity: 1,
@@ -48,7 +50,7 @@ export default function JobOpeningsSection() {
           delay: 0.2,
           ease: 'power2.out',
           scrollTrigger: {
-            trigger: headingRef.current,
+            trigger: introRef.current,
             start: 'top 85%',
             toggleActions: 'play none none none'
           }
@@ -76,27 +78,33 @@ export default function JobOpeningsSection() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [loading, jobs]); // Re-run when loading finishes and jobs change
+  }, [loading, jobs, title, description]); // Re-run when loading finishes and jobs change
 
   return (
     <section id="openings" ref={sectionRef} className="bg-white pt-8 md:pt-12 pb-16 md:pb-24 px-4 sm:px-8 mb-10">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
+        {(title || description) && (
         <div className="mb-10">
+          {title && (
           <h2
             ref={headingRef}
             className="aloevera-bold text-3xl sm:text-4xl mb-4 opacity-0"
             style={{ color: '#C83C64' }}
           >
-            Current Openings
+            {title}
           </h2>
+          )}
+          {description && (
           <p
             ref={introRef}
-            className="font-lato text-gray-600 text-sm sm:text-base max-w-xl opacity-0 font-medium"
+            className="font-lato text-gray-600 text-sm sm:text-base max-w-xl opacity-0 font-medium whitespace-pre-line"
           >
-            Luxume Pvt. Ltd., an upcoming company dealing in building materials and headquartered in Ernakulam, Kerala, is always looking for talented individuals to join our growing team. Explore our current openings below and apply to be part of our journey.
+            {description}
           </p>
+          )}
         </div>
+        )}
 
         {/* Loading State — shimmer skeleton */}
         {loading && (
