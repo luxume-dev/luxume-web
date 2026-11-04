@@ -37,12 +37,16 @@ export const metadata = {
   alternates: {
     canonical: "/",
   },
-  // Site is not to be indexed. Kept alongside the X-Robots-Tag header in
-  // next.config.mjs; remove both to go public.
   robots: {
-    index: false,
-    follow: false,
-    googleBot: { index: false, follow: false },
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
   // Pages that set their own openGraph replace this whole object, so they must
   // include DEFAULT_OG_IMAGE as their fallback image too.

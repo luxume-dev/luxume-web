@@ -23,8 +23,6 @@ const contentSecurityPolicy = [
 const securityHeaders = [
   { key: 'Content-Security-Policy', value: contentSecurityPolicy },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
-  // Keep the whole site (pages, PDFs, images) out of search indexes.
-  { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
