@@ -1,251 +1,267 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import FaqSection from '@/components/FaqSection';
+import AltTextProvider from '@/providers/AltTextProvider';
+import { getAssurancePageContent } from '@/services/supabase';
+import { getAssurancePageSeoCached } from '@/lib/pageSeo.server';
+import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, normaliseImageSrc, visibleFaqs } from '@/lib/pageSeo';
+import { parseRichHtml } from '@/lib/parseHtml';
 
-export const metadata = {
-  title: 'Guarantee Terms & Conditions',
-  description: '10-year limited guarantee for Luxume colour coated roofing and cladding products. Read the full terms and conditions.',
-  alternates: { canonical: '/guarantee' },
-};
+export const revalidate = 3600;
 
-/* ─── Content Data ─────────────────────────────────────────────── */
+// Content and SEO are managed from the dashboard (assurance_page -> page_seo)
+export async function generateMetadata() {
+  const seo = buildSeoMetadata(await getAssurancePageSeoCached(), { path: '/guarantee' });
+  return {
+    ...seo,
+    alternates: { canonical: '/guarantee' },
+  };
+}
 
-const warrantyIntro = {
-  body: 'LUXUME hereby provides limited GUARANTEE to genuine buyers of colour coated coil/sheet for roofing and cladding application, from the date mentioned in the purchase invoice from authorised dealers, provided terms and conditions mentioned below are found in compliance. This Limited Guarantee applies to pre-painted products supplied by LUXUME, using the RMP paint system — 10 years against perforation for Luxume and 15 years against perforation for Luxume Plus. No previous guarantee shall apply to such product.',
-};
+// Section colour (hex, picked in the dashboard) and bullet style
+const BULLETS = new Set(['check', 'dot', 'cross', 'definition']);
 
-const definitions = [
-  {
-    term: 'Film Integrity',
-    definition:
-      'Defined as the absence of peeling, chalking, chipping or cracking, except for such crazing or slight cracking as may occur on tightly roll-formed edges or brake bends at the time of forming pre-painted sheet.',
-  },
-  {
-    term: 'Color Change',
-    definition:
-      'Defined as freedom from fade or change as warranted in ΔE Units calculated in accordance with ASTM D2244-93, CIEL a B", 10° Observer, secular included. Color Change is measured on an exposed painted surface that has been cleaned of surface soils and chalk and then compared to corresponding values measured on the original or unexposed coated surface.',
-  },
-  {
-    term: 'Chalk / Oxidation',
-    definition:
-      'Defined as a numerical rating as warranted then measured in accordance with the standard procedures specified in ASTMD421789.',
-  },
-];
+// "#abc" / "#aabbcc" -> "#AABBCC" (6 digits, so a tint can be appended); null if not a hex colour
+function sectionColor(value) {
+  const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(text(value));
+  if (!m) return null;
+  return '#' + (m[1].length === 3 ? m[1].replace(/./g, (c) => c + c) : m[1]).toUpperCase();
+}
 
-const generalTerms = [
-  'Guarantee is not applicable if guard film is not removed at the time of installation.',
-  'End user customer must clean the installed sheets on a regular 6-month basis.',
-  'The coated metal must not be cleaned with abrasive or chemical cleaners and subjected to water infiltration due to improper packaging.',
-  'Claims under this limited guarantee must be sent by the guarantee holder in writing to LUXUME and must be received within thirty (30) days after discovery of the initial condition giving rise to the claim.',
-  'The exclusive remedy under this guarantee shall be, at the sole discretion of LUXUME, to either repaint the products or provide free of charge replacements (but not installation) for the products.',
-  'LUXUME extends this guarantee solely to the original purchaser of the product. This Guarantee is non-transferable and non-assignable.',
-  'No terms or conditions other than those stated herein shall be binding on LUXUME unless made in writing and signed by its authorised representative.',
-  'This guarantee shall be governed by Indian regulations. Any litigation or dispute will be settled by the law Court of Ernakulam, India.',
-];
+/* ─── Content helpers ───────────────────────────────────────────── */
 
-const claimDocs = [
-  'Purchase Receipt.',
-  'Duly stamped Guarantee Certificate.',
-];
+const text = (value) => (typeof value === 'string' ? value.trim() : '');
+const isRecord = (value) => value && typeof value === 'object' && !Array.isArray(value);
 
-const conditions = [
-  'The limited guarantee shall extend for utilisation within 6 months from the date of shipment or 3 months after application, whichever occurs first.',
-  'Non-uniform colour changes from unequal exposure to sunlight are not covered unless such change meets the definition of Color Change above.',
-  'The durability of the paint is up to 10 years for residential, commercial and school buildings in rural or residential areas. This guarantee excludes industrial steel mills, power generating stations, oil fields, oil refineries, ore mines, chemical plants, paper mills, chimneys, or other unusual environmental exposure, or severe marine environments within 5,000 feet from salt water.',
-  'The guarantee is valid and applicable for roofing and cladding end application only; wherein the installation is at an incline of not more than 75° from the vertical.',
-];
+// Empty fields hide their part of the page
+function pageContent(data) {
+  const content = isRecord(data?.content) ? data.content : {};
+  const cta = isRecord(content.cta) ? content.cta : {};
+  const sections = Array.isArray(content.sections) ? content.sections : [];
+  return {
+    label: text(data?.label),
+    title: text(data?.title),
+    description: text(data?.description),
+    image: text(data?.image),
+    card_text: text(data?.card_text),
+    sections: sections
+      .filter(isRecord)
+      .map((s) => ({
+        title: text(s.title),
+        description: text(s.description),
+        accent: sectionColor(s.color),
+        bullet: BULLETS.has(s.bullet) ? s.bullet : null,
+      }))
+      .filter((s) => s.title || s.description),
+    cta: {
+      title: text(cta.title),
+      description: text(cta.description),
+      button_label: text(cta.button_label),
+      button_link: text(cta.button_link),
+    },
+  };
+}
 
-const notCovered = [
-  'Damage due to improper storage, packaging, handling, shipping, processing or installation.',
-  'Improper forming, fabrication, cut edge exposure, corrosion of substrate or any coating degradation caused by deficiencies in metal pre-treatment.',
-  'Acts of God, falling objects, external forces, explosions, fire, riots, civil commotions, acts of war, radiation, or similar occurrences beyond LUXUME\'s control.',
-  'Contact with animals and/or animal waste, decomposed products, chemical fumes, or cement products.',
-  'Deterioration caused by use of improper fastener material other than AS 3566 Class ¾ or equivalent.',
-  'Damages occasioned, directly or indirectly, by moisture or other contamination due to improper storage prior to installation.',
-];
-
-const voidConditions = [
-  'The product is stored or installed in a way which allows contact with animals and/or animal waste or chemical fumes or cement products.',
-  'Deterioration caused by corrosive chemicals, improper fastener material, failure to remove debris, failure to provide free drainage of water including internal condensation from all surfaces, or misuse, wilful act or negligence.',
-];
+const isExternal = (href) => /^https?:\/\//i.test(href);
 
 /* ─── Helper Components ─────────────────────────────────────────── */
-function SectionCard({ title, accent = '#1a1b4b', children }) {
+
+function SectionCard({ title, accent, children }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-      <div className="px-6 py-4 border-l-4" style={{ borderColor: accent, backgroundColor: '#f8f9fc' }}>
-        <h2 className="font-aloevera font-bold text-lg md:text-xl" style={{ color: accent }}>{title}</h2>
-      </div>
-      <div className="px-6 py-5">{children}</div>
+      {title && (
+        <div className="px-6 py-4 border-l-4" style={{ borderColor: accent, backgroundColor: '#f8f9fc' }}>
+          <h2 className="font-aloevera font-bold text-lg md:text-xl" style={{ color: accent }}>{title}</h2>
+        </div>
+      )}
+      {children && <div className="px-6 py-5">{children}</div>}
     </div>
   );
 }
 
-function BulletItem({ text, icon = 'dot', color = '#1a1b4b' }) {
-  return (
-    <li className="flex items-start gap-3 py-2 border-b border-gray-50 last:border-0">
-      <span
-        className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5"
-        style={{ backgroundColor: color + '18' }}
-      >
-        {icon === 'check' ? (
-          <svg className="w-3 h-3" fill="none" stroke={color} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-          </svg>
-        ) : icon === 'x' ? (
-          <svg className="w-3 h-3" fill="none" stroke={color} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        ) : (
-          <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
-        )}
-      </span>
-      <span className="font-lato text-gray-700 text-sm leading-relaxed">{text}</span>
-    </li>
-  );
+function BulletIcon({ bullet, color }) {
+  if (bullet === 'check' || bullet === 'cross') {
+    return (
+      <svg className="w-3 h-3" fill="none" stroke={color ?? 'currentColor'} viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2.5}
+          d={bullet === 'check' ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12'}
+        />
+      </svg>
+    );
+  }
+  return <div className="w-1.5 h-1.5 rounded-full bg-current" style={color ? { backgroundColor: color } : undefined} />;
+}
+
+// The section's rich text with the page's list styling: each list item gets a
+// tinted badge (check / dot / cross), or for "definition" a dot with the bold
+// term in darker text.
+// No bullet style: the rich text is shown as written (plain lists).
+function SectionBody({ html, bullet, accent }) {
+  if (!bullet) {
+    return <div className="font-lato text-gray-700 text-sm leading-relaxed [&>*:last-child]:mb-0">{parseRichHtml(html)}</div>;
+  }
+  const definition = bullet === 'definition';
+  const components = {
+    p: ({ key, style }, children) => (
+      <p key={key} style={style} className="font-lato text-gray-600 text-sm leading-relaxed mb-4">
+        {children}
+      </p>
+    ),
+    ul: ({ key }, children) => (
+      <ul key={key} className={definition ? 'space-y-4 mb-4' : 'space-y-0 mb-4'}>
+        {children}
+      </ul>
+    ),
+    li: ({ key, style }, children) =>
+      definition ? (
+        <li key={key} className="flex gap-3">
+          <div className="flex-shrink-0 mt-1">
+            <div className="w-2 h-2 rounded-full mt-1.5 bg-gray-400" style={accent ? { backgroundColor: accent } : undefined} />
+          </div>
+          <div style={style} className="font-lato text-gray-600 text-sm leading-relaxed">
+            {children}
+          </div>
+        </li>
+      ) : (
+        <li key={key} className="flex items-start gap-3 py-2 border-b border-gray-50 last:border-0">
+          <span
+            className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5"
+            style={accent ? { backgroundColor: accent + '18' } : undefined}
+          >
+            <BulletIcon bullet={bullet} color={accent} />
+          </span>
+          <div style={style} className="font-lato text-gray-700 text-sm leading-relaxed">
+            {children}
+          </div>
+        </li>
+      ),
+    strong: ({ key }, children) => (
+      <strong key={key} className="font-lato font-bold text-gray-800">
+        {children}
+      </strong>
+    ),
+  };
+
+  return <div className="[&>*:last-child]:mb-0">{parseRichHtml(html, { components })}</div>;
 }
 
 /* ─── Page ──────────────────────────────────────────────────────── */
-export default function WarrantyPage() {
+export default async function WarrantyPage() {
+  // None of these throw: a failure renders the page without the content / SEO extras
+  const [{ data }, seo] = await Promise.all([getAssurancePageContent(), getAssurancePageSeoCached()]);
+  const page = pageContent(data);
+
+  const faqs = visibleFaqs(seo);
+  const faqSchema = faqPageSchema(faqs);
+  const alts = buildAltMap(seo);
+  const imageAlt = page.image ? alts[normaliseImageSrc(page.image)] ?? '' : '';
+
   return (
-    <main className="bg-white min-h-screen">
-      {/* Hero */}
-      <section
-        className="relative flex flex-col items-center justify-center text-center px-4 py-28 md:py-36 overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #1a1b4b 0%, #2d2f6b 60%, #C83C64 100%)' }}
-      >
-        <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full opacity-10" style={{ backgroundColor: '#C83C64' }} />
-        <div className="absolute -bottom-16 -right-16 w-64 h-64 rounded-full opacity-10" style={{ backgroundColor: '#ffffff' }} />
+    <AltTextProvider alts={alts}>
+      <main className="bg-white min-h-screen">
+        {seo?.schema && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(seo.schema) }} />
+        )}
+        {faqSchema && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
+        )}
 
-        <span className="inline-block px-4 py-1.5 rounded-full text-xs font-lato font-semibold tracking-widest uppercase text-white/70 border border-white/20 mb-5">
-          Product Assurance
-        </span>
-        <h1 className="font-aloevera font-bold text-4xl md:text-5xl lg:text-6xl text-white mb-4">
-          Guarantee
-        </h1>
-        <p className="font-lato text-white/70 max-w-xl text-base md:text-lg">
-          Terms &amp; Conditions for Luxume colour coated roofing and cladding products.
-        </p>
+        {/* Hero */}
+        <section
+          className="relative flex flex-col items-center justify-center text-center px-4 py-28 md:py-36 overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, #1a1b4b 0%, #2d2f6b 60%, #C83C64 100%)' }}
+        >
+          <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full opacity-10" style={{ backgroundColor: '#C83C64' }} />
+          <div className="absolute -bottom-16 -right-16 w-64 h-64 rounded-full opacity-10" style={{ backgroundColor: '#ffffff' }} />
 
-
-      </section>
-
-      {/* Guarantee Image */}
-      <div className="w-full max-w-4xl mx-auto px-4 md:px-8 -mt-1 pt-12">
-        <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-100">
-          <Image
-            src="/images/warranty-both.png"
-            alt="Luxume Guarantee Certificate"
-            width={1200}
-            height={600}
-            className="w-full h-auto object-contain"
-            priority
-          />
-        </div>
-      </div>
-
-      {/* Content */}
-      <section className="py-12 md:py-20 px-4 md:px-8">
-        <div className="max-w-4xl mx-auto space-y-8">
-
-          {/* Intro banner */}
-          <div className="rounded-2xl p-6 md:p-8 text-center" style={{ backgroundColor: '#1a1b4b' }}>
-            <p className="font-lato text-white/80 text-sm md:text-base leading-relaxed max-w-3xl mx-auto">
-              {warrantyIntro.body}
+          {page.label && (
+            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-lato font-semibold tracking-widest uppercase text-white/70 border border-white/20 mb-5">
+              {page.label}
+            </span>
+          )}
+          {page.title && (
+            <h1 className="font-aloevera font-bold text-4xl md:text-5xl lg:text-6xl text-white mb-4">
+              {page.title}
+            </h1>
+          )}
+          {page.description && (
+            <p className="font-lato text-white/70 max-w-xl text-base md:text-lg whitespace-pre-line">
+              {page.description}
             </p>
-          </div>
+          )}
+        </section>
 
-          {/* Definitions */}
-          <SectionCard title="Definitions" accent="#C83C64">
-            <div className="space-y-4">
-              {definitions.map((d, i) => (
-                <div key={i} className="flex gap-3">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="w-2 h-2 rounded-full mt-1.5" style={{ backgroundColor: '#C83C64' }} />
-                  </div>
-                  <div>
-                    <span className="font-lato font-bold text-gray-800 text-sm">{d.term}: </span>
-                    <span className="font-lato text-gray-600 text-sm leading-relaxed">{d.definition}</span>
-                  </div>
+        {/* Guarantee Image */}
+        {page.image && (
+          <div className="w-full max-w-4xl mx-auto px-4 md:px-8 -mt-1 pt-12">
+            <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-100">
+              <Image
+                src={page.image}
+                alt={imageAlt}
+                width={1200}
+                height={600}
+                className="w-full h-auto object-contain"
+                priority
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Content */}
+        <section className="py-12 md:py-20 px-4 md:px-8">
+          <div className="max-w-4xl mx-auto space-y-8">
+
+            {/* Intro banner */}
+            {page.card_text && (
+              <div className="rounded-2xl p-6 md:p-8 text-center" style={{ backgroundColor: '#1a1b4b' }}>
+                <p className="font-lato text-white/80 text-sm md:text-base leading-relaxed max-w-3xl mx-auto whitespace-pre-line">
+                  {page.card_text}
+                </p>
+              </div>
+            )}
+
+            {/* Sections (title + rich-text description from the dashboard) */}
+            {page.sections.map((section, i) => (
+              <SectionCard key={i} title={section.title} accent={section.accent}>
+                {section.description && (
+                  <SectionBody html={section.description} bullet={section.bullet} accent={section.accent} />
+                )}
+              </SectionCard>
+            ))}
+
+            {/* Bottom CTA */}
+            {page.cta.title && (
+              <div
+                className="rounded-2xl px-6 md:px-10 py-8 flex flex-col md:flex-row items-center justify-between gap-6"
+                style={{ background: 'linear-gradient(135deg, #1a1b4b, #2d2f6b)' }}
+              >
+                <div>
+                  <p className="font-aloevera font-bold text-xl text-white mb-1">{page.cta.title}</p>
+                  {page.cta.description && (
+                    <p className="font-lato text-white/60 text-sm">{page.cta.description}</p>
+                  )}
                 </div>
-              ))}
-            </div>
-          </SectionCard>
+                {page.cta.button_label && page.cta.button_link && (
+                  <Link
+                    href={page.cta.button_link}
+                    {...(isExternal(page.cta.button_link) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className="flex-shrink-0 inline-block px-8 py-3 rounded-xl font-lato font-semibold text-sm text-white transition-all hover:opacity-90"
+                    style={{ backgroundColor: '#C83C64' }}
+                  >
+                    {page.cta.button_label}
+                  </Link>
+                )}
+              </div>
+            )}
 
-          {/* General Terms */}
-          <SectionCard title="Terms & Conditions" accent="#1a1b4b">
-            <ul className="space-y-0">
-              {generalTerms.map((t, i) => (
-                <BulletItem key={i} text={t} icon="check" color="#1a1b4b" />
-              ))}
-            </ul>
-          </SectionCard>
-
-          {/* Claim Documents */}
-          <SectionCard title="Required Documents for Claims" accent="#2BBAA4">
-            <p className="font-lato text-gray-600 text-sm mb-4">
-              In the event of a claim under this limited guarantee, the purchaser must provide the original copy of:
-            </p>
-            <ul className="space-y-0">
-              {claimDocs.map((d, i) => (
-                <BulletItem key={i} text={d} icon="check" color="#2BBAA4" />
-              ))}
-            </ul>
-          </SectionCard>
-
-          {/* Conditions */}
-          <SectionCard title="Conditions" accent="#1a1b4b">
-            <ul className="space-y-0">
-              {conditions.map((c, i) => (
-                <BulletItem key={i} text={c} color="#1a1b4b" />
-              ))}
-            </ul>
-          </SectionCard>
-
-          {/* Not Covered */}
-          <SectionCard title="Not Covered Under This Guarantee" accent="#C83C64">
-            <p className="font-lato text-gray-600 text-sm mb-4">
-              This limited guarantee does not extend to or cover:
-            </p>
-            <ul className="space-y-0">
-              {notCovered.map((n, i) => (
-                <BulletItem key={i} text={n} icon="x" color="#C83C64" />
-              ))}
-            </ul>
-          </SectionCard>
-
-          {/* Guarantee Void */}
-          <SectionCard title="Guarantee Void If" accent="#C83C64">
-            <ul className="space-y-0">
-              {voidConditions.map((v, i) => (
-                <BulletItem key={i} text={v} icon="x" color="#C83C64" />
-              ))}
-            </ul>
-          </SectionCard>
-
-          {/* Congratulations / Footer note */}
-          <div
-            className="rounded-2xl px-6 md:px-10 py-8 flex flex-col md:flex-row items-center justify-between gap-6"
-            style={{ background: 'linear-gradient(135deg, #1a1b4b, #2d2f6b)' }}
-          >
-            <div>
-              <p className="font-aloevera font-bold text-xl text-white mb-1">
-                Congratulations on becoming a LUXUME customer!
-              </p>
-              <p className="font-lato text-white/60 text-sm">
-                We&apos;re committed to standing behind the quality of every product we make.
-              </p>
-            </div>
-            <Link
-              href="/contact"
-              className="flex-shrink-0 inline-block px-8 py-3 rounded-xl font-lato font-semibold text-sm text-white transition-all hover:opacity-90"
-              style={{ backgroundColor: '#C83C64' }}
-            >
-              Contact Us
-            </Link>
           </div>
+        </section>
 
-        </div>
-      </section>
-    </main>
+        <FaqSection faqs={faqs} />
+      </main>
+    </AltTextProvider>
   );
 }

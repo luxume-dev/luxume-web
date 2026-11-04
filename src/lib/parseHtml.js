@@ -33,12 +33,17 @@ export function parseHtml(input) {
  *   this site; anything else (javascript: ...) renders as plain text.
  * - text-align (left / center / right / justify) is the only style kept.
  * - Every other attribute is dropped.
+ * - options.components replaces the element for a tag (e.g. styled list
+ *   items): { li: (props, children) => node }. props holds key, className and
+ *   the kept attributes; children are the already-rendered contents.
  *
  * @param {string} input
+ * @param {{components?: Record<string, (props: object, children: import('react').ReactNode[]) => import('react').ReactNode>}} [options]
  * @returns {import('react').ReactNode}
  */
-export function parseRichHtml(input) {
-  return renderHtml(input, RICH_CONFIG);
+export function parseRichHtml(input, options) {
+  const components = options?.components;
+  return renderHtml(input, components ? { ...RICH_CONFIG, components } : RICH_CONFIG);
 }
 
 function renderHtml(input, config) {
@@ -58,7 +63,10 @@ function renderHtml(input, config) {
   const closeFrame = () => {
     const frame = stack.pop();
     const parent = current();
-    if (frame.allowed) {
+    const component = frame.allowed ? config.components?.[frame.tag] : undefined;
+    if (component) {
+      parent.children.push(component({ key: key++, ...frame.props }, frame.children));
+    } else if (frame.allowed) {
       parent.children.push(createElement(frame.tag, { key: key++, ...frame.props }, ...frame.children));
     } else {
       parent.children.push(...frame.children);

@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
  * text (public / read-only). Each page row links to one page_seo row:
  *   home_page.id, about_page.id, blog_page.id, careers_page.id -> page_seo.id
  *   project_page.page_seo_id                   -> page_seo.id
- *   guideline_page.id                          -> page_seo.id
+ *   guideline_page.id, assurance_page.id       -> page_seo.id
  *   contact_page.page_seo_id                   -> page_seo.id
  *   blogs.blog_id                              -> page_seo.id (one per post)
  *   careers.page_seo_id                        -> page_seo.id (one per job opening)
@@ -133,4 +133,9 @@ export async function getBlogPostSeo(slug) {
 /** Fetch the Do's & Don'ts page SEO (guideline_page.id -> page_seo). */
 export function getGuidelinePageSeo() {
     return getPageSeo('guideline_page', 'page_seo!guideline_page_id_fkey');
+}
+
+/** Fetch the Guarantee page SEO (assurance_page.id -> page_seo). */
+export function getAssurancePageSeo() {
+    return getPageSeo('assurance_page', 'page_seo!assurance_page_id_fkey');
 }

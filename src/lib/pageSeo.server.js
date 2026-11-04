@@ -9,6 +9,7 @@ import {
   getProjectPageSeo,
   getContactPageSeo,
   getGuidelinePageSeo,
+  getAssurancePageSeo,
 } from '@/services/supabase';
 
 /**
@@ -24,5 +25,6 @@ export const getCareersPageSeoCached = cache(async () => (await getCareersPageSe
 export const getProjectPageSeoCached = cache(async () => (await getProjectPageSeo()).data);
 export const getContactPageSeoCached = cache(async () => (await getContactPageSeo()).data);
 export const getGuidelinePageSeoCached = cache(async () => (await getGuidelinePageSeo()).data);
+export const getAssurancePageSeoCached = cache(async () => (await getAssurancePageSeo()).data);
 export const getCareerSeoCached = cache(async (id) => (await getCareerSeo(id)).data);
 export const getBlogPostSeoCached = cache(async (slug) => (await getBlogPostSeo(slug)).data);
