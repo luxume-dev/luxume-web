@@ -96,7 +96,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </Script>
         )}
       </head>
-      <body className={`${lato.variable} antialiased`}>
+      {/* Browser extensions (e.g. ColorZilla) add attributes to <body> before React loads */}
+      <body className={`${lato.variable} antialiased`} suppressHydrationWarning>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe

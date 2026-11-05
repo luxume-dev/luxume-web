@@ -3,54 +3,35 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { iconSrc } from '@/lib/cmsList';
 
 // Register ScrollTrigger plugin
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export default function ProductStats() {
+// "15 +" / "1000+" count up from 0 to the number, keeping the text after it.
+// Anything else (e.g. "24/7") is shown as-is.
+function toStat(card, index) {
+  const title = String(card?.title ?? '').trim();
+  const match = title.match(/^(\d+)(\D*)$/);
+  return {
+    id: index,
+    src: iconSrc(String(card?.icon ?? '').trim(), 'white'),
+    value: title,
+    label: String(card?.label ?? '').trim(),
+    isStatic: !match,
+    targetNumber: match ? Number(match[1]) : 0,
+    suffix: match ? match[2] : '',
+  };
+}
+
+export default function ProductStats({ cards }) {
   const statsContainerRef = useRef(null);
   const statRefs = useRef([]);
-  const stats = [
-    {
-      id: 1,
-      icon: (
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M40 26C40 36 33 41 24.68 43.9C24.2443 44.0477 23.7711 44.0406 23.34 43.88C15 41 8 36 8 26V12C8 11.4696 8.21071 10.9609 8.58579 10.5858C8.96086 10.2108 9.46957 10 10 10C14 10 19 7.60004 22.48 4.56004C22.9037 4.19804 23.4427 3.99915 24 3.99915C24.5573 3.99915 25.0963 4.19804 25.52 4.56004C29.02 7.62004 34 10 38 10C38.5304 10 39.0391 10.2108 39.4142 10.5858C39.7893 10.9609 40 11.4696 40 12V26Z" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      ),
-      value: '15+',
-      label: 'Years of Excellence',
-      targetNumber: 15,
-      suffix: '+'
-    },
-    {
-      id: 2,
-      icon: (
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M30.9535 25.78L33.9835 42.832C34.0174 43.0328 33.9893 43.2392 33.9028 43.4235C33.8162 43.6079 33.6755 43.7614 33.4994 43.8636C33.3232 43.9658 33.1201 44.0118 32.9171 43.9954C32.7141 43.9791 32.521 43.9011 32.3635 43.772L25.2035 38.398C24.8579 38.1398 24.438 38.0003 24.0065 38.0003C23.575 38.0003 23.1552 38.1398 22.8095 38.398L15.6375 43.77C15.4801 43.8989 15.2872 43.9767 15.0845 43.9931C14.8818 44.0095 14.6788 43.9637 14.5028 43.8618C14.3268 43.7598 14.1861 43.6067 14.0993 43.4227C14.0126 43.2387 13.9841 43.0327 14.0175 42.832L17.0455 25.78" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M24 28C30.6274 28 36 22.6274 36 16C36 9.37258 30.6274 4 24 4C17.3726 4 12 9.37258 12 16C12 22.6274 17.3726 28 24 28Z" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      ),
-      value: '1000+',
-      label: 'Projects Completed',
-      targetNumber: 1000,
-      suffix: '+'
-    },
-    {
-      id: 3,
-      icon: (
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M24 12V24L32 28" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      ),
-      value: '24/7',
-      label: 'Customer Support',
-      isStatic: true
-    }
-  ];
+  const stats = (Array.isArray(cards) ? cards : [])
+    .map(toStat)
+    .filter((s) => s.src || s.value || s.label);
 
   // Real figures in the server-rendered HTML; the scroll animation still
   // counts up from 0 on its first tick.
@@ -106,7 +87,10 @@ export default function ProductStats() {
     }, statsContainerRef);
 
     return () => ctx.revert();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cards]);
+
+  if (!stats.length) return null;
 
   return (
     <section className="w-full pb-8 px-4">
@@ -122,9 +106,12 @@ export default function ProductStats() {
                 boxShadow: '0 10px 30px -10px rgba(200, 60, 100, 0.3)'
               }}
             >
-              <div className="mb-4 transform scale-125">
-                {stat.icon}
-              </div>
+              {stat.src && (
+                <div className="mb-4 transform scale-125">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={stat.src} alt="" aria-hidden="true" className="w-12 h-12 object-contain" />
+                </div>
+              )}
               <h2 className="text-[32px] font-medium mb-2 font-lato">
                 {stat.isStatic ? stat.value : animatedValues[index]}
               </h2>

@@ -3,8 +3,10 @@ import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { productQuery } from '@/lib/queries';
 import { brandMissing } from '@/lib/exists.server';
-import { summarise } from '@/lib/text';
-import { DEFAULT_OG_IMAGE } from '@/lib/site';
+import { getBrandSeoCached } from '@/lib/pageSeo.server';
+import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
+import AltTextProvider from '@/providers/AltTextProvider';
+import FaqSection from '@/components/FaqSection';
 import { productSchema, breadcrumbSchema } from '@/lib/schema';
 import ProductDetailClient from '@/components/products/ProductDetailClient';
 import { getHomeContent } from '@/services/supabase';
@@ -20,30 +22,16 @@ async function getBrand(slug) {
   }
 }
 
+// SEO is managed per brand in the dashboard (brands.product_id -> page_seo).
+// The brand title is only the base page title until a meta title is set there.
 export async function generateMetadata({ params }) {
   const { id: slug } = await params;
-  const brand = await getBrand(slug);
-
-  if (!brand) {
-    return { title: 'Product', alternates: { canonical: `/products/${slug}` } };
-  }
-
-  // brand.description runs 700-800 chars, far past what a SERP shows.
-  const description =
-    summarise(brand.description) ||
-    `${brand.title} colour-coated steel roofing from Luxume — specifications, profiles and finishes.`;
+  const [brand, seo] = await Promise.all([getBrand(slug), getBrandSeoCached(slug)]);
 
   return {
-    title: brand.title,
-    description,
+    ...(brand ? { title: brand.title } : {}),
+    ...buildSeoMetadata(seo, { path: `/products/${slug}` }),
     alternates: { canonical: `/products/${slug}` },
-    openGraph: {
-      title: brand.title,
-      description,
-      type: 'website',
-      url: `/products/${slug}`,
-      images: [brand.cover_image_url || DEFAULT_OG_IMAGE],
-    },
   };
 }
 
@@ -55,9 +43,10 @@ export default async function ProductDetailPage({ params }) {
   if (await brandMissing(slug)) notFound();
 
   // The Coated Steel Layers section is edited once, on the dashboard's home page
-  const [queryClient, { data: homeContent }] = await Promise.all([
+  const [queryClient, { data: homeContent }, seo] = await Promise.all([
     prefetch(getQueryClient(), [productQuery(slug)]),
     getHomeContent(),
+    getBrandSeoCached(slug),
   ]);
   const coatedSteel = {
     label: homeContent?.coated_steel_label?.trim(),
@@ -76,8 +65,11 @@ export default async function ProductDetailPage({ params }) {
     { name: brand?.title ?? 'Product', path: `/products/${slug}` },
   ]);
 
+  const faqs = visibleFaqs(seo);
+  const faqSchema = faqPageSchema(faqs);
+
   return (
-    <>
+    <AltTextProvider alts={buildAltMap(seo)}>
       {product && (
         <script
           type="application/ld+json"
@@ -90,9 +82,16 @@ export default async function ProductDetailPage({ params }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
         />
       )}
+      {seo?.schema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(seo.schema) }} />
+      )}
+      {faqSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
+      )}
       <HydrationBoundary state={dehydrate(queryClient)}>
         <ProductDetailClient coatedSteel={coatedSteel} />
       </HydrationBoundary>
-    </>
+      <FaqSection faqs={faqs} />
+    </AltTextProvider>
   );
 }

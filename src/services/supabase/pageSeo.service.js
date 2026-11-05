@@ -8,9 +8,11 @@ import { supabase } from '@/lib/supabase';
  *   project_page.page_seo_id                   -> page_seo.id
  *   guideline_page.id, assurance_page.id       -> page_seo.id
  *   contact_page.page_seo_id                   -> page_seo.id
+ *   product_page.id                            -> page_seo.id
  *   blogs.blog_id                              -> page_seo.id (one per post)
  *   careers.page_seo_id                        -> page_seo.id (one per job opening)
  *   company_page.page_seo_id                   -> page_seo.id (one per company page)
+ *   brands.product_id                          -> page_seo.id (one per brand / product page)
  */
 
 export const PAGE_SEO_SELECT =
@@ -75,6 +77,11 @@ export function getProjectPageSeo() {
     return getPageSeo('project_page', 'page_seo!project_page_page_seo_id_fkey');
 }
 
+/** Fetch the Products page SEO (product_page.id -> page_seo). */
+export function getProductPageSeo() {
+    return getPageSeo('product_page', 'page_seo!product_page_id_fkey');
+}
+
 /** Fetch the Contact page SEO (contact_page.page_seo_id -> page_seo). */
 export function getContactPageSeo() {
     return getPageSeo('contact_page', 'page_seo!contact_page_page_seo_id_fkey');
@@ -126,6 +133,26 @@ export async function getBlogPostSeo(slug) {
         return { data: seo ? sortPageSeo(seo) : null, error: null };
     } catch (error) {
         console.error('[Page SEO Service] Error fetching blog post SEO:', error);
+        return { data: null, error: error.message };
+    }
+}
+
+/** Fetch a brand's SEO (brands.product_id -> page_seo) by the brand slug. */
+export async function getBrandSeo(slug) {
+    try {
+        const { data, error } = await supabase
+            .from('brands')
+            .select(`page_seo:page_seo!brands_product_id_fkey(${PAGE_SEO_SELECT})`)
+            .eq('slug', slug)
+            .limit(1)
+            .maybeSingle();
+
+        if (error) throw error;
+
+        const seo = data?.page_seo ?? null;
+        return { data: seo ? sortPageSeo(seo) : null, error: null };
+    } catch (error) {
+        console.error('[Page SEO Service] Error fetching brand SEO:', error);
         return { data: null, error: error.message };
     }
 }

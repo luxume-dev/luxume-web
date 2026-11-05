@@ -312,3 +312,20 @@ h6 {
 .animate-[shimmer_2s_infinite] {
   animation: shimmer 2s infinite;
 }
+/* Product card image + skeleton shimmer (global, not styled-jsx: scoped
+   classes mismatched between server and client render) */
+@keyframes card-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.card-img-shimmer {
+  background: #f3f4f6;
+}
+.card-img-shimmer::after,
+.skeleton-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.75) 50%, transparent 100%);
+  animation: card-shimmer 1.4s infinite;
+}

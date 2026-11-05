@@ -2,26 +2,51 @@ import ProductsIntro from '@/components/ProductsIntro';
 import ProductStats from '@/components/ProductStats';
 import ProductGrid from '@/components/ProductGrid';
 import ProductHero from '@/components/ProductHero';
+import FaqSection from '@/components/FaqSection';
+import AltTextProvider from '@/providers/AltTextProvider';
+import { getProductPageContent } from '@/services/supabase';
+import { getProductPageSeoCached } from '@/lib/pageSeo.server';
+import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
 
-export const metadata = {
-  title: 'Steel Roofing Products',
-  description:
-    'Browse the full Luxume range of coated steel roofing profiles and finishes — engineered for weather resistance, colour retention, and long service life.',
-  alternates: { canonical: '/products' },
-};
+export const revalidate = 3600;
 
-export default function ProductsPage() {
+// SEO is managed from the dashboard (product_page -> page_seo)
+export async function generateMetadata() {
+  return {
+    ...buildSeoMetadata(await getProductPageSeoCached(), { path: '/products' }),
+    alternates: { canonical: '/products' },
+  };
+}
+
+export default async function ProductsPage() {
+  // None of these throw: a failure renders the page without the dashboard content / SEO extras
+  const [{ data }, seo] = await Promise.all([getProductPageContent(), getProductPageSeoCached()]);
+
+  const faqs = visibleFaqs(seo);
+  const faqSchema = faqPageSchema(faqs);
+
   return (
-    <main className="min-h-screen bg-white">
-      <div> {/* Add padding to account for absolute navbar */}
-        <ProductHero 
-          heading="Innovative Roofing Materials & Designs"
-          backgroundImage="/images/product-hero.webp"
+    <AltTextProvider alts={buildAltMap(seo)}>
+      <main className="min-h-screen bg-white">
+        {seo?.schema && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(seo.schema) }} />
+        )}
+        {faqSchema && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
+        )}
+
+        {/* Hero, intro and count cards come from product_page (dashboard) */}
+        <ProductHero heading={data?.title?.trim()} backgroundImage={data?.banner_image?.trim()} />
+        <ProductsIntro
+          label={data?.product_label?.trim()}
+          title={data?.product_title?.trim()}
+          description={data?.product_description?.trim()}
         />
-        <ProductsIntro />
-        <ProductStats />
+        <ProductStats cards={data?.count_card} />
+        {/* Product cards come from the brands table */}
         <ProductGrid />
-      </div>
-    </main>
+        <FaqSection faqs={faqs} />
+      </main>
+    </AltTextProvider>
   );
 }

@@ -70,28 +70,6 @@ export default function ProductCard({ product, priority = false }) {
           </svg>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes cardshimmer {
-          0%   { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        .card-img-shimmer {
-          background: #f3f4f6;
-        }
-        .card-img-shimmer::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.75) 50%,
-            transparent 100%
-          );
-          animation: cardshimmer 1.4s infinite;
-        }
-      `}</style>
     </div>
     </Link>
   );

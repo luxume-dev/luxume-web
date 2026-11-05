@@ -18,10 +18,12 @@ export {
   getCareersPageSeo,
   getProjectPageSeo,
   getContactPageSeo,
+  getProductPageSeo,
   getGuidelinePageSeo,
   getAssurancePageSeo,
   getBlogPostSeo,
   getCareerSeo,
+  getBrandSeo,
 } from './pageSeo.service';
 export { getHomeContent } from './homePage.service';
 export { getAboutContent } from './aboutPage.service';
@@ -29,6 +31,7 @@ export { getProjectPageContent } from './projectPage.service';
 export { getBlogPageContent } from './blogPage.service';
 export { getCareersPageContent } from './careersPage.service';
 export { getContactPageContent } from './contactPage.service';
+export { getProductPageContent } from './productPage.service';
 export { getGuidelinePageContent } from './guidelinePage.service';
 export { getAssurancePageContent } from './assurancePage.service';
 export { getCompanyPage } from './companyPage.service';

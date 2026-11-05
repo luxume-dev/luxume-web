@@ -37,25 +37,6 @@ function ProductCardSkeleton() {
           <div className="absolute inset-0 skeleton-shimmer" />
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes skshimmer {
-          0%   { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        .skeleton-shimmer::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.7) 50%,
-            transparent 100%
-          );
-          animation: skshimmer 1.4s infinite;
-        }
-      `}</style>
     </div>
   );
 }
