@@ -3,7 +3,7 @@ import { SITE_URL } from '@/lib/site';
 
 // Revalidate the sitemap hourly so newly published brands/blogs/jobs get picked
 // up without a redeploy.
-export const revalidate = 3600;
+export const revalidate = 10;
 
 const STATIC_ROUTES = [
   { path: '', changeFrequency: 'weekly', priority: 1.0 },

@@ -16,7 +16,7 @@ import { getMediaAlts } from "@/services/supabase";
 import AltTextProvider from "@/providers/AltTextProvider";
 
 // Supabase-backed content is regenerated hourly rather than pinned at build.
-export const revalidate = 3600;
+export const revalidate = 10;
 
 const lato = Lato({
   variable: "--font-lato",

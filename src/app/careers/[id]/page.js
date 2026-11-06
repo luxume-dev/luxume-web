@@ -11,7 +11,7 @@ import AltTextProvider from '@/providers/AltTextProvider';
 import JobDetailClient from '@/components/careers/JobDetailClient';
 import FaqSection from '@/components/FaqSection';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 async function getJob(id) {
   try {

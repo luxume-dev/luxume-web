@@ -9,7 +9,7 @@ import CareersHeroSection from '@/components/careers/CareersHeroSection';
 import JobOpeningsSection from '@/components/careers/JobOpeningsSection';
 import FaqSection from '@/components/FaqSection';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 // SEO is managed from the dashboard (careers_page -> page_seo); there are no hard-coded defaults.
 export async function generateMetadata() {

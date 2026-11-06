@@ -1,7 +1,7 @@
 import React from 'react';
 import CompanyPage, { companyPageMetadata } from '@/components/CompanyPage';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 const SLUG = 'privacy-policy';
 

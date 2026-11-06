@@ -8,7 +8,7 @@ import AltTextProvider from '@/providers/AltTextProvider';
 import ProjectsPageContent from '@/components/projects/ProjectsPageContent';
 import FaqSection from '@/components/FaqSection';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 const DEFAULT_METADATA = {
   title: 'Projects',

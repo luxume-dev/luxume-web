@@ -5,7 +5,7 @@ import { getGuidelinePageContent } from '@/services/supabase';
 import { getGuidelinePageSeoCached } from '@/lib/pageSeo.server';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 // Content and SEO are managed from the dashboard (guideline_page -> page_seo)
 export async function generateMetadata() {

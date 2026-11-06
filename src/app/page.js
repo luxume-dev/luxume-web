@@ -18,7 +18,7 @@ import AwardsSection from '@/components/AwardsSection';
 import FaqSection from '@/components/FaqSection';
 import DownloadsAndResources from '@/components/DownloadsAndResources';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 // SEO is managed from the dashboard (home_page -> page_seo); empty fields keep the layout defaults.
 export async function generateMetadata() {

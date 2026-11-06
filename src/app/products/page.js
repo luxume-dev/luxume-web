@@ -8,7 +8,7 @@ import { getProductPageContent } from '@/services/supabase';
 import { getProductPageSeoCached } from '@/lib/pageSeo.server';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 // SEO is managed from the dashboard (product_page -> page_seo)
 export async function generateMetadata() {

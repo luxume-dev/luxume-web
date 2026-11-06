@@ -9,7 +9,7 @@ import AboutCoreValuesSection from '@/components/about/AboutCoreValuesSection';
 import HowWeWorkSection from '@/components/about/HowWeWorkSection';
 import FaqSection from '@/components/FaqSection';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 const DEFAULT_METADATA = {
   title: 'About Us',

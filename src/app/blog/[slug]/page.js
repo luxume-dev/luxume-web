@@ -13,7 +13,7 @@ import AltTextProvider from '@/providers/AltTextProvider';
 import BlogDetailClient from '@/components/blog/BlogDetailClient';
 import FaqSection from '@/components/FaqSection';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 async function getPost(slug) {
   try {

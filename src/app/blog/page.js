@@ -9,7 +9,7 @@ import BlogHeroSection from '@/components/blog/BlogHeroSection';
 import BlogSection from '@/components/blog/BlogSection';
 import FaqSection from '@/components/FaqSection';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 const DEFAULT_METADATA = {
   title: 'Insights & Updates',

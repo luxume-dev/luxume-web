@@ -7,7 +7,7 @@ import { getAssurancePageSeoCached } from '@/lib/pageSeo.server';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, normaliseImageSrc, visibleFaqs } from '@/lib/pageSeo';
 import { parseRichHtml } from '@/lib/parseHtml';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 // Content and SEO are managed from the dashboard (assurance_page -> page_seo)
 export async function generateMetadata() {

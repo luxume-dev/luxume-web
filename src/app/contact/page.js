@@ -5,7 +5,7 @@ import { getContactPageContent } from '@/services/supabase';
 import { getContactPageSeoCached } from '@/lib/pageSeo.server';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 // SEO is managed from the dashboard (contact_page -> page_seo). The title and
 // description below are only used until they are filled in there.

@@ -4,7 +4,7 @@ import { slugify, summarise } from '@/lib/text';
 import { breadcrumbSchema } from '@/lib/schema';
 import ProfileDetailClient from '@/components/products/ProfileDetailClient';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 /**
  * /products/[brand slug]/[profile slug]

@@ -11,7 +11,7 @@ import { productSchema, breadcrumbSchema } from '@/lib/schema';
 import ProductDetailClient from '@/components/products/ProductDetailClient';
 import { getHomeContent, getProductPageContent } from '@/services/supabase';
 
-export const revalidate = 3600;
+export const revalidate = 10;
 
 /** The route param is named `id` but carries the brand slug. */
 async function getBrand(slug) {
