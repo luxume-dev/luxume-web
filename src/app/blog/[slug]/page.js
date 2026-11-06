@@ -4,6 +4,7 @@ import { getQueryClient, prefetch } from '@/lib/queryClient.server';
 import { blogQuery } from '@/lib/queries';
 import { postMissing } from '@/lib/exists.server';
 import { summarise } from '@/lib/text';
+import { firstParagraph, isHtmlContent } from '@/lib/blogContent';
 import { DEFAULT_OG_IMAGE } from '@/lib/site';
 import { blogPostingSchema, breadcrumbSchema } from '@/lib/schema';
 import { getBlogPostSeoCached } from '@/lib/pageSeo.server';
@@ -29,6 +30,8 @@ async function getPost(slug) {
  * would inherit the site-wide default — five identical descriptions.
  */
 function deriveDescription(content) {
+  // HTML from the rich-text editor: start from the first paragraph
+  if (isHtmlContent(content)) return summarise(firstParagraph(content)) || undefined;
   if (!Array.isArray(content)) return undefined;
 
   const text = content
@@ -86,7 +89,9 @@ export async function generateMetadata({ params }) {
       ...(ogDescription ? { description: ogDescription } : {}),
       type: 'article',
       url,
-      ...(post.created_at ? { publishedTime: post.created_at } : {}),
+      ...((post.published_on || post.created_at)
+        ? { publishedTime: post.published_on || post.created_at }
+        : {}),
       images: [ogImage],
     },
     twitter: {

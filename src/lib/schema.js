@@ -94,7 +94,9 @@ export function blogPostingSchema(post, slug) {
     '@type': 'BlogPosting',
     headline: post.meta_title || post.title,
     ...(post.image_url ? { image: post.image_url } : {}),
-    ...(post.created_at ? { datePublished: post.created_at } : {}),
+    ...((post.published_on || post.created_at)
+      ? { datePublished: post.published_on || post.created_at }
+      : {}),
     ...(post.updated_at ? { dateModified: post.updated_at } : {}),
     author: ORG_REF,
     publisher: ORG_REF,

@@ -36,14 +36,30 @@ export function parseHtml(input) {
  * - options.components replaces the element for a tag (e.g. styled list
  *   items): { li: (props, children) => node }. props holds key, className and
  *   the kept attributes; children are the already-rendered contents.
+ * - options.classes replaces the class of a tag (e.g. the blog's own text
+ *   styles): { p: 'text-gray-600 mb-4' }.
+ * - Tables (table / thead / tbody / tr / th / td) are rendered inside a
+ *   horizontally scrolling box; cells keep colspan / rowspan.
  *
  * @param {string} input
- * @param {{components?: Record<string, (props: object, children: import('react').ReactNode[]) => import('react').ReactNode>}} [options]
+ * @param {{
+ *   components?: Record<string, (props: object, children: import('react').ReactNode[]) => import('react').ReactNode>,
+ *   classes?: Record<string, string>,
+ * }} [options]
  * @returns {import('react').ReactNode}
  */
 export function parseRichHtml(input, options) {
-  const components = options?.components;
-  return renderHtml(input, components ? { ...RICH_CONFIG, components } : RICH_CONFIG);
+  const { components, classes } = options ?? {};
+  if (!components && !classes) return renderHtml(input, RICH_CONFIG);
+  return renderHtml(input, {
+    ...RICH_CONFIG,
+    components: { ...RICH_CONFIG.components, ...components },
+    props: (tag, rawAttrs) => {
+      const props = RICH_CONFIG.props(tag, rawAttrs);
+      if (props && classes?.[tag] !== undefined) props.className = classes[tag];
+      return props;
+    },
+  });
 }
 
 function renderHtml(input, config) {
@@ -56,7 +72,11 @@ function renderHtml(input, config) {
 
   const current = () => stack[stack.length - 1];
   const pushText = (text) => {
-    if (text) current().children.push(decodeEntities(text));
+    if (!text) return;
+    // Text directly inside table structure is invalid HTML (React warns on
+    // hydration); it is only ever whitespace between rows/cells
+    if (TABLE_STRUCTURE.has(current().tag)) return;
+    current().children.push(decodeEntities(text));
   };
 
   // Turn an open frame into a node and add it to its parent
@@ -159,18 +179,49 @@ const RICH_CLASSES = {
   hr: 'my-8 border-gray-200',
   strong: 'font-semibold text-[#0F172B]',
   s: 'line-through',
+  table: 'w-full min-w-[32rem] border-collapse text-sm sm:text-base',
+  thead: 'bg-gray-50',
+  tbody: '',
+  tr: 'border-b border-gray-200 last:border-b-0',
+  th: 'border border-gray-200 px-4 py-3 text-left align-top font-semibold text-[#0F172B]',
+  td: 'border border-gray-200 px-4 py-3 text-left align-top',
 };
 
 const RICH_TAGS = new Set([...Object.keys(RICH_CLASSES), 'br', 'b', 'em', 'i', 'u', 'sub', 'sup']);
 
-const ALIGNABLE = new Set(['p', 'h2', 'h3', 'h4', 'li']);
+const ALIGNABLE = new Set(['p', 'h2', 'h3', 'h4', 'li', 'th', 'td']);
+
+// Table elements that may only hold other elements
+const TABLE_STRUCTURE = new Set(['table', 'thead', 'tbody', 'tr']);
+
+// colspan / rowspan of a cell (1-50)
+const span = (value) => {
+  const n = parseInt(value ?? '', 10);
+  return n > 1 && n <= 50 ? n : undefined;
+};
 
 const RICH_CONFIG = {
   tags: RICH_TAGS,
+  // Wide tables scroll sideways on small screens instead of overflowing the page
+  components: {
+    table: (props, children) =>
+      createElement(
+        'div',
+        { key: props.key, className: 'mb-6 overflow-x-auto' },
+        createElement('table', { ...props, key: undefined }, ...children)
+      ),
+  },
   // Props for an element; false drops the tag (its text is kept)
   props(tag, rawAttrs) {
     const props = RICH_CLASSES[tag] ? { className: RICH_CLASSES[tag] } : {};
     const attrs = readAttributes(rawAttrs);
+
+    if (tag === 'th' || tag === 'td') {
+      const colSpan = span(attrs.colspan);
+      const rowSpan = span(attrs.rowspan);
+      if (colSpan) props.colSpan = colSpan;
+      if (rowSpan) props.rowSpan = rowSpan;
+    }
 
     if (tag === 'a') {
       const href = safeHref(attrs.href);

@@ -15,6 +15,8 @@ export async function getPublishedBlogs() {
       .from('blogs')
       .select('*, category:categories(*)')
       .eq('status', 'published')
+      // sort_date = published_on, else created_at (set by a DB trigger)
+      .order('sort_date', { ascending: false })
       .order('created_at', { ascending: false });
 
     if (error) throw error;

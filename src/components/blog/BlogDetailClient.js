@@ -3,9 +3,13 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useBlog } from '@/hooks/useBlogs';
+import { blogDate } from '@/lib/blogDate';
+import { BLOG_RICH_CLASSES, isHtmlContent } from '@/lib/blogContent';
+import { parseRichHtml } from '@/lib/parseHtml';
 
 
 /* ─── Recursive Content Block Renderer ─────────────────────────────── */
+/* For older posts saved as blocks; newer posts are HTML (parseRichHtml). */
 
 /**
  * Resolves the actual list items for a list block.
@@ -190,7 +194,7 @@ export default function BlogDetailClient() {
               {blog.title}
             </h1>
 
-            <time className="text-white/70 text-sm">{formatDate(blog.created_at)}</time>
+            <time className="text-white/70 text-sm">{formatDate(blogDate(blog))}</time>
           </div>
         </div>
       </section>
@@ -198,10 +202,12 @@ export default function BlogDetailClient() {
       {/* Content Section */}
       <section className="py-10 md:py-16 px-4 sm:px-8">
         <div className="max-w-4xl mx-auto">
-          {Array.isArray(blog.content) &&
-            blog.content.map((block) => (
-              <ContentBlockRenderer key={block.id} block={block} />
-            ))}
+          {isHtmlContent(blog.content)
+            ? parseRichHtml(blog.content, { classes: BLOG_RICH_CLASSES })
+            : Array.isArray(blog.content) &&
+              blog.content.map((block) => (
+                <ContentBlockRenderer key={block.id} block={block} />
+              ))}
         </div>
       </section>
 

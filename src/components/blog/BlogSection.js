@@ -5,6 +5,8 @@ import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useBlogs } from '@/hooks/useBlogs';
+import { blogDate } from '@/lib/blogDate';
+import { firstParagraph } from '@/lib/blogContent';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -111,12 +113,8 @@ export default function BlogSection() {
     ),
   ];
 
-  // Extract first paragraph text from content blocks
-  function getFirstParagraph(content) {
-    if (!Array.isArray(content)) return '';
-    const para = content.find((block) => block.type === 'paragraph');
-    return para?.content || '';
-  }
+  // First paragraph text of the content (HTML, or older blocks)
+  const getFirstParagraph = firstParagraph;
 
   // Format date
   function formatDate(dateStr) {
@@ -247,7 +245,7 @@ export default function BlogSection() {
                     </p>
                     <div className="flex items-center justify-between mt-auto">
                       <span className="text-gray-400 text-xs">
-                        {formatDate(post.created_at)}
+                        {formatDate(blogDate(post))}
                       </span>
                       <span
                         className="inline-flex items-center gap-1 text-sm font-medium transition-all hover:opacity-80 group-hover:gap-2"
