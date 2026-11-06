@@ -21,12 +21,6 @@ function downloadUrl(url) {
 
 const isExternal = (href) => /^(https?:)?\/\//i.test(href);
 
-// Static buttons used where the section is not managed from the dashboard (product pages)
-const DEFAULT_BUTTONS = [
-    { label: 'Brochure', media: '/documents/Luxume%20Brochure.pdf', link: '' },
-    { label: "Do's & Don'ts", media: '', link: '/dos-and-donts' },
-    { label: 'Guarantee - Terms & Conditions', media: '', link: '/guarantee' },
-];
 
 const buttonClass =
     'inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full text-white font-lato font-semibold transition-all duration-300 hover:opacity-90';
@@ -42,12 +36,17 @@ const DownloadIcon = () => (
  * With `fromDashboard`, all content comes from home_page (download_title,
  * download_description, button_label / button_media / button_link): there are
  * no static fallbacks, empty fields are hidden, and the section is skipped when
- * it has no title, description or button. Without it, the static defaults are
- * shown (used on product pages).
+ * it has no title, description or button. Without it (product pages), the
+ * title and description come from the brand (download_title /
+ * download_description, hidden when empty); the brand's brochure
+ * (`brochureUrl` + `brochureLabel`) comes first when both are set, then its
+ * link buttons (brands.download_buttons: [{ label, link }]).
  * A button downloads its file (media) when set, otherwise opens its link.
  */
 export default function DownloadsAndResources({
-    brandName = 'Luxume',
+    brochureUrl = '',
+    brochureLabel = '',
+    linkButtons,
     fromDashboard = false,
     title = '',
     description = '',
@@ -72,9 +71,15 @@ export default function DownloadsAndResources({
             // A button needs text to show and somewhere to go
             .filter((b) => b.label && (b.media || b.link));
     } else {
-        heading = 'Downloads & Resources';
-        text = `Access essential documents to help you make informed decisions and ensure the best performance of ${brandName} roofing products.`;
-        buttons = DEFAULT_BUTTONS;
+        const brochure = brochureUrl?.trim();
+        const brochureText = brochureLabel?.trim();
+        const links = (Array.isArray(linkButtons) ? linkButtons : [])
+            .map((b) => ({ label: String(b?.label ?? '').trim(), media: '', link: String(b?.link ?? '').trim() }))
+            .filter((b) => b.label && b.link);
+        buttons = [
+            ...(brochure && brochureText ? [{ label: brochureText, media: brochure, link: '' }] : []),
+            ...links,
+        ];
     }
 
     if (!heading && !text && buttons.length === 0) return null;

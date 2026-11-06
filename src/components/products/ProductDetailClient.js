@@ -10,7 +10,7 @@ import RequestQuoteModal from '@/components/RequestQuoteModal';
 import DownloadsAndResources from '@/components/DownloadsAndResources';
 import * as LucideIcons from 'lucide-react';
 
-export default function ProductDetailClient({ coatedSteel }) {
+export default function ProductDetailClient({ coatedSteel, defaultCta, defaultDownloads }) {
   const params = useParams();
   const slug = params.id;
 
@@ -81,29 +81,55 @@ export default function ProductDetailClient({ coatedSteel }) {
 
   // Map DB fields to local variables for the template
   const title = brand.title;
-  const s_ = (brand.slug || '').toLowerCase();
-  const description = s_.includes('silver')
-    ? 'Luxume Silverlux is a high-performance Aluminium-Zinc alloy coated roofing solution developed for exceptional durability, advanced corrosion resistance, and dependable long-term performance.'
-    : s_.includes('plus') || s_.includes('+')
-    ? 'Luxume+ is an advanced colour-coated steel roofing solution built with premium Aluminium-Zinc coated steel technology, offering enhanced resistance against corrosion, harsh weather conditions, and everyday wear.'
-    : 'Luxume Roofing presents premium colour-coated roofing sheets crafted to deliver dependable strength, long-term durability, and reliable protection across every climate condition.';
+  const description = brand.description?.trim();
   const coverImage = brand.cover_image_url;
   const features = Array.isArray(brand.features) ? brand.features : [];
   const specifications = Array.isArray(brand.specification) ? brand.specification : [];
   const profiles = brand.profiles || [];
+  const profileSectionTitle = brand.profile_title?.trim();
+  const profileSectionDescription = brand.profile_description?.trim();
+  const featureLabel = brand.feature_label?.trim();
+  const featureTitle = brand.feature_title?.trim();
+  const specLabel = brand.spec_label?.trim();
+  const specTitle = brand.spec_title?.trim();
+  // Contact banner: the brand's own, or the Products page default when the brand has none
+  const brandCta = {
+    title: brand.cta_title?.trim(),
+    description: brand.cta_description?.trim(),
+    image: brand.cta_image?.trim(),
+    buttonLabel: brand.cta_button_label?.trim(),
+    buttonLink: brand.cta_button_link?.trim(),
+  };
+  // Each empty field falls back to the Default Contact Banner (dashboard Products page)
+  const cta = Object.fromEntries(
+    Object.keys(brandCta).map((k) => [k, brandCta[k] || defaultCta?.[k] || '']),
+  );
+  const ctaTitle = cta.title;
+  const ctaDescription = cta.description;
+  const ctaImage = cta.image;
+  const ctaButtonLabel = cta.buttonLabel;
+  const ctaButtonLink = cta.buttonLink;
+  const profileButtonLabel = brand.profile_button_label?.trim();
 
-  const colors = [
-    { name: 'Brick Red', image: '/images/image 12.png', houseImage: '/images/roof-images/brick-red.webp' },
-    { name: 'Pepsi Blue', image: '/images/image 13.png', houseImage: '/images/roof-images/pepsi-blue.webp' },
-    { name: 'Pencil Grey', image: '/images/image 14.png', houseImage: '/images/roof-images/pencil-grey.webp' },
-    { name: 'Wine Red', image: '/images/image 15.png', houseImage: '/images/roof-images/wine-red.webp' },
-    { name: 'Coffee Brown', image: '/images/image 16.png', houseImage: '/images/roof-images/coffee-brown.webp' },
-    { name: 'Caulfield Green', image: '/images/image 17.png', houseImage: '/images/roof-images/caulfield-green.webp' },
-    { name: 'Leaf Green', image: '/images/image 18.png', houseImage: '/images/roof-images/leaf-green.webp' },
-    { name: 'Off White', image: '/images/image 19.png', houseImage: '/images/roof-images/off-white.webp' },
-    { name: 'Black', image: '/images/image 20.png', houseImage: '/images/roof-images/black.webp' },
-    { name: 'Turquoise Green', image: '/images/image 21.png', houseImage: '/images/roof-images/turquoise-green.webp' },
-  ];
+  // Downloads & Resources: each empty field falls back to the Products page default;
+  // a brand with no buttons of its own uses the default buttons
+  const brandButtons = (Array.isArray(brand.download_buttons) ? brand.download_buttons : []).filter((b) => b?.label && b?.link);
+  const downloads = {
+    title: brand.download_title?.trim() || defaultDownloads?.title || '',
+    description: brand.download_description?.trim() || defaultDownloads?.description || '',
+    brochureLabel: brand.brochure_label?.trim() || defaultDownloads?.brochureLabel || '',
+    brochureUrl: brand.brochure_url?.trim() || defaultDownloads?.brochureUrl || '',
+    buttons: brandButtons.length > 0 ? brandButtons : defaultDownloads?.buttons || [],
+  };
+  const specButtonLabel = brand.spec_button_label?.trim();
+
+  // "Wide Range of Colours" comes from the brand in the dashboard
+  const colors = (Array.isArray(brand.colors) ? brand.colors : [])
+    .filter((c) => c?.roofing_color && c.roofing_image && c.roofing_house_image)
+    .map((c) => ({ name: c.roofing_color, image: c.roofing_image, houseImage: c.roofing_house_image }));
+  const colorSectionTitle = brand.color_section_title?.trim();
+  const colorSectionDescription = brand.color_section_description?.trim();
+  const activeColorIndex = selectedColorIndex < colors.length ? selectedColorIndex : 0;
 
   return (
     <main className="bg-white pt-20">
@@ -155,28 +181,36 @@ export default function ProductDetailClient({ coatedSteel }) {
       {features.length > 0 && (
         <section className="py-16 px-4 md:px-8" style={{ backgroundColor: '#f8f7ff' }}>
           <div className="max-w-7xl mx-auto">
+            {(featureLabel || featureTitle) && (
             <div className="mb-12">
+              {featureLabel && (
               <span className="inline-block font-lato text-xs font-bold uppercase tracking-widest text-[#C83C64] mb-3 px-3 py-1 rounded-full bg-pink-50 border border-pink-100">
-                Key Features &amp; Benefits
+                {featureLabel}
               </span>
+              )}
+              {featureTitle && (
               <h2 className="font-aloevera text-3xl md:text-4xl font-bold mt-2" style={{ color: '#1a1b4b' }}>
-                Why choose {title}?
+                {featureTitle}
               </h2>
+              )}
             </div>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {features.map((feature, index) => {
-                const Icon = LucideIcons[feature.icon] || LucideIcons.CheckCircle;
+                const Icon = LucideIcons[feature.icon];
                 return (
                   <div
                     key={index}
                     className="bg-white p-7 rounded-2xl border border-gray-100 hover:border-pink-100 hover:shadow-lg transition-all duration-300 group"
                   >
+                    {Icon && (
                     <div
                       className="w-11 h-11 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300"
                       style={{ backgroundColor: '#FEF2F2', color: '#C83C64' }}
                     >
                       <Icon size={22} />
                     </div>
+                    )}
                     <h3 className="font-aloevera text-lg font-bold mb-2" style={{ color: '#1a1b4b' }}>
                       {feature.title}
                     </h3>
@@ -192,24 +226,30 @@ export default function ProductDetailClient({ coatedSteel }) {
       )}
 
       {/* 4. Wide Range of Colours Section */}
-      {brand.is_colors_available && (
+      {brand.is_colors_available && colors.length > 0 && (
       <section className="py-16 px-4 md:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
+          {(colorSectionTitle || colorSectionDescription) && (
           <div className="text-center mb-12">
+            {colorSectionTitle && (
             <h2 className="font-aloevera text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style={{ color: '#C83C64' }}>
-              Wide Range of Colours
+              {colorSectionTitle}
             </h2>
+            )}
+            {colorSectionDescription && (
             <p className="font-lato text-gray-500 max-w-2xl mx-auto text-base md:text-lg">
-              Choose from our extensive palette of premium finishes, designed to complement any architectural style.
+              {colorSectionDescription}
             </p>
+            )}
           </div>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             {/* House Image */}
             <div ref={houseImageRef} className="relative h-[340px] sm:h-[420px] md:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
               <Image
-                src={colors[selectedColorIndex].houseImage}
-                alt="Beautiful house with colored roofing"
+                src={colors[activeColorIndex].houseImage}
+                alt={`House with ${colors[activeColorIndex].name} roofing`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover transition-all duration-500"
@@ -218,7 +258,7 @@ export default function ProductDetailClient({ coatedSteel }) {
               <div className="absolute bottom-4 left-4 right-4">
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-sm text-white font-lato text-sm font-medium">
                   <span className="w-2 h-2 rounded-full bg-[#C83C64]" />
-                  {colors[selectedColorIndex].name}
+                  {colors[activeColorIndex].name}
                 </span>
               </div>
             </div>
@@ -238,7 +278,7 @@ export default function ProductDetailClient({ coatedSteel }) {
                   >
                     <div
                       className={`w-full aspect-square relative overflow-hidden rounded-xl transition-all duration-300 ${
-                        selectedColorIndex === index
+                        activeColorIndex === index
                           ? 'ring-2 ring-[#C83C64] ring-offset-2 scale-105 shadow-md'
                           : 'ring-1 ring-gray-200 group-hover:ring-[#C83C64]/50 group-hover:scale-105'
                       }`}
@@ -250,7 +290,7 @@ export default function ProductDetailClient({ coatedSteel }) {
                         sizes="80px"
                         className="object-contain"
                       />
-                      {selectedColorIndex === index && (
+                      {activeColorIndex === index && (
                         <div className="absolute inset-0 bg-[#C83C64]/10 flex items-center justify-center">
                           <LucideIcons.Check size={14} strokeWidth={3} className="text-[#C83C64]" />
                         </div>
@@ -258,7 +298,7 @@ export default function ProductDetailClient({ coatedSteel }) {
                     </div>
                     <p
                       className={`font-lato text-center text-[10px] sm:text-xs font-medium leading-tight transition-colors ${
-                        selectedColorIndex === index ? 'text-[#C83C64] font-bold' : 'text-gray-600'
+                        activeColorIndex === index ? 'text-[#C83C64] font-bold' : 'text-gray-600'
                       }`}
                     >
                       {color.name}
@@ -276,14 +316,20 @@ export default function ProductDetailClient({ coatedSteel }) {
       {profiles.length > 0 && (
         <section className="py-16 px-4 md:px-8" style={{ backgroundColor: '#f8f7ff' }}>
           <div className="max-w-7xl mx-auto">
+            {(profileSectionTitle || profileSectionDescription) && (
             <div className="text-center mb-12">
+              {profileSectionTitle && (
               <h2 className="font-aloevera text-3xl md:text-4xl lg:text-5xl font-bold mb-4" style={{ color: '#C83C64' }}>
-                Profile Types
+                {profileSectionTitle}
               </h2>
+              )}
+              {profileSectionDescription && (
               <p className="font-lato text-gray-500 max-w-2xl mx-auto text-base md:text-lg">
-                Explore the variety of profiles available for {title}, engineered for strength, aesthetic appeal, and performance.
+                {profileSectionDescription}
               </p>
+              )}
             </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               {profiles.map((profile, index) => (
@@ -327,13 +373,15 @@ export default function ProductDetailClient({ coatedSteel }) {
                     <p className="font-lato text-gray-500 text-sm leading-relaxed mb-6 flex-1">
                       {profile.description}
                     </p>
+                    {profileButtonLabel && (
                     <button
                       onClick={() => openQuote(profile.title)}
                       className="w-full py-3 rounded-xl text-white font-lato font-semibold text-sm transition-all duration-300 hover:opacity-90 hover:shadow-md mt-auto"
                       style={{ backgroundColor: '#0F172B' }}
                     >
-                      Request Quote
+                      {profileButtonLabel}
                     </button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -347,12 +395,17 @@ export default function ProductDetailClient({ coatedSteel }) {
         <section className="py-16 px-4 md:px-8 bg-white">
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
+              {specLabel && (
               <span className="inline-block font-lato text-xs font-bold uppercase tracking-widest text-[#C83C64] mb-3 px-3 py-1 rounded-full bg-pink-50 border border-pink-100">
-                Details
+                {specLabel}
               </span>
+              )}
+              {specTitle && (
               <h2 className="font-aloevera text-3xl md:text-4xl font-bold mt-2" style={{ color: '#1a1b4b' }}>
-                Technical Specifications
+                {specTitle}
               </h2>
+              )}
+              {specButtonLabel && (
               <button
                 onClick={async () => {
                   const { default: jsPDF } = await import('jspdf');
@@ -391,7 +444,7 @@ export default function ProductDetailClient({ coatedSteel }) {
 
 
                   // ── PRODUCT INFO BAND ────────────────────────────────
-                  const pdfDesc = description;
+                  const pdfDesc = description?.replace(/\s+/g, ' ');
                   const descFontSize = 8.5;
                   const descLineHeight = 4.8;
                   const textAreaW = W - M * 2 - 10;
@@ -422,7 +475,7 @@ export default function ProductDetailClient({ coatedSteel }) {
                   doc.setTextColor(26, 27, 75);
                   doc.text(title, M + 7, 59);
 
-                  // Static description
+                  // Brand description
                   if (descLines.length > 0) {
                     doc.setFontSize(descFontSize);
                     doc.setFont('helvetica', 'normal');
@@ -570,8 +623,9 @@ export default function ProductDetailClient({ coatedSteel }) {
                 style={{ backgroundColor: '#1a1b4b', color: '#ffffff' }}
               >
                 <LucideIcons.Download size={16} />
-                Download Technical Data Sheet
+                {specButtonLabel}
               </button>
+              )}
             </div>
 
             {/* Mobile: card stack */}
@@ -667,10 +721,11 @@ export default function ProductDetailClient({ coatedSteel }) {
       {/* 7. Contact CTA Section */}
       <section className="relative px-4 md:px-8 md:mt-6 lg:mt-16 xl:mt-32" style={{ backgroundColor: '#C83C64', overflow: 'visible' }}>
         {/* Image - absolutely positioned at the very bottom-left, ignoring padding */}
+        {ctaImage && (
         <div className="hidden lg:block absolute bottom-0 left-0" style={{ width: '50%', zIndex: 1 }}>
           <img
-            src={brand.is_colors_available ? "/images/contact-section-product.webp" : "/images/cta-non-color.webp"}
-            alt="Luxume roofing products showcase"
+            src={ctaImage}
+            alt={ctaTitle || `${title} roofing`}
             style={{
               maxHeight: '620px',
               width: 'auto',
@@ -681,6 +736,7 @@ export default function ProductDetailClient({ coatedSteel }) {
             }}
           />
         </div>
+        )}
 
         <div className="max-w-7xl mx-auto relative" style={{ zIndex: 2 }}>
           <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -689,21 +745,28 @@ export default function ProductDetailClient({ coatedSteel }) {
 
             {/* Right Side - Text & CTA */}
             <div className="flex flex-col justify-center px-6 md:px-10 py-10 md:py-14 lg:py-14 xl:py-28">
+              {ctaTitle && (
               <h2 className="font-aloevera text-2xl md:text-3xl lg:text-[2.25rem] font-medium text-white leading-tight mb-4" style={{ fontStyle: 'italic' }}>
-                Ready to enhance the aesthetic appeal of your buildings?
+                {ctaTitle}
               </h2>
-              <p className="font-lato text-white/80 text-sm md:text-base mb-8 max-w-md">
-                For inquiries, orders, or to learn more about our products and services
+              )}
+              {ctaDescription && (
+              <p className="font-lato text-white/80 text-sm md:text-base mb-8 max-w-md whitespace-pre-line">
+                {ctaDescription}
               </p>
+              )}
+              {ctaButtonLabel && ctaButtonLink && (
               <div>
                 <a
-                  href="/contact"
+                  href={ctaButtonLink}
+                  {...(/^(https?:)?\/\//i.test(ctaButtonLink) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   className="inline-block px-10 py-3.5 rounded-[16px] font-lato font-semibold text-sm md:text-base transition-all duration-300 hover:shadow-lg hover:scale-105"
                   style={{ backgroundColor: '#ffffff', color: '#C83C64' }}
                 >
-                  Contact Us
+                  {ctaButtonLabel}
                 </a>
               </div>
+              )}
             </div>
           </div>
         </div>
@@ -713,7 +776,13 @@ export default function ProductDetailClient({ coatedSteel }) {
       <CoatedSteelSection isColorsAvailable={brand.is_colors_available} {...coatedSteel} />
 
       {/* 9. Downloads & Resources Section */}
-      <DownloadsAndResources brandName={title} />
+      <DownloadsAndResources
+        title={downloads.title}
+        description={downloads.description}
+        brochureUrl={downloads.brochureUrl}
+        brochureLabel={downloads.brochureLabel}
+        linkButtons={downloads.buttons}
+      />
 
       {/* Request Quote Modal */}
       <RequestQuoteModal

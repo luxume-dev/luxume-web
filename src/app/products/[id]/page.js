@@ -9,7 +9,7 @@ import AltTextProvider from '@/providers/AltTextProvider';
 import FaqSection from '@/components/FaqSection';
 import { productSchema, breadcrumbSchema } from '@/lib/schema';
 import ProductDetailClient from '@/components/products/ProductDetailClient';
-import { getHomeContent } from '@/services/supabase';
+import { getHomeContent, getProductPageContent } from '@/services/supabase';
 
 export const revalidate = 3600;
 
@@ -43,11 +43,27 @@ export default async function ProductDetailPage({ params }) {
   if (await brandMissing(slug)) notFound();
 
   // The Coated Steel Layers section is edited once, on the dashboard's home page
-  const [queryClient, { data: homeContent }, seo] = await Promise.all([
+  // The default contact banner is edited on the dashboard's Products page
+  const [queryClient, { data: homeContent }, seo, { data: productPage }] = await Promise.all([
     prefetch(getQueryClient(), [productQuery(slug)]),
     getHomeContent(),
     getBrandSeoCached(slug),
+    getProductPageContent(),
   ]);
+  const defaultCta = {
+    title: productPage?.cta_title?.trim() || '',
+    description: productPage?.cta_description?.trim() || '',
+    image: productPage?.cta_image?.trim() || '',
+    buttonLabel: productPage?.cta_button_label?.trim() || '',
+    buttonLink: productPage?.cta_button_link?.trim() || '',
+  };
+  const defaultDownloads = {
+    title: productPage?.download_title?.trim() || '',
+    description: productPage?.download_description?.trim() || '',
+    brochureLabel: productPage?.brochure_label?.trim() || '',
+    brochureUrl: productPage?.brochure_url?.trim() || '',
+    buttons: Array.isArray(productPage?.download_buttons) ? productPage.download_buttons : [],
+  };
   const coatedSteel = {
     label: homeContent?.coated_steel_label?.trim(),
     title: homeContent?.coated_steel_title?.trim(),
@@ -89,7 +105,7 @@ export default async function ProductDetailPage({ params }) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
       )}
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <ProductDetailClient coatedSteel={coatedSteel} />
+        <ProductDetailClient coatedSteel={coatedSteel} defaultCta={defaultCta} defaultDownloads={defaultDownloads} />
       </HydrationBoundary>
       <FaqSection faqs={faqs} />
     </AltTextProvider>
