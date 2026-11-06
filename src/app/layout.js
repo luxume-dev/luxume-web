@@ -67,6 +67,10 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <meta
+          name="google-site-verification"
+          content="9E6_EDefXtqvMGK0C33NycdnvkMmKxjQTkaFXRyzM2Q"
+        />
         {/* Google Tag Manager. next/script rather than a raw <script>: React 19
             warns about (and never runs) script tags it renders on the client. */}
         <Script id="gtm-main" strategy="afterInteractive">
