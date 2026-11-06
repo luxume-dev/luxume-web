@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { submitContactForm } from '@/services/supabase';
 import { toast } from 'sonner';
 
@@ -28,6 +29,7 @@ const REQUIRED_FIELDS = ['full_name', 'email_address', 'subject', 'message'];
  * @returns {Object} Contact form state and handlers
  */
 export function useContactForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
   const [isLoading, setIsLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' });
@@ -93,13 +95,8 @@ export function useContactForm() {
 
     if (result.success) {
       setFormData(INITIAL_FORM_STATE);
-      toast.success(result.message || 'Message sent successfully!', {
-        style: {
-          background: '#1a1a2e',
-          color: '#ffffff',
-          border: '1px solid #C83C64',
-        },
-      });
+      router.push('/thank-you?type=contact');
+      return;
     } else {
       toast.error(result.message || 'Something went wrong. Please try again.', {
         style: {
@@ -111,7 +108,7 @@ export function useContactForm() {
     }
 
     setIsLoading(false);
-  }, [formData, validateForm]);
+  }, [formData, validateForm, router]);
 
   return {
     // State

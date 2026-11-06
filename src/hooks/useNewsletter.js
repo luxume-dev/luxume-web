@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { subscribeToNewsletter } from '@/services/supabase';
 
 /**
@@ -10,6 +11,7 @@ import { subscribeToNewsletter } from '@/services/supabase';
  * @returns {Object} Newsletter subscription state and handlers
  */
 export function useNewsletter() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
@@ -57,10 +59,11 @@ export function useNewsletter() {
 
     if (result.success && result.type === 'success') {
       setEmail('');
+      router.push('/thank-you?type=newsletter');
     }
 
     setIsLoading(false);
-  }, [email, validateEmail, resetStatus]);
+  }, [email, validateEmail, resetStatus, router]);
 
   return {
     // State

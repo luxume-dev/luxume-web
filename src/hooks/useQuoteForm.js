@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { submitQuoteRequest } from '@/services/supabase';
 
 const INITIAL_STATE = {
@@ -12,6 +13,7 @@ const INITIAL_STATE = {
 };
 
 export function useQuoteForm({ productName, profileType }) {
+  const router = useRouter();
   const [formData, setFormData] = useState(INITIAL_STATE);
   const [isLoading, setIsLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' });
@@ -41,10 +43,16 @@ export function useQuoteForm({ productName, profileType }) {
       product_name: productName,
       profile_type: profileType,
     });
+    if (result.success) {
+      setFormData(INITIAL_STATE);
+      // The modal locks body scroll; release it before leaving the page
+      document.body.style.overflow = '';
+      router.push('/thank-you?type=quote');
+      return;
+    }
     setSubmitStatus({ type: result.type, message: result.message });
-    if (result.success) setFormData(INITIAL_STATE);
     setIsLoading(false);
-  }, [formData, productName, profileType]);
+  }, [formData, productName, profileType, router]);
 
   return { formData, isLoading, submitStatus, handleChange, handleSubmit, resetForm };
 }
