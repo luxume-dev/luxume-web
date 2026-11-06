@@ -60,7 +60,7 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${showWhiteBg ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+    <nav data-site-nav className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${showWhiteBg ? 'bg-white shadow-md' : 'bg-transparent'}`}>
       <div className="w-full px-8 md:px-16 lg:px-24 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}

@@ -19,7 +19,7 @@ export default function Footer() {
   const productLinks = (products && products.length > 0) ? products : FALLBACK_PRODUCTS;
 
   return (
-    <footer className="relative z-30 bg-[#0B1120] text-gray-300 font-lato">
+    <footer data-site-footer className="relative z-30 bg-[#0B1120] text-gray-300 font-lato">
       
       {/* ─── PRE-FOOTER CTA BANNER ───────────────────────────────────────────── */}
       <div className="relative py-20 lg:py-24 border-b border-white/5">

@@ -16,3 +16,13 @@ export function summarise(text, limit = 155) {
   const lastSpace = clipped.lastIndexOf(' ');
   return `${clipped.slice(0, lastSpace > 0 ? lastSpace : limit).replace(/[,;:.\-–—]$/, '')}…`;
 }
+
+/** URL slug from a display title, e.g. "Trapezoidal Profile" -> "trapezoidal-profile". */
+export function slugify(text) {
+  return String(text ?? '')
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}

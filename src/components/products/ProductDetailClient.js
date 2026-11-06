@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import CoatedSteelSection from '@/components/CoatedSteelSection';
 import { useProduct } from '@/hooks/useProducts';
-import RequestQuoteModal from '@/components/RequestQuoteModal';
+import { slugify } from '@/lib/text';
 import DownloadsAndResources from '@/components/DownloadsAndResources';
 import * as LucideIcons from 'lucide-react';
 
@@ -19,11 +19,6 @@ export default function ProductDetailClient({ coatedSteel, defaultCta, defaultDo
   // State to track the selected color index
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [hoveredProfileIndex, setHoveredProfileIndex] = useState(null);
-
-  // Quote modal state
-  const [quoteModal, setQuoteModal] = useState({ isOpen: false, profileType: '' });
-  const openQuote = (profileTitle) => setQuoteModal({ isOpen: true, profileType: profileTitle });
-  const closeQuote = () => setQuoteModal({ isOpen: false, profileType: '' });
 
   // Ref for the house image — used for mobile scroll-to-image on color pick
   const houseImageRef = useRef(null);
@@ -374,13 +369,13 @@ export default function ProductDetailClient({ coatedSteel, defaultCta, defaultDo
                       {profile.description}
                     </p>
                     {profileButtonLabel && (
-                    <button
-                      onClick={() => openQuote(profile.title)}
-                      className="w-full py-3 rounded-xl text-white font-lato font-semibold text-sm transition-all duration-300 hover:opacity-90 hover:shadow-md mt-auto"
+                    <Link
+                      href={`/products/${slug}/${slugify(profile.title)}`}
+                      className="block text-center w-full py-3 rounded-xl text-white font-lato font-semibold text-sm transition-all duration-300 hover:opacity-90 hover:shadow-md mt-auto"
                       style={{ backgroundColor: '#0F172B' }}
                     >
                       {profileButtonLabel}
-                    </button>
+                    </Link>
                     )}
                   </div>
                 </div>
@@ -782,15 +777,6 @@ export default function ProductDetailClient({ coatedSteel, defaultCta, defaultDo
         brochureUrl={downloads.brochureUrl}
         brochureLabel={downloads.brochureLabel}
         linkButtons={downloads.buttons}
-      />
-
-      {/* Request Quote Modal */}
-      <RequestQuoteModal
-        isOpen={quoteModal.isOpen}
-        onClose={closeQuote}
-        productName={title}
-        profileType={quoteModal.profileType}
-      />
-    </main>
+      />    </main>
   );
 }
