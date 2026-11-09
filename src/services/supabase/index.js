@@ -36,3 +36,4 @@ export { getGuidelinePageContent } from './guidelinePage.service';
 export { getAssurancePageContent } from './assurancePage.service';
 export { getCompanyPage } from './companyPage.service';
 export { getMediaAlts } from './mediaAlt.service';
+export { getGeneralSettings } from './generalSettings.service';

@@ -10,7 +10,7 @@ import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/site";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
 import { getQueryClient, prefetch } from "@/lib/queryClient.server";
-import { productsQuery } from "@/lib/queries";
+import { careersQuery, generalSettingsQuery, productsQuery } from "@/lib/queries";
 import { buildMediaAltMap } from "@/lib/pageSeo";
 import { getMediaAlts } from "@/services/supabase";
 import AltTextProvider from "@/providers/AltTextProvider";
@@ -55,11 +55,11 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  // Navbar and Footer both render the product list, so prefetching here makes
-  // those links server-rendered on every page rather than appearing only after
-  // hydration.
+  // Navbar and Footer render the dashboard's header/footer settings and may
+  // list products or open jobs, so prefetching here makes them server-rendered
+  // on every page rather than appearing only after hydration.
   const [queryClient, { data: mediaAlts }] = await Promise.all([
-    prefetch(getQueryClient(), [productsQuery()]),
+    prefetch(getQueryClient(), [generalSettingsQuery(), productsQuery(), careersQuery()]),
     // Alt text set per file in the dashboard Media Library, used site-wide
     getMediaAlts(),
   ]);

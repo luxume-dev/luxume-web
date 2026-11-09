@@ -7,14 +7,11 @@ import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } fro
 
 export const revalidate = 10;
 
-// SEO is managed from the dashboard (contact_page -> page_seo). The title and
-// description below are only used until they are filled in there.
+// SEO is managed from the dashboard (contact_page -> page_seo) only; nothing is
+// filled in here when it is empty.
 export async function generateMetadata() {
   const seo = buildSeoMetadata(await getContactPageSeoCached(), { path: '/contact' });
   return {
-    title: 'Contact Us',
-    description:
-      'Get in touch with Luxume Roofing for product enquiries, dealer partnerships, and project quotes. Call, email, or send us a message.',
     ...seo,
     alternates: { canonical: '/contact' },
   };

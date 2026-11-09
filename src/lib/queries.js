@@ -18,6 +18,7 @@ import {
   getActiveProjectsPage,
   getHomeFeaturedProjects,
   getTestimonials,
+  getGeneralSettings,
 } from '@/services/supabase';
 
 /** Services return { data, error }; unwrap consistently. */
@@ -123,4 +124,10 @@ export const homeFeaturedProjectsQuery = () => ({
 export const testimonialsQuery = () => ({
   queryKey: queryKeys.testimonials.all,
   queryFn: () => unwrap(getTestimonials()),
+});
+
+/** Site-wide header / footer row (null until saved in the dashboard) */
+export const generalSettingsQuery = () => ({
+  queryKey: queryKeys.generalSettings,
+  queryFn: () => unwrap(getGeneralSettings()),
 });

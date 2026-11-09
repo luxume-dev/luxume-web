@@ -27,4 +27,5 @@ export const queryKeys = {
   testimonials: {
     all: ['testimonials'],
   },
+  generalSettings: ['general-settings'],
 };

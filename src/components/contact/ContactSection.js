@@ -54,12 +54,12 @@ const INFO_ICONS = {
 // The contact form fields; they map to the contact_us columns. The dashboard
 // only edits their wording (contact_page.form_fields.fields).
 const FORM_FIELDS = {
-  full_name: { label: 'Full Name', type: 'text', required: true },
-  email_address: { label: 'Email Address', type: 'email', required: true },
-  phone_number: { label: 'Phone Number', type: 'tel', required: false },
-  company_name: { label: 'Company Name', type: 'text', required: false },
-  subject: { label: 'Subject', type: 'text', required: true },
-  message: { label: 'Message', type: 'textarea', required: true },
+  full_name: { type: 'text', required: true },
+  email_address: { type: 'email', required: true },
+  phone_number: { type: 'tel', required: false },
+  company_name: { type: 'text', required: false },
+  subject: { type: 'text', required: true },
+  message: { type: 'textarea', required: true },
 };
 
 const isRecord = (v) => typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -136,13 +136,13 @@ export default function ContactSection({ title, description, info, formFields })
   const formText = isRecord(formFields) ? formFields : {};
   const fieldText = isRecord(formText.fields) ? formText.fields : {};
   const formHeading = text(formText.heading);
-  const submitLabel = text(formText.submit_label) || 'Send Message';
+  // Only the saved wording is used: empty text is simply not shown
+  const submitLabel = text(formText.submit_label);
   const formNote = text(formText.note);
-  // Saved wording for a field; an empty label falls back to the field's name
   const field = (name) => {
     const saved = isRecord(fieldText[name]) ? fieldText[name] : {};
     return {
-      label: text(saved.label) || FORM_FIELDS[name].label,
+      label: text(saved.label),
       placeholder: text(saved.placeholder),
     };
   };
@@ -349,13 +349,16 @@ export default function ContactSection({ title, description, info, formFields })
     const id = `contact-${name}`;
     return (
       <div>
-        <label htmlFor={id} className="block text-sm text-gray-700 mb-2">
-          {label}
-          {required && ' *'}
-        </label>
+        {label && (
+          <label htmlFor={id} className="block text-sm text-gray-700 mb-2">
+            {label}
+            {required && ' *'}
+          </label>
+        )}
         {type === 'textarea' ? (
           <textarea
             id={id}
+            aria-label={label ? undefined : name.replace(/_/g, ' ')}
             rows={5}
             name={name}
             value={formData[name]}
@@ -366,6 +369,7 @@ export default function ContactSection({ title, description, info, formFields })
         ) : (
           <input
             id={id}
+            aria-label={label ? undefined : name.replace(/_/g, ' ')}
             type={type}
             name={name}
             value={formData[name]}
