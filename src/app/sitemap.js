@@ -1,5 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { SITE_URL } from '@/lib/site';
+// TEMP (review): location module is noindex (src/app/locations/layout.js), so it is left out of the sitemap.
+// import { locations, getAllCombos, getLocationCatalogue } from '@/data/locations';
 
 // Revalidate the sitemap hourly so newly published brands/blogs/jobs get picked
 // up without a redeploy.
@@ -9,6 +11,7 @@ const STATIC_ROUTES = [
   { path: '', changeFrequency: 'weekly', priority: 1.0 },
   { path: '/about', changeFrequency: 'monthly', priority: 0.8 },
   { path: '/products', changeFrequency: 'weekly', priority: 0.9 },
+  // { path: '/locations', changeFrequency: 'monthly', priority: 0.7 }, // TEMP (review): noindex
   { path: '/projects', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/blog', changeFrequency: 'weekly', priority: 0.7 },
   { path: '/guarantee', changeFrequency: 'yearly', priority: 0.7 },
@@ -71,6 +74,13 @@ export default async function sitemap() {
     changeFrequency,
     priority,
   }));
+
+  // TEMP (review): location pages are noindex; restore this block and add ...locationEntries back below.
+  // Locations are sample data in src/data/locations.js; their products come from brands
+  // const locationEntries = [
+  //   ...locations.map((l) => `/locations/${l.slug}`),
+  //   ...getAllCombos(await getLocationCatalogue()).map((c) => `/locations/${c.location}/${c.product}`),
+  // ].map((path) => ({ url: `${SITE_URL}${path}`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 }));
 
   return [...staticEntries, ...(await getDynamicEntries())];
 }
