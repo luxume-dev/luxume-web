@@ -10,7 +10,7 @@ import { Search, LayoutGrid, Layers, ArrowRight, X } from 'lucide-react';
  * `products` (brands from the dashboard) is already narrowed to this location
  * (see getProductsForLocation). The chips filter by brand.
  */
-export default function LocationProductFilter({ products, locationSlug, locationName }) {
+export default function LocationProductFilter({ products, locationName }) {
   const [query, setQuery] = useState('');
   const [brand, setBrand] = useState('all');
   const [view, setView] = useState('products');
@@ -130,7 +130,7 @@ export default function LocationProductFilter({ products, locationSlug, location
             {filteredProducts.map((p) => (
               <Link
                 key={p.slug}
-                href={`/locations/${locationSlug}/${p.slug}`}
+                href={`/products/${p.slug}`}
                 className="group bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
               >
                 <div className="relative h-64 bg-gray-100 overflow-hidden">
@@ -159,7 +159,7 @@ export default function LocationProductFilter({ products, locationSlug, location
                     ))}
                   </div>
                   <div className="mt-auto w-full bg-[#C83C64] group-hover:bg-[#a62f50] text-white py-3.5 rounded-xl font-medium transition-all flex items-center justify-center gap-2 group-hover:gap-3">
-                    View in {locationName}
+                    View Product
                     <ArrowRight size={16} />
                   </div>
                 </div>
@@ -171,7 +171,7 @@ export default function LocationProductFilter({ products, locationSlug, location
             {filteredProfiles.map((pr) => (
               <Link
                 key={`${pr.product.slug}-${pr.slug}`}
-                href={`/locations/${locationSlug}/${pr.product.slug}#${pr.slug}`}
+                href={`/products/${pr.product.slug}/${pr.slug}`}
                 className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-pink-100 hover:shadow-lg transition-all duration-300 flex flex-col"
               >
                 <div className="relative h-44 bg-gray-100 overflow-hidden">
@@ -194,7 +194,7 @@ export default function LocationProductFilter({ products, locationSlug, location
                     <p className="font-lato text-gray-500 text-sm leading-relaxed mb-4 line-clamp-2">{pr.description}</p>
                   )}
                   <span className="mt-auto flex items-center gap-1.5 font-lato text-sm font-semibold text-[#C83C64]">
-                    View in {locationName} <ArrowRight size={14} />
+                    View Profile <ArrowRight size={14} />
                   </span>
                 </div>
               </Link>

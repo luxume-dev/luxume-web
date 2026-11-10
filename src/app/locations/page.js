@@ -65,7 +65,7 @@ export default async function LocationsPage() {
               return (
                 <Link
                   key={l.slug}
-                  href={`/locations/${l.slug}`}
+                  href={`/${l.slug}`}
                   className="group bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
                 >
                   <div className="relative h-52 bg-gray-100 overflow-hidden">

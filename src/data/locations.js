@@ -218,22 +218,6 @@ export const locations = [
   },
 ];
 
-/**
- * Optional hand-written copy for a specific location + product page, keyed
- * `${location}/${brand slug}`. Anything not set falls back to the template in
- * getComboContent().
- */
-const comboOverrides = {
-  'ernakulam/luxume-plus': {
-    intro:
-      'Luxume+ is manufactured and dispatched from Ernakulam, so customers across Kochi, Aluva and Perumbavoor get the shortest lead times and direct factory support. It is the most popular choice for new homes and re-roofing projects in the district.',
-  },
-  'kottayam/luxume-silverlux': {
-    intro:
-      'Rubber processing units, estates and farm buildings across Kottayam rely on Luxume Silverlux: an aluminium-zinc coated sheet that resists rust through the district’s long, heavy monsoon.',
-  },
-};
-
 /* ─── Lookups (pass in the catalogue from getLocationCatalogue) ─── */
 
 export function getLocation(slug) {
@@ -253,81 +237,4 @@ export function getProductsForLocation(catalogue, location) {
       };
     })
     .filter(Boolean);
-}
-
-/** Locations where a product is sold. */
-export function getLocationsForProduct(productSlug) {
-  return locations.filter((l) => productSlug in l.availability);
-}
-
-/** Every valid location + product pair, for static params and the sitemap. */
-export function getAllCombos(catalogue) {
-  return locations.flatMap((l) =>
-    getProductsForLocation(catalogue, l).map((p) => ({ location: l.slug, product: p.slug })),
-  );
-}
-
-/* ─── Combination page copy ─── */
-
-/** Copy for /locations/[location]/[product]: hand-written override, else template. */
-export function getComboContent(location, product) {
-  const override = comboOverrides[`${location.slug}/${product.slug}`] ?? {};
-  const name = location.name;
-  const title = product.title;
-  const profileNames = product.profiles.map((p) => p.title);
-
-  return {
-    heading: override.heading ?? `${title} Roofing Sheets in ${name}`,
-    intro:
-      override.intro ??
-      `Looking for ${title} roofing sheets in ${name}? Luxume supplies ${title} across ${name} district through ${location.stats.dealers} authorised dealers, with delivery in about ${location.stats.delivery} to most sites.`,
-    why: override.why ?? [
-      {
-        title: `Made for ${location.region} weather`,
-        text: location.climateNote,
-      },
-      {
-        title: 'Local dealers, local stock',
-        text: `Our ${name} dealers keep popular colours and profiles in stock, so most orders are cut to length and dispatched within ${location.stats.delivery}.`,
-      },
-      {
-        title: 'Expert advice on site',
-        text: `Not sure which profile suits your building? The Luxume team in ${name} can visit, measure and recommend the right specification.`,
-      },
-      {
-        title: 'Backed by the Luxume guarantee',
-        text: `Every ${title} sheet sold in ${name} carries the same guarantee as sheets bought directly from our Ernakulam head office.`,
-      },
-    ],
-    faqs: override.faqs ?? [
-      {
-        id: 'price',
-        questions: `What is the price of ${title} in ${name}?`,
-        answers: `Prices depend on profile, colour, length and quantity. Request a quote and our ${name} team will send you an exact price for your roof, usually within one working day.`,
-      },
-      {
-        id: 'delivery',
-        questions: `How quickly can ${title} be delivered in ${name}?`,
-        answers: `Most orders in ${name} are cut to length and delivered in about ${location.stats.delivery}. Large or custom orders may take a little longer.`,
-      },
-      {
-        id: 'areas',
-        questions: `Which areas in ${name} do you deliver to?`,
-        answers: `We deliver across ${name} district, including ${location.serviceAreas.slice(0, 5).join(', ')} and surrounding areas.`,
-      },
-      ...(profileNames.length
-        ? [
-            {
-              id: 'profiles',
-              questions: `Which ${title} profiles are available in ${name}?`,
-              answers: `In ${name} you can order ${title} as ${
-                profileNames.length > 1
-                  ? `${profileNames.slice(0, -1).join(', ')} and ${profileNames.at(-1)}`
-                  : profileNames[0]
-              }.`,
-            },
-          ]
-        : []),
-    ],
-  };
 }

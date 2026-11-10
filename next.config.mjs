@@ -4,6 +4,8 @@
 // hosts need those hosts added here too.
 // 'unsafe-inline'/'unsafe-eval' on script-src are required by Next's inlined
 // bootstrap; tightening those needs a nonce-based setup via middleware.
+const isProd = process.env.NODE_ENV === 'production';
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com https://www.googletagmanager.com",
@@ -17,7 +19,10 @@ const contentSecurityPolicy = [
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",
-  'upgrade-insecure-requests',
+  // Only force HTTPS in production: in dev the site is served over plain HTTP
+  // (e.g. http://192.168.1.60:3000 on the LAN), and upgrading /_next assets to
+  // https:// makes every CSS/JS request fail.
+  ...(isProd ? ['upgrade-insecure-requests'] : []),
 ].join('; ');
 
 const securityHeaders = [
@@ -26,15 +31,20 @@ const securityHeaders = [
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-  {
-    key: 'Strict-Transport-Security',
-    value: 'max-age=63072000; includeSubDomains; preload',
-  },
+  ...(isProd
+    ? [
+        {
+          key: 'Strict-Transport-Security',
+          value: 'max-age=63072000; includeSubDomains; preload',
+        },
+      ]
+    : []),
 ];
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  // Allow loading dev assets / HMR when the dev server is opened via LAN IP.
+  allowedDevOrigins: ['192.168.1.60', '192.168.1.*'],
   reactCompiler: true,
   images: {
     dangerouslyAllowLocalIP: true,

@@ -1,6 +1,5 @@
 // TEMP (review): keep the whole location module out of search engines while it
-// is being reviewed. Applies to /locations, /locations/[location] and
-// /locations/[location]/[product]. Delete this file to make them indexable again,
+// is being reviewed. Applies to /locations (the city pages /[location] have their own layout). Delete this file to make it indexable again,
 // and restore the location entries in src/app/sitemap.js.
 export const metadata = {
   robots: {

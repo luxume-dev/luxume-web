@@ -2,17 +2,16 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { MapPin, Phone, Truck, Store, Building2, CloudRain } from 'lucide-react';
 import LocationHero from '@/components/locations/LocationHero';
-import LocationProductFilter from '@/components/locations/LocationProductFilter';
+import { ProductCategoryCard } from '@/components/productCategories/ProductCategoryDetail';
 import LocationQuoteButton from '@/components/locations/LocationQuoteButton';
 import { breadcrumbSchema } from '@/lib/schema';
 import { jsonLd } from '@/lib/pageSeo';
 import { summarise } from '@/lib/text';
-import { locations, getLocation, getLocationCatalogue, getProductsForLocation } from '@/data/locations';
+import { locations, getLocation } from '@/data/locations';
+import { productCategories } from '@/data/productCategories';
 
 // Only the locations in src/data/locations.js exist; anything else is a 404.
 export const dynamicParams = false;
-// Products come live from the dashboard (brands / profiles)
-export const revalidate = 10;
 
 export function generateStaticParams() {
   return locations.map((l) => ({ location: l.slug }));
@@ -26,7 +25,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `Roofing Sheets in ${location.name} | Luxume`,
     description: summarise(location.intro),
-    alternates: { canonical: `/locations/${slug}` },
+    alternates: { canonical: `/${slug}` },
   };
 }
 
@@ -35,12 +34,11 @@ export default async function LocationPage({ params }) {
   const location = getLocation(slug);
   if (!location) notFound();
 
-  const products = getProductsForLocation(await getLocationCatalogue(), location);
   const others = locations.filter((l) => l.slug !== slug);
   const breadcrumbs = breadcrumbSchema([
     { name: 'Home', path: '' },
     { name: 'Locations', path: '/locations' },
-    { name: location.name, path: `/locations/${slug}` },
+    { name: location.name, path: `/${slug}` },
   ]);
 
   return (
@@ -63,10 +61,10 @@ export default async function LocationPage({ params }) {
         <div className="flex flex-wrap gap-4">
           <LocationQuoteButton productName={`Enquiry – ${location.name}`} label="Get a Quote" />
           <a
-            href="#products"
+            href="#categories"
             className="px-8 py-3 rounded-[16px] font-lato font-semibold border-2 border-white text-white hover:bg-white hover:text-[#1a1b4b] transition-all duration-300"
           >
-            Browse Products
+            Browse Categories
           </a>
         </div>
       </LocationHero>
@@ -89,7 +87,27 @@ export default async function LocationPage({ params }) {
         </div>
       </section>
 
-      <LocationProductFilter products={products} locationSlug={slug} locationName={location.name} />
+      {/* Product categories in this location */}
+      <section id="categories" className="py-16 md:py-20 px-4 md:px-8 scroll-mt-24">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="inline-block font-lato text-xs font-bold uppercase tracking-widest text-[#C83C64] mb-3 px-3 py-1 rounded-full bg-pink-50 border border-pink-100">
+              Product Categories
+            </span>
+            <h2 className="aloevera-bold text-4xl md:text-[48px] leading-tight mb-4" style={{ color: 'var(--secondary)' }}>
+              Roofing sheets in {location.name}
+            </h2>
+            <p className="lato-regular text-[16px] max-w-2xl mx-auto leading-[28px]" style={{ color: 'var(--text-description)' }}>
+              Explore every Luxume product category available in {location.name}, with features, specifications and local dealers.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {productCategories.map((c) => (
+              <ProductCategoryCard key={c.slug} category={c} href={`/${slug}/${c.slug}`} />
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Climate + service areas */}
       <section className="py-16 px-4 md:px-8 bg-stone-100">
@@ -160,7 +178,7 @@ export default async function LocationPage({ params }) {
             {others.map((l) => (
               <Link
                 key={l.slug}
-                href={`/locations/${l.slug}`}
+                href={`/${l.slug}`}
                 className="px-5 py-2.5 rounded-full bg-white border border-gray-200 font-lato font-semibold text-sm text-[#1a1b4b] hover:border-[#C83C64] hover:text-[#C83C64] transition-colors"
               >
                 {l.name}

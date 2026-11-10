@@ -6,7 +6,7 @@ import { MapPin, Package, ArrowRight } from 'lucide-react';
 
 /**
  * Pick a location (and optionally a product sold there) and jump to
- * /locations/[location] or /locations/[location]/[product].
+ * /[location] (e.g. /ernakulam), or straight to /products/[product] when one is chosen.
  *
  * `locations` is [{ slug, name, products: [{ slug, title }] }].
  */
@@ -23,7 +23,7 @@ export default function LocationFinder({ locations, defaultLocation = '' }) {
   const go = (e) => {
     e.preventDefault();
     if (!location) return;
-    router.push(product ? `/locations/${location}/${product}` : `/locations/${location}`);
+    router.push(product ? `/products/${product}` : `/${location}`);
   };
 
   const selectClass =
