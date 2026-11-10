@@ -59,7 +59,7 @@ export function useNewsletter() {
 
     if (result.success && result.type === 'success') {
       setEmail('');
-      router.push('/thank-you?type=newsletter');
+      router.push('/thank-you');
     }
 
     setIsLoading(false);

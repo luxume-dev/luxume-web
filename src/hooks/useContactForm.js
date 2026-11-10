@@ -95,7 +95,7 @@ export function useContactForm() {
 
     if (result.success) {
       setFormData(INITIAL_FORM_STATE);
-      router.push('/thank-you?type=contact');
+      router.push('/thank-you');
       return;
     } else {
       toast.error(result.message || 'Something went wrong. Please try again.', {

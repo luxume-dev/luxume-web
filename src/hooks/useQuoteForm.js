@@ -47,7 +47,7 @@ export function useQuoteForm({ productName, profileType }) {
       setFormData(INITIAL_STATE);
       // The modal locks body scroll; release it before leaving the page
       document.body.style.overflow = '';
-      router.push('/thank-you?type=quote');
+      router.push('/thank-you');
       return;
     }
     setSubmitStatus({ type: result.type, message: result.message });
