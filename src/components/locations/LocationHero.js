@@ -43,9 +43,11 @@ export default function LocationHero({ image, eyebrow, heading, description, cru
             {eyebrow}
           </span>
         )}
-        <h1 className="aloevera-bold text-white leading-tight drop-shadow-lg max-w-4xl text-4xl md:text-5xl lg:text-[64px]">
-          {heading}
-        </h1>
+        {heading && (
+          <h1 className="aloevera-bold text-white leading-tight drop-shadow-lg max-w-4xl text-4xl md:text-5xl lg:text-[64px]">
+            {heading}
+          </h1>
+        )}
         {description && (
           <p className="font-lato text-white/85 text-lg leading-relaxed max-w-2xl mt-6">{description}</p>
         )}

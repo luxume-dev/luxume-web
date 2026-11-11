@@ -2,24 +2,56 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Store, ArrowRight } from 'lucide-react';
 import LocationHero from '@/components/locations/LocationHero';
+import FaqSection from '@/components/FaqSection';
+import AltTextProvider from '@/providers/AltTextProvider';
+import { getLocationPageContent } from '@/services/supabase';
+import { getLocationPageSeoCached } from '@/lib/pageSeo.server';
 // Banner filter hidden for now; uncomment this, finderLocations and <LocationFinder> below to bring it back.
 // import LocationFinder from '@/components/locations/LocationFinder';
 import { breadcrumbSchema } from '@/lib/schema';
-import { jsonLd } from '@/lib/pageSeo';
+import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
 import { locations, getLocationCatalogue, getProductsForLocation } from '@/data/locations';
 
 // Products come live from the dashboard (brands / profiles)
 export const revalidate = 10;
 
-export const metadata = {
+// Content and SEO are managed from the dashboard (location_page -> page_seo).
+// Default title / description, used only when the SEO tab leaves them empty.
+const DEFAULT_METADATA = {
   title: 'Roofing Sheets Near You | Luxume Locations',
   description:
     'Find Luxume, Luxume+ and Silverlux roofing sheets in Ernakulam, Kottayam, Kollam and across Kerala. See products, profiles and dealers in your location.',
-  alternates: { canonical: '/locations' },
 };
 
+export async function generateMetadata() {
+  const seo = buildSeoMetadata(await getLocationPageSeoCached(), { path: '/locations' });
+  return {
+    ...DEFAULT_METADATA,
+    ...seo,
+    alternates: { canonical: '/locations' },
+  };
+}
+
+const text = (value) => (typeof value === 'string' ? value.trim() : '');
+
 export default async function LocationsPage() {
-  const catalogue = await getLocationCatalogue();
+  // None of these throw: a failure renders the page without the dashboard content / SEO extras
+  const [catalogue, { data }, seo] = await Promise.all([
+    getLocationCatalogue(),
+    getLocationPageContent(),
+    getLocationPageSeoCached(),
+  ]);
+  // Empty fields hide their part of the page
+  const page = {
+    banner_img: text(data?.banner_img),
+    label: text(data?.label),
+    title: text(data?.title),
+    description: text(data?.description),
+    supply_title: text(data?.supply_title),
+    supply_description: text(data?.supply_description),
+  };
+  const faqs = visibleFaqs(seo);
+  const faqSchema = faqPageSchema(faqs);
   // const finderLocations = locations.map((l) => ({
   //   slug: l.slug,
   //   name: l.name,
@@ -32,16 +64,23 @@ export default async function LocationsPage() {
   ]);
 
   return (
+    <AltTextProvider alts={buildAltMap(seo)}>
     <main className="min-h-screen bg-white">
       {breadcrumbs && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbs) }} />
       )}
+      {seo?.schema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(seo.schema) }} />
+      )}
+      {faqSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
+      )}
 
       <LocationHero
-        image="/images/luxume-hero.webp"
-        eyebrow="Locations"
-        heading="Luxume roofing, near you"
-        description="Choose your location to see which Luxume products and profiles are available, find local dealers and get a quote."
+        image={page.banner_img}
+        eyebrow={page.label}
+        heading={page.title}
+        description={page.description}
         crumbs={[{ label: 'Home', href: '/' }, { label: 'Locations' }]}
       >
         {/* <LocationFinder locations={finderLocations} /> */}
@@ -49,14 +88,20 @@ export default async function LocationsPage() {
 
       <section className="py-16 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="aloevera-bold text-4xl md:text-[48px] leading-tight mb-4" style={{ color: 'var(--secondary)' }}>
-              Where we supply
-            </h2>
-            <p className="lato-regular text-[16px] max-w-2xl mx-auto leading-[28px]" style={{ color: 'var(--text-description)' }}>
-              Luxume sheets reach every corner of Kerala through our authorised dealer network. Pick a district to see what is in stock there.
-            </p>
-          </div>
+          {(page.supply_title || page.supply_description) && (
+            <div className="text-center mb-12">
+              {page.supply_title && (
+                <h2 className="aloevera-bold text-4xl md:text-[48px] leading-tight mb-4" style={{ color: 'var(--secondary)' }}>
+                  {page.supply_title}
+                </h2>
+              )}
+              {page.supply_description && (
+                <p className="lato-regular text-[16px] max-w-2xl mx-auto leading-[28px] whitespace-pre-line" style={{ color: 'var(--text-description)' }}>
+                  {page.supply_description}
+                </p>
+              )}
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {locations.map((l) => {
@@ -116,6 +161,9 @@ export default async function LocationsPage() {
           </div>
         </div>
       </section>
+
+      <FaqSection faqs={faqs} />
     </main>
+    </AltTextProvider>
   );
 }

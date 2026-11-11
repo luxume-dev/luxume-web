@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
  *   home_page.id, about_page.id, blog_page.id, careers_page.id -> page_seo.id
  *   project_page.page_seo_id                   -> page_seo.id
  *   guideline_page.id, assurance_page.id       -> page_seo.id
+ *   location_page.id                           -> page_seo.id
  *   contact_page.page_seo_id                   -> page_seo.id
  *   product_page.id                            -> page_seo.id
  *   blogs.blog_id                              -> page_seo.id (one per post)
@@ -165,4 +166,9 @@ export function getGuidelinePageSeo() {
 /** Fetch the Guarantee page SEO (assurance_page.id -> page_seo). */
 export function getAssurancePageSeo() {
     return getPageSeo('assurance_page', 'page_seo!assurance_page_id_fkey');
+}
+
+/** Fetch the Locations page SEO (location_page.id -> page_seo). */
+export function getLocationPageSeo() {
+    return getPageSeo('location_page', 'page_seo!location_page_id_fkey');
 }

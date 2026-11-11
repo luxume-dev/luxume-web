@@ -21,6 +21,7 @@ export {
   getProductPageSeo,
   getGuidelinePageSeo,
   getAssurancePageSeo,
+  getLocationPageSeo,
   getBlogPostSeo,
   getCareerSeo,
   getBrandSeo,
@@ -34,6 +35,7 @@ export { getContactPageContent } from './contactPage.service';
 export { getProductPageContent } from './productPage.service';
 export { getGuidelinePageContent } from './guidelinePage.service';
 export { getAssurancePageContent } from './assurancePage.service';
+export { getLocationPageContent } from './locationPage.service';
 export { getCompanyPage } from './companyPage.service';
 export { getMediaAlts } from './mediaAlt.service';
 export { getGeneralSettings } from './generalSettings.service';
