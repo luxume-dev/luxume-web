@@ -14,6 +14,7 @@ import { supabase } from '@/lib/supabase';
  *   careers.page_seo_id                        -> page_seo.id (one per job opening)
  *   company_page.page_seo_id                   -> page_seo.id (one per company page)
  *   brands.product_id                          -> page_seo.id (one per brand / product page)
+ *   locations.page_seo_id                      -> page_seo.id (one per location page)
  */
 
 export const PAGE_SEO_SELECT =
@@ -154,6 +155,26 @@ export async function getBrandSeo(slug) {
         return { data: seo ? sortPageSeo(seo) : null, error: null };
     } catch (error) {
         console.error('[Page SEO Service] Error fetching brand SEO:', error);
+        return { data: null, error: error.message };
+    }
+}
+
+/** Fetch the SEO of one location page (locations.page_seo_id -> page_seo), by slug. */
+export async function getLocationSeo(slug) {
+    try {
+        const { data, error } = await supabase
+            .from('locations')
+            .select(`page_seo:page_seo!locations_page_seo_id_fkey(${PAGE_SEO_SELECT})`)
+            .eq('slug', slug)
+            .limit(1)
+            .maybeSingle();
+
+        if (error) throw error;
+
+        const seo = data?.page_seo ?? null;
+        return { data: seo ? sortPageSeo(seo) : null, error: null };
+    } catch (error) {
+        console.error('[Page SEO Service] Error fetching location SEO:', error);
         return { data: null, error: error.message };
     }
 }

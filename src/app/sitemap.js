@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { SITE_URL } from '@/lib/site';
 // TEMP (review): location module is noindex (src/app/locations/layout.js), so it is left out of the sitemap.
-// import { locations } from '@/data/locations';
+// import { getLocations } from '@/services/supabase';
 
 // Revalidate the sitemap hourly so newly published brands/blogs/jobs get picked
 // up without a redeploy.
@@ -76,9 +76,9 @@ export default async function sitemap() {
   }));
 
   // TEMP (review): location pages are noindex; restore this block and add ...locationEntries back below.
-  // Locations are sample data in src/data/locations.js; their products come from brands
+  // Locations come from the dashboard (table `locations`)
   // const locationEntries = [
-  //   ...locations.map((l) => `/${l.slug}`),
+  //   ...(await getLocations()).map((l) => `/${l.slug}`),
   // ].map((path) => ({ url: `${SITE_URL}${path}`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 }));
 
   return [...staticEntries, ...(await getDynamicEntries())];

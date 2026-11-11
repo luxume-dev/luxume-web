@@ -4,15 +4,15 @@ import { MapPin, Store, ArrowRight } from 'lucide-react';
 import LocationHero from '@/components/locations/LocationHero';
 import FaqSection from '@/components/FaqSection';
 import AltTextProvider from '@/providers/AltTextProvider';
-import { getLocationPageContent } from '@/services/supabase';
+import { getLocationPageContent, getLocations } from '@/services/supabase';
 import { getLocationPageSeoCached } from '@/lib/pageSeo.server';
 // Banner filter hidden for now; uncomment this, finderLocations and <LocationFinder> below to bring it back.
 // import LocationFinder from '@/components/locations/LocationFinder';
 import { breadcrumbSchema } from '@/lib/schema';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
-import { locations, getLocationCatalogue, getProductsForLocation } from '@/data/locations';
+import { getLocationCatalogue, getProductsForLocation } from '@/data/locations';
 
-// Products come live from the dashboard (brands / profiles)
+// Locations and products come live from the dashboard (locations / brands / profiles)
 export const revalidate = 10;
 
 // Content and SEO are managed from the dashboard (location_page -> page_seo).
@@ -36,7 +36,8 @@ const text = (value) => (typeof value === 'string' ? value.trim() : '');
 
 export default async function LocationsPage() {
   // None of these throw: a failure renders the page without the dashboard content / SEO extras
-  const [catalogue, { data }, seo] = await Promise.all([
+  const [locations, catalogue, { data }, seo] = await Promise.all([
+    getLocations(),
     getLocationCatalogue(),
     getLocationPageContent(),
     getLocationPageSeoCached(),
@@ -106,41 +107,45 @@ export default async function LocationsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {locations.map((l) => {
               const products = getProductsForLocation(catalogue, l);
-              const profileCount = products.reduce((sum, p) => sum + p.profiles.length, 0);
               return (
                 <Link
                   key={l.slug}
                   href={`/${l.slug}`}
                   className="group bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
                 >
-                  <div className="relative h-52 bg-gray-100 overflow-hidden">
-                    <Image
-                      src={l.heroImage}
-                      alt={`Luxume roofing in ${l.name}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
+                  <div className="relative h-52 bg-[#1a1b4b] overflow-hidden">
+                    {l.image && (
+                      <Image
+                        src={l.image}
+                        alt={`Luxume roofing in ${l.name}`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                     <div className="absolute bottom-4 left-5 right-5 flex items-end justify-between">
                       <h3 className="aloevera-bold text-white text-3xl">{l.name}</h3>
-                      {l.isHeadOffice && (
+                      {l.label && (
                         <span className="font-lato text-xs font-bold px-3 py-1 rounded-full bg-[#C83C64] text-white">
-                          Head Office
+                          {l.label}
                         </span>
                       )}
                     </div>
                   </div>
                   <div className="p-6 flex flex-col flex-grow">
-                    <p className="font-lato text-sm text-gray-500 flex items-center gap-1.5 mb-3">
-                      <MapPin size={14} className="text-[#C83C64]" /> {l.region}, {l.state}
-                    </p>
-                    <p className="font-lato text-gray-600 text-[14px] leading-relaxed line-clamp-3 mb-5">{l.intro}</p>
-                    <div className="grid grid-cols-3 gap-3 mb-6 text-center">
+                    {l.location && (
+                      <p className="font-lato text-sm text-gray-500 flex items-center gap-1.5 mb-3">
+                        <MapPin size={14} className="text-[#C83C64]" /> {l.location}
+                      </p>
+                    )}
+                    {l.description && (
+                      <p className="font-lato text-gray-600 text-[14px] leading-relaxed line-clamp-3 mb-5">{l.description}</p>
+                    )}
+                    <div className="grid grid-cols-2 gap-3 mb-6 text-center">
                       {[
                         [products.length, 'Products'],
-                        [profileCount, 'Profiles'],
-                        [l.stats.dealers, 'Dealers'],
+                        [l.dealerCountLabel, 'Dealers'],
                       ].map(([value, label]) => (
                         <div key={label} className="rounded-xl bg-gray-50 py-3">
                           <div className="font-aloevera text-xl font-bold text-[#1a1b4b]">{value}</div>

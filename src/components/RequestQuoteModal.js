@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useQuoteForm } from '@/hooks/useQuoteForm';
 
 export default function RequestQuoteModal({ isOpen, onClose, productName, profileType }) {
@@ -31,12 +32,15 @@ export default function RequestQuoteModal({ isOpen, onClose, productName, profil
     return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  // Server render has no document; the modal only opens after a click anyway
+  if (!isOpen || typeof document === 'undefined') return null;
 
   const inputClass =
     'w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm font-lato text-gray-800 focus:outline-none focus:border-[#C83C64] transition-colors placeholder:text-gray-400';
 
-  return (
+  // Rendered on <body> so it sits above everything, whatever section opened it
+  // (a parent's stacking context would otherwise let later cards paint over it)
+  return createPortal(
     <div
       className="fixed inset-0 z-[999] flex items-center justify-center p-4"
       style={{ backgroundColor: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(3px)' }}
@@ -182,6 +186,7 @@ export default function RequestQuoteModal({ isOpen, onClose, productName, profil
           </form>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

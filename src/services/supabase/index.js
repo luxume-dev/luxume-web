@@ -25,6 +25,7 @@ export {
   getBlogPostSeo,
   getCareerSeo,
   getBrandSeo,
+  getLocationSeo,
 } from './pageSeo.service';
 export { getHomeContent } from './homePage.service';
 export { getAboutContent } from './aboutPage.service';
@@ -36,6 +37,7 @@ export { getProductPageContent } from './productPage.service';
 export { getGuidelinePageContent } from './guidelinePage.service';
 export { getAssurancePageContent } from './assurancePage.service';
 export { getLocationPageContent } from './locationPage.service';
+export { getLocations, getLocationBySlug } from './locations.service';
 export { getCompanyPage } from './companyPage.service';
 export { getMediaAlts } from './mediaAlt.service';
 export { getGeneralSettings } from './generalSettings.service';

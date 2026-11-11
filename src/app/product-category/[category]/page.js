@@ -1,10 +1,13 @@
 import { notFound } from 'next/navigation';
 import ProductCategoryDetail from '@/components/productCategories/ProductCategoryDetail';
 import { summarise } from '@/lib/text';
+import { getLocations } from '@/services/supabase';
 import { productCategories, getProductCategory } from '@/data/productCategories';
 
 // Only the categories in src/data/productCategories.js exist; anything else is a 404.
 export const dynamicParams = false;
+// The "near you" location links come from the dashboard
+export const revalidate = 10;
 
 export function generateStaticParams() {
   return productCategories.map((c) => ({ category: c.slug }));
@@ -28,5 +31,5 @@ export default async function ProductCategoryDetailPage({ params }) {
   const category = getProductCategory(slug);
   if (!category) notFound();
 
-  return <ProductCategoryDetail category={category} />;
+  return <ProductCategoryDetail category={category} locations={await getLocations()} />;
 }

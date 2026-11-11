@@ -5,7 +5,6 @@ import LocationHero from '@/components/locations/LocationHero';
 import LocationQuoteButton from '@/components/locations/LocationQuoteButton';
 import { breadcrumbSchema } from '@/lib/schema';
 import { jsonLd } from '@/lib/pageSeo';
-import { locations } from '@/data/locations';
 import { getRelatedCategories } from '@/data/productCategories';
 
 /**
@@ -13,11 +12,12 @@ import { getRelatedCategories } from '@/data/productCategories';
  * Without `location` it renders /product-category/[category];
  * with a location it renders /[location]/[category] and adds local content.
  */
-export default function ProductCategoryDetail({ category, location = null }) {
+export default function ProductCategoryDetail({ category, location = null, locations = [] }) {
   const where = location ? ` in ${location.name}` : '';
   const heading = `${category.name}${where}`;
   const path = location ? `/${location.slug}/${category.slug}` : `/product-category/${category.slug}`;
   const related = getRelatedCategories(category.slug);
+  const otherLocations = locations.filter((l) => l.slug !== location?.slug);
 
   const crumbs = location
     ? [
@@ -45,7 +45,7 @@ export default function ProductCategoryDetail({ category, location = null }) {
   };
 
   const description = location
-    ? `Buy ${category.name.toLowerCase()} in ${location.name} from Luxume. ${category.summary} Delivered across ${location.serviceAreas.slice(0, 3).join(', ')} and more through our authorised dealers.`
+    ? `Buy ${category.name.toLowerCase()} in ${location.name} from Luxume. ${category.summary} ${location.areas.length ? `Delivered across ${location.areas.slice(0, 3).join(', ')} and more through our authorised dealers.` : ''}`.trim()
     : category.summary;
 
   return (
@@ -54,8 +54,8 @@ export default function ProductCategoryDetail({ category, location = null }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />
 
       <LocationHero
-        image={location?.heroImage || category.image}
-        eyebrow={location ? `${location.name}, ${location.state}` : 'Product Category'}
+        image={location?.image || category.image}
+        eyebrow={location ? location.location || location.name : 'Product Category'}
         heading={heading}
         description={description}
         crumbs={crumbs}
@@ -96,10 +96,10 @@ export default function ProductCategoryDetail({ category, location = null }) {
                 {p}
               </p>
             ))}
-            {location && (
+            {location?.dealerCount > 0 && (
               <p className="font-lato text-gray-700 leading-relaxed text-[16px] mb-4">
-                In {location.name}, Luxume {category.name.toLowerCase()} are available through {location.stats.dealers}{' '}
-                authorised dealers, with typical delivery in {location.stats.delivery}.
+                In {location.name}, Luxume {category.name.toLowerCase()} are available through {location.dealerCount}{' '}
+                authorised dealers.
               </p>
             )}
           </div>
@@ -160,39 +160,51 @@ export default function ProductCategoryDetail({ category, location = null }) {
       </section>
 
       {/* Local section (location pages only) */}
-      {location && (
+      {location && (location.builtDescription || location.areas.length > 0 || location.dealers.length > 0) && (
         <section className="py-16 px-4 md:px-8 bg-stone-100">
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
             <div>
               <h2 className="aloevera-bold text-3xl text-[#1a1b4b] mb-5">
                 {category.name} for {location.name}&rsquo;s climate
               </h2>
-              <p className="font-lato text-gray-700 leading-relaxed text-[16px] mb-6">{location.climateNote}</p>
+              {location.builtDescription && (
+                <p className="font-lato text-gray-700 leading-relaxed text-[16px] mb-6 whitespace-pre-line">{location.builtDescription}</p>
+              )}
+              {location.areas.length > 0 && (
+              <>
               <h3 className="font-lato font-bold text-lg text-[#1a1b4b] mb-3">Areas we deliver to</h3>
               <ul className="flex flex-wrap gap-2">
-                {location.serviceAreas.map((area) => (
+                {location.areas.map((area) => (
                   <li key={area} className="flex items-center gap-1.5 font-lato text-sm font-semibold px-3 py-1.5 rounded-full bg-white border border-pink-100 text-[#1a1b4b]">
                     <MapPin size={13} className="text-[#C83C64]" /> {area}
                   </li>
                 ))}
               </ul>
+              </>
+              )}
             </div>
+            {location.dealers.length > 0 && (
             <div>
               <h2 className="aloevera-bold text-3xl text-[#1a1b4b] mb-5">Dealers in {location.name}</h2>
               <div className="space-y-4">
                 {location.dealers.map((d) => (
-                  <div key={d.name} className="bg-white p-5 rounded-2xl border border-gray-100">
+                  <div key={d.id} className="bg-white p-5 rounded-2xl border border-gray-100">
                     <h3 className="font-lato font-bold text-[#1a1b4b] mb-1">{d.name}</h3>
-                    <p className="font-lato text-sm text-gray-500 flex items-center gap-2 mb-1">
-                      <MapPin size={14} className="text-[#C83C64]" /> {d.area}
-                    </p>
-                    <a href={`tel:${d.phone.replace(/\s+/g, '')}`} className="font-lato text-sm font-semibold text-[#C83C64] flex items-center gap-2 hover:underline">
-                      <Phone size={14} /> {d.phone}
-                    </a>
+                    {d.area && (
+                      <p className="font-lato text-sm text-gray-500 flex items-center gap-2 mb-1">
+                        <MapPin size={14} className="text-[#C83C64]" /> {d.area}
+                      </p>
+                    )}
+                    {d.phone && (
+                      <a href={`tel:${d.phone.replace(/[^\d+]/g, '')}`} className="font-lato text-sm font-semibold text-[#C83C64] flex items-center gap-2 hover:underline">
+                        <Phone size={14} /> {d.phone}
+                      </a>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
+            )}
           </div>
         </section>
       )}
@@ -216,15 +228,14 @@ export default function ProductCategoryDetail({ category, location = null }) {
       </section>
 
       {/* Available in (location links for this category) */}
+      {otherLocations.length > 0 && (
       <section className="py-14 px-4 md:px-8" style={{ backgroundColor: '#f8f7ff' }}>
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="aloevera-bold text-2xl md:text-3xl text-[#1a1b4b] mb-6">
             {location ? `${category.name} in other locations` : `${category.name} near you`}
           </h2>
           <div className="flex flex-wrap justify-center gap-3">
-            {locations
-              .filter((l) => l.slug !== location?.slug)
-              .map((l) => (
+            {otherLocations.map((l) => (
                 <Link
                   key={l.slug}
                   href={`/${l.slug}/${category.slug}`}
@@ -236,6 +247,7 @@ export default function ProductCategoryDetail({ category, location = null }) {
           </div>
         </div>
       </section>
+      )}
 
       {/* Related categories */}
       <section className="py-16 md:py-20 px-4 md:px-8">
