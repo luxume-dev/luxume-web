@@ -16,6 +16,7 @@ import {
   getProductCategoryPageSeo,
   getLocationSeo,
   getProductCategorySeo,
+  getProfileSeo,
 } from '@/services/supabase';
 
 /**
@@ -40,3 +41,4 @@ export const getBrandSeoCached = cache(async (slug) => (await getBrandSeo(slug))
 export const getCareerSeoCached = cache(async (id) => (await getCareerSeo(id)).data);
 export const getBlogPostSeoCached = cache(async (slug) => (await getBlogPostSeo(slug)).data);
 export const getProductCategorySeoCached = cache(async (slug) => (await getProductCategorySeo(slug)).data);
+export const getProfileSeoCached = cache(async (profileId) => (await getProfileSeo(profileId)).data);

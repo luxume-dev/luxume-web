@@ -160,6 +160,29 @@ export async function getBrandSeo(slug) {
     }
 }
 
+/**
+ * Fetch the SEO of one product (profile) page (profiles.page_seo_id -> page_seo), by
+ * profile id. Its bottom_content is the page's bottom content (rich-text HTML).
+ */
+export async function getProfileSeo(profileId) {
+    try {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select(`page_seo:page_seo!profiles_page_seo_id_fkey(${PAGE_SEO_SELECT})`)
+            .eq('id', profileId)
+            .limit(1)
+            .maybeSingle();
+
+        if (error) throw error;
+
+        const seo = data?.page_seo ?? null;
+        return { data: seo ? sortPageSeo(seo) : null, error: null };
+    } catch (error) {
+        console.error('[Page SEO Service] Error fetching product (profile) SEO:', error);
+        return { data: null, error: error.message };
+    }
+}
+
 /** Fetch the SEO of one location page (locations.page_seo_id -> page_seo), by slug. */
 export async function getLocationSeo(slug) {
     try {

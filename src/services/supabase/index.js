@@ -28,6 +28,7 @@ export {
   getBrandSeo,
   getLocationSeo,
   getProductCategorySeo,
+  getProfileSeo,
 } from './pageSeo.service';
 export { getHomeContent } from './homePage.service';
 export { getAboutContent } from './aboutPage.service';

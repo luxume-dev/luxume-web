@@ -2,7 +2,8 @@
  * Profile detail page content (/products/<brand>/<profile>), from the `profiles`
  * row. Edited in the dashboard under Products -> Edit Product
  * (sql/2026-11-11_profile_detail.sql). Only saved content is used: empty
- * fields and lists hide their element or section.
+ * fields and lists hide their element or section. The long-form bottom content
+ * and FAQs come from the profile's page_seo row instead (see the page).
  */
 
 const str = (v) => (typeof v === 'string' ? v.trim() : '');
@@ -52,13 +53,6 @@ export function profileDetailContent(row) {
       items: list(row?.gallery)
         .map((g) => ({ src: str(g?.src), alt: str(g?.alt) }))
         .filter((g) => g.src),
-    },
-    about: {
-      heading: str(row?.about_heading),
-      intro: str(row?.about_intro),
-      blocks: list(row?.about_blocks)
-        .map((b) => ({ title: str(b?.title), paragraphs: paragraphs(b?.description) }))
-        .filter((b) => b.title || b.paragraphs.length),
     },
   };
 }

@@ -16,14 +16,14 @@ const Badge = ({ children }) => (
 /**
  * Profile detail page. `profile` comes from lib/profileDetail.js
  * (profileDetailContent); every section is hidden when its content is empty.
+ * `children` (bottom content + FAQs from page_seo) render after the gallery.
  */
-export default function ProfileDetailClient({ profile, brand, brandHref }) {
+export default function ProfileDetailClient({ profile, brand, brandHref, children }) {
   const [quoteOpen, setQuoteOpen] = useState(false);
-  const { overview, features, specs, applications, gallery, about } = profile;
+  const { overview, features, specs, applications, gallery } = profile;
 
   const hasOverview = overview.heading || overview.lead || overview.paragraphs.length || overview.highlights.length;
   const hasSpecsRow = specs.items.length > 0 || applications.items.length > 0;
-  const hasAbout = about.heading || about.intro || about.blocks.length;
 
   return (
     <main className="bg-white pt-20">
@@ -195,35 +195,8 @@ export default function ProfileDetailClient({ profile, brand, brandHref }) {
         </section>
       )}
 
-      {/* Long-form content */}
-      {hasAbout && (
-        <section className="py-16 px-4 md:px-8">
-          <article className="max-w-7xl mx-auto">
-            {about.heading && (
-              <h2 className="font-aloevera text-3xl md:text-4xl font-bold mb-6" style={{ color: '#1a1b4b' }}>
-                {about.heading}
-              </h2>
-            )}
-            {about.intro && <p className="font-lato text-gray-700 leading-relaxed text-lg mb-10 whitespace-pre-line">{about.intro}</p>}
-            {about.blocks.length > 0 && (
-              <div className="space-y-8">
-                {about.blocks.map((block, bi) => (
-                  <div key={`${block.title}-${bi}`}>
-                    {block.title && (
-                      <h3 className="font-aloevera text-xl md:text-2xl font-bold mb-3" style={{ color: '#C83C64' }}>
-                        {block.title}
-                      </h3>
-                    )}
-                    {block.paragraphs.map((text, i) => (
-                      <p key={i} className="font-lato text-gray-600 leading-relaxed mb-3 last:mb-0 whitespace-pre-line">{text}</p>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )}
-          </article>
-        </section>
-      )}
+      {/* Bottom content and FAQs (from the page SEO), rendered by the page */}
+      {children}
 
       <RequestQuoteModal
         isOpen={quoteOpen}
