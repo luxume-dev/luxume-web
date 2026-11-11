@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { productQuery } from '@/lib/queries';
 import { slugify, summarise } from '@/lib/text';
 import { breadcrumbSchema } from '@/lib/schema';
+import { profileDetailContent } from '@/lib/profileDetail';
 import ProfileDetailClient from '@/components/products/ProfileDetailClient';
 
 export const revalidate = 10;
@@ -9,8 +10,7 @@ export const revalidate = 10;
 /**
  * /products/[brand slug]/[profile slug]
  * Profiles have no slug column, so the slug is derived from the profile title.
- * Only the header (title, image, description, brand) is per profile; the rest
- * of the page is the static copy in ProfileDetailClient.
+ * All page content comes from the profile row (see lib/profileDetail.js).
  */
 async function getBrandProfile(brandSlug, profileSlug) {
   try {
@@ -58,11 +58,9 @@ export default async function BrandProfilePage({ params }) {
         />
       )}
       <ProfileDetailClient
-        title={profile.title}
+        profile={profileDetailContent(profile)}
         brand={brand.title}
         brandHref={`/products/${brandSlug}`}
-        image={profile.image_url}
-        description={profile.description}
       />
     </>
   );

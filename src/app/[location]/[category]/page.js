@@ -1,24 +1,26 @@
 import { notFound } from 'next/navigation';
-import ProductCategoryDetail from '@/components/productCategories/ProductCategoryDetail';
+import ProductCategoryDetail, { categoryHeading, categoryPath } from '@/components/productCategories/ProductCategoryDetail';
 import { summarise } from '@/lib/text';
-import { getLocations } from '@/services/supabase';
-import { productCategories, getProductCategory } from '@/data/productCategories';
+import { getProductCategorySeoCached } from '@/lib/pageSeo.server';
+import { getLocations, getProductCategories } from '@/services/supabase';
 
-// Location × product category, e.g. /ernakulam/gi-sheets. Locations come from the
-// dashboard (table `locations`); unknown pairs are a 404.
+// Location × product category, e.g. /kottayam/aluminium-zinc-coated-steel. Locations and
+// categories come from the dashboard (tables `locations`, `product_categories`); unknown pairs are a 404.
+// The banner uses the category's detail_title / detail_description ({location} -> city name).
 export const revalidate = 10;
 
 export async function generateStaticParams() {
-  const locations = await getLocations();
-  return locations.flatMap((l) => productCategories.map((c) => ({ location: l.slug, category: c.slug })));
+  const [locations, categories] = await Promise.all([getLocations(), getProductCategories()]);
+  return locations.flatMap((l) => categories.map((c) => ({ location: l.slug, category: c.slug })));
 }
 
 async function findPage(locSlug, catSlug) {
-  const locations = await getLocations();
+  const [locations, categories] = await Promise.all([getLocations(), getProductCategories()]);
   return {
     locations,
+    categories,
     location: locations.find((l) => l.slug === locSlug) ?? null,
-    category: getProductCategory(catSlug),
+    category: categories.find((c) => c.slug === catSlug) ?? null,
   };
 }
 
@@ -27,18 +29,31 @@ export async function generateMetadata({ params }) {
   const { location, category } = await findPage(locSlug, catSlug);
   if (!location || !category) return {};
 
+  const { heading, description } = categoryHeading(category, location);
+  const image = category.bannerImage;
   return {
-    title: `${category.name} in ${location.name}`,
-    description: summarise(`Buy ${category.name.toLowerCase()} in ${location.name} from Luxume. ${category.summary}`),
-    alternates: { canonical: `/${locSlug}/${catSlug}` },
-    openGraph: { images: [category.image] },
+    ...(heading && { title: heading }),
+    description: summarise(description),
+    alternates: { canonical: categoryPath(category, location) },
+    ...(image && { openGraph: { images: [image] } }),
   };
 }
 
 export default async function LocationCategoryPage({ params }) {
   const { location: locSlug, category: catSlug } = await params;
-  const { locations, location, category } = await findPage(locSlug, catSlug);
+  const { locations, categories, location, category } = await findPage(locSlug, catSlug);
   if (!location || !category) notFound();
 
-  return <ProductCategoryDetail category={category} location={location} locations={locations} />;
+  // FAQs and image alt text come from the category's SEO tab
+  const seo = await getProductCategorySeoCached(category.slug);
+
+  return (
+    <ProductCategoryDetail
+      category={category}
+      location={location}
+      locations={locations}
+      categories={categories}
+      seo={seo}
+    />
+  );
 }

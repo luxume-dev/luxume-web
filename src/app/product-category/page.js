@@ -2,13 +2,13 @@ import LocationHero from '@/components/locations/LocationHero';
 import FaqSection from '@/components/FaqSection';
 import AltTextProvider from '@/providers/AltTextProvider';
 import { ProductCategoryCard } from '@/components/productCategories/ProductCategoryDetail';
-import { getProductCategoryPageContent } from '@/services/supabase';
+import { getProductCategoryPageContent, getProductCategories } from '@/services/supabase';
 import { getProductCategoryPageSeoCached } from '@/lib/pageSeo.server';
 import { breadcrumbSchema } from '@/lib/schema';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
-import { productCategories } from '@/data/productCategories';
 
-// Banner, heading and SEO are managed from the dashboard (product_category_page -> page_seo)
+// Banner, heading and SEO are managed from the dashboard (product_category_page -> page_seo);
+// the cards are the categories under Content -> Product Categories (each links to /<slug>)
 export const revalidate = 10;
 
 // Default title / description, used only when the SEO tab leaves them empty
@@ -31,7 +31,11 @@ const text = (value) => (typeof value === 'string' ? value.trim() : '');
 
 export default async function ProductCategoryPage() {
   // Neither throws: a failure renders the page without the dashboard content / SEO extras
-  const [{ data }, seo] = await Promise.all([getProductCategoryPageContent(), getProductCategoryPageSeoCached()]);
+  const [{ data }, seo, productCategories] = await Promise.all([
+    getProductCategoryPageContent(),
+    getProductCategoryPageSeoCached(),
+    getProductCategories(),
+  ]);
   // Empty fields hide their part of the page
   const page = {
     page_banner_image: text(data?.page_banner_image),

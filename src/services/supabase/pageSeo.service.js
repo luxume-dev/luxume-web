@@ -199,3 +199,23 @@ export function getLocationPageSeo() {
 export function getProductCategoryPageSeo() {
     return getPageSeo('product_category_page', 'page_seo!product_category_page_id_fkey');
 }
+
+/** Fetch the SEO of one product category page (product_categories.page_seo_id -> page_seo), by slug. */
+export async function getProductCategorySeo(slug) {
+    try {
+        const { data, error } = await supabase
+            .from('product_categories')
+            .select(`page_seo:page_seo!product_categories_page_seo_id_fkey(${PAGE_SEO_SELECT})`)
+            .eq('slug', slug)
+            .limit(1)
+            .maybeSingle();
+
+        if (error) throw error;
+
+        const seo = data?.page_seo ?? null;
+        return { data: seo ? sortPageSeo(seo) : null, error: null };
+    } catch (error) {
+        console.error('[Page SEO Service] Error fetching product category SEO:', error);
+        return { data: null, error: error.message };
+    }
+}

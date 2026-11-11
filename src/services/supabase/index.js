@@ -27,6 +27,7 @@ export {
   getCareerSeo,
   getBrandSeo,
   getLocationSeo,
+  getProductCategorySeo,
 } from './pageSeo.service';
 export { getHomeContent } from './homePage.service';
 export { getAboutContent } from './aboutPage.service';
@@ -40,6 +41,7 @@ export { getAssurancePageContent } from './assurancePage.service';
 export { getLocationPageContent } from './locationPage.service';
 export { getProductCategoryPageContent } from './productCategoryPage.service';
 export { getLocations, getLocationBySlug } from './locations.service';
+export { getProductCategories, getProductCategoryBySlug } from './productCategories.service';
 export { getCompanyPage } from './companyPage.service';
 export { getMediaAlts } from './mediaAlt.service';
 export { getGeneralSettings } from './generalSettings.service';

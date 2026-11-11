@@ -1,12 +1,7 @@
-import ProfileDetailClient from '@/components/products/ProfileDetailClient';
+import { permanentRedirect } from 'next/navigation';
 
-export const metadata = {
-  title: 'Trapezoidal Roofing Profile',
-  description:
-    'Luxume trapezoidal roofing profile: high-rib colour-coated steel sheets with strong load capacity, fast installation and reliable water drainage.',
-  alternates: { canonical: '/profile-detail' },
-};
-
+// Old static demo page. Profile pages now live at /products/<brand>/<profile>
+// with content from the dashboard, so this address goes to the products list.
 export default function ProfileDetailPage() {
-  return <ProfileDetailClient />;
+  permanentRedirect('/products');
 }

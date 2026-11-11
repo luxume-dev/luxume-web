@@ -1,35 +1,8 @@
-import { notFound } from 'next/navigation';
-import ProductCategoryDetail from '@/components/productCategories/ProductCategoryDetail';
-import { summarise } from '@/lib/text';
-import { getLocations } from '@/services/supabase';
-import { productCategories, getProductCategory } from '@/data/productCategories';
+import { permanentRedirect } from 'next/navigation';
 
-// Only the categories in src/data/productCategories.js exist; anything else is a 404.
-export const dynamicParams = false;
-// The "near you" location links come from the dashboard
-export const revalidate = 10;
-
-export function generateStaticParams() {
-  return productCategories.map((c) => ({ category: c.slug }));
-}
-
-export async function generateMetadata({ params }) {
-  const { category: slug } = await params;
-  const category = getProductCategory(slug);
-  if (!category) return {};
-
-  return {
-    title: `${category.name}`,
-    description: summarise(category.summary),
-    alternates: { canonical: `/product-category/${slug}` },
-    openGraph: { images: [category.image] },
-  };
-}
-
-export default async function ProductCategoryDetailPage({ params }) {
-  const { category: slug } = await params;
-  const category = getProductCategory(slug);
-  if (!category) notFound();
-
-  return <ProductCategoryDetail category={category} locations={await getLocations()} />;
+// Category pages live at the top level now (/aluminium-zinc-coated-steel, served by
+// src/app/[location]/page.js). Old /product-category/<slug> links redirect there.
+export default async function ProductCategoryRedirect({ params }) {
+  const { category } = await params;
+  permanentRedirect(`/${encodeURIComponent(category)}`);
 }

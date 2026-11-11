@@ -2,35 +2,45 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { MapPin, Phone, CloudRain } from 'lucide-react';
 import LocationHero from '@/components/locations/LocationHero';
-import { ProductCategoryCard } from '@/components/productCategories/ProductCategoryDetail';
+import ProductCategoryDetail, {
+  ProductCategoryCard,
+  categoryHeading,
+} from '@/components/productCategories/ProductCategoryDetail';
 import LocationQuoteButton from '@/components/locations/LocationQuoteButton';
 import { breadcrumbSchema } from '@/lib/schema';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
-import { getLocationSeoCached } from '@/lib/pageSeo.server';
+import { getLocationSeoCached, getProductCategorySeoCached } from '@/lib/pageSeo.server';
 import FaqSection from '@/components/FaqSection';
 import AltTextProvider from '@/providers/AltTextProvider';
 import { summarise } from '@/lib/text';
 import { iconSrc } from '@/lib/cmsList';
-import { getLocations } from '@/services/supabase';
-import { productCategories } from '@/data/productCategories';
+import { getLocations, getProductCategories } from '@/services/supabase';
 
-// Locations come from the dashboard (table `locations`); unknown slugs are a 404.
-// Locations added later in the dashboard are rendered on their first visit.
+// One top-level slug serves two kinds of page, both managed in the dashboard:
+//   a location        /kottayam                      (table `locations`)
+//   a product category /aluminium-zinc-coated-steel  (table `product_categories`)
+// The dashboard stops a category from taking a location's slug; if both exist the location wins.
+// Unknown slugs are a 404. Pages added later in the dashboard are rendered on their first visit.
 export const revalidate = 10;
 
 export async function generateStaticParams() {
-  return (await getLocations()).map((l) => ({ location: l.slug }));
+  const [locations, categories] = await Promise.all([getLocations(), getProductCategories()]);
+  return [...locations, ...categories].map((item) => ({ location: item.slug }));
 }
 
-async function findLocation(slug) {
-  const locations = await getLocations();
-  return { locations, location: locations.find((l) => l.slug === slug) ?? null };
+async function findPage(slug) {
+  const [locations, categories] = await Promise.all([getLocations(), getProductCategories()]);
+  const location = locations.find((l) => l.slug === slug) ?? null;
+  const category = location ? null : categories.find((c) => c.slug === slug) ?? null;
+  return { locations, categories, location, category };
 }
 
 export async function generateMetadata({ params }) {
   const { location: slug } = await params;
-  const [{ location }, seo] = await Promise.all([findLocation(slug), getLocationSeoCached(slug)]);
+  const { location, category } = await findPage(slug);
+  if (category) return categoryMetadata(category);
   if (!location) return {};
+  const seo = await getLocationSeoCached(slug);
 
   // Defaults from the page content; anything filled in on the dashboard's SEO tab wins
   const seoMetadata = buildSeoMetadata(seo, { path: `/${slug}` });
@@ -47,10 +57,43 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function LocationPage({ params }) {
+async function categoryMetadata(category) {
+  const seo = await getProductCategorySeoCached(category.slug);
+  const { heading, description } = categoryHeading(category);
+  const path = `/${category.slug}`;
+  // Defaults from the page content; anything filled in on the dashboard's SEO tab wins
+  const seoMetadata = buildSeoMetadata(seo, { path });
+  const hasOgImage = Boolean(seo?.og_image?.trim());
+  return {
+    ...(heading && { title: heading }),
+    description: summarise(description),
+    ...seoMetadata,
+    ...(category.bannerImage && !hasOgImage && {
+      openGraph: { ...seoMetadata.openGraph, images: [category.bannerImage] },
+      twitter: { ...seoMetadata.twitter, images: [category.bannerImage] },
+    }),
+    alternates: { canonical: path },
+  };
+}
+
+export default async function SlugPage({ params }) {
   const { location: slug } = await params;
-  const [{ locations, location }, seo] = await Promise.all([findLocation(slug), getLocationSeoCached(slug)]);
+  const { locations, categories, location, category } = await findPage(slug);
+
+  if (category) {
+    const seo = await getProductCategorySeoCached(category.slug);
+    return (
+      <ProductCategoryDetail
+        category={category}
+        locations={locations}
+        categories={categories}
+        seo={seo}
+      />
+    );
+  }
+
   if (!location) notFound();
+  const seo = await getLocationSeoCached(slug);
 
   const faqs = visibleFaqs(seo);
   const faqSchema = faqPageSchema(faqs);
@@ -149,7 +192,7 @@ export default async function LocationPage({ params }) {
             </div>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {productCategories.map((c) => (
+            {categories.map((c) => (
               <ProductCategoryCard key={c.slug} category={c} href={`/${slug}/${c.slug}`} />
             ))}
           </div>
