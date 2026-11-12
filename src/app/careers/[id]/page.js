@@ -86,7 +86,16 @@ export default async function JobDetailPage({ params }) {
       )}
       <HydrationBoundary state={dehydrate(queryClient)}>
         {/* The job's own banner (careers.banner_image), else the Careers page banner */}
-        <JobDetailClient bannerImage={job?.banner_image?.trim() || careersPage?.banner_image?.trim()} />
+        {/* How to Apply contacts are managed on the dashboard Careers page (careers_page.apply_*) */}
+        <JobDetailClient
+          bannerImage={job?.banner_image?.trim() || careersPage?.banner_image?.trim()}
+          apply={{
+            title: careersPage?.apply_title?.trim(),
+            description: careersPage?.apply_description?.trim(),
+            email: careersPage?.apply_email?.trim(),
+            whatsapp: careersPage?.apply_whatsapp?.trim(),
+          }}
+        />
       </HydrationBoundary>
       <FaqSection faqs={faqs} />
     </AltTextProvider>

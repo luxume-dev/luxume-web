@@ -12,6 +12,7 @@ import { organizationSchema, websiteSchema } from "@/lib/schema";
 import { getQueryClient, prefetch } from "@/lib/queryClient.server";
 import { careersQuery, generalSettingsQuery, productsQuery } from "@/lib/queries";
 import { buildMediaAltMap } from "@/lib/pageSeo";
+import { resolveSiteSettings } from "@/lib/siteSettings";
 import { getMediaAlts } from "@/services/supabase";
 import AltTextProvider from "@/providers/AltTextProvider";
 
@@ -64,6 +65,11 @@ export default async function RootLayout({ children }) {
     getMediaAlts(),
   ]);
 
+  // Same footer settings the Footer renders, so schema NAP matches what's shown.
+  const { footer } = resolveSiteSettings(
+    queryClient.getQueryData(generalSettingsQuery().queryKey)
+  );
+
   return (
     <html lang="en">
       <head>
@@ -84,7 +90,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([organizationSchema, websiteSchema]),
+            __html: JSON.stringify([organizationSchema(footer), websiteSchema]),
           }}
         />
       </head>

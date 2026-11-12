@@ -681,8 +681,10 @@ export default function ProductDetailClient({ coatedSteel, defaultCta, defaultDo
                         {spec.logo_image_url || spec.qr_code_image_url ? (
                           <div className="flex items-center gap-3">
                             {spec.logo_image_url && (
-                              <img
+                              <Image
                                 src={spec.logo_image_url}
+                                width={200}
+                                height={200}
                                 alt="Logo"
                                 className="object-contain flex-shrink-0"
                                 style={{ width: '44px', height: '44px' }}

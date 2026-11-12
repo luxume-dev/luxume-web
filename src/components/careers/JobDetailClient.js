@@ -4,9 +4,23 @@ import { useParams } from 'next/navigation';
 import { FaClock, FaMapMarkerAlt, FaBriefcase, FaEnvelope, FaWhatsapp } from 'react-icons/fa';
 import { useCareer } from '@/hooks/useCareers';
 
+// Hover handlers shared by the How to Apply contact links
+const contactLinkProps = {
+  className: 'flex items-center gap-4 p-4 rounded-lg transition-all duration-300',
+  style: { backgroundColor: 'rgba(200, 60, 100, 0.2)' },
+  onMouseEnter: e => { e.currentTarget.style.backgroundColor = 'rgba(200, 60, 100, 0.35)'; },
+  onMouseLeave: e => { e.currentTarget.style.backgroundColor = 'rgba(200, 60, 100, 0.2)'; },
+};
+
 // bannerImage is the job's own banner (careers.banner_image), else the Careers
 // page banner, both managed in the dashboard; without one the header is plain dark.
-export default function JobDetailClient({ bannerImage }) {
+// apply holds the How to Apply title, description, email and WhatsApp number from
+// the dashboard Careers page; an empty field is hidden, and the box is hidden
+// when there is neither an email nor a WhatsApp number.
+export default function JobDetailClient({ bannerImage, apply = {} }) {
+  const whatsappDigits = apply.whatsapp?.replace(/\D/g, '');
+  const hasApplyContact = Boolean(apply.email || whatsappDigits);
+
   const { id } = useParams();
   const { data: job, isLoading: loading } = useCareer(id);
 
@@ -166,61 +180,60 @@ export default function JobDetailClient({ bannerImage }) {
       )}
 
       {/* How to Apply Section */}
+      {hasApplyContact && (
         <section className="bg-white pb-16 md:pb-24 px-4 sm:px-8">
           <div className="max-w-4xl mx-auto">
-            <div 
+            <div
               className="rounded-xl p-6 md:p-10"
               style={{ backgroundColor: '#1a1a2e' }}
             >
-              <h2 className="text-2xl font-semibold text-white mb-4">How to Apply</h2>
-              <p className="text-gray-400 text-sm mb-6">
-                Interested candidates may send their updated resume via:
-              </p>
+              {apply.title && (
+                <h2 className="text-2xl font-semibold text-white mb-4">{apply.title}</h2>
+              )}
+              {apply.description && (
+                <p className="text-gray-400 text-sm mb-6">{apply.description}</p>
+              )}
 
               <div className="space-y-3">
-                <a 
-                  href="mailto:info@luxume.in"
-                  className="flex items-center gap-4 p-4 rounded-lg transition-all duration-300"
-                  style={{ backgroundColor: 'rgba(200, 60, 100, 0.2)' }}
-                  onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(200, 60, 100, 0.35)'}
-                  onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(200, 60, 100, 0.2)'}
-                >
-                  <div 
-                    className="w-10 h-10 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: '#C83C64' }}
-                  >
-                    <FaEnvelope className="text-white" />
-                  </div>
-                  <div>
-                    <p className="text-white font-medium">Email</p>
-                    <p className="text-gray-400 text-sm">info@luxume.in</p>
-                  </div>
-                </a>
+                {apply.email && (
+                  <a href={`mailto:${apply.email}`} {...contactLinkProps}>
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center"
+                      style={{ backgroundColor: '#C83C64' }}
+                    >
+                      <FaEnvelope className="text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">Email</p>
+                      <p className="text-gray-400 text-sm">{apply.email}</p>
+                    </div>
+                  </a>
+                )}
 
-                <a 
-                  href="https://wa.me/919778557752"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-4 p-4 rounded-lg transition-all duration-300"
-                  style={{ backgroundColor: 'rgba(200, 60, 100, 0.2)' }}
-                  onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(200, 60, 100, 0.35)'}
-                  onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(200, 60, 100, 0.2)'}
-                >
-                  <div 
-                    className="w-10 h-10 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: '#C83C64' }}
+                {whatsappDigits && (
+                  <a
+                    href={`https://wa.me/${whatsappDigits}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    {...contactLinkProps}
                   >
-                    <FaWhatsapp className="text-white" />
-                  </div>
-                  <div>
-                    <p className="text-white font-medium">WhatsApp</p>
-                    <p className="text-gray-400 text-sm">+91 97785 57752</p>
-                  </div>
-                </a>
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center"
+                      style={{ backgroundColor: '#C83C64' }}
+                    >
+                      <FaWhatsapp className="text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">WhatsApp</p>
+                      <p className="text-gray-400 text-sm">{apply.whatsapp}</p>
+                    </div>
+                  </a>
+                )}
               </div>
             </div>
           </div>
         </section>
+      )}
     </main>
   );
 }

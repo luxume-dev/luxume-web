@@ -1,49 +1,72 @@
 import { SITE_URL } from '@/lib/site';
+import { socialHref } from '@/lib/siteSettings';
+
+/** Footer social platforms that are profiles on another site (not phone / WhatsApp / email). */
+const PROFILE_PLATFORMS = new Set(['instagram', 'facebook', 'youtube', 'linkedin', 'x', 'pinterest']);
+
+const clean = (v) => (typeof v === 'string' ? v.trim() : '');
 
 /**
- * Sitewide structured data. Values here are the single source of truth for the
- * business NAP and must stay in sync with src/components/Footer.js — a mismatch
- * between visible contact details and schema is itself an SEO problem.
+ * Sitewide Organization structured data.
+ *
+ * Address, phone, email and social profiles come from the footer settings
+ * (dashboard → Settings → General Settings → Footer), the same values the
+ * footer shows, so visible contact details and schema can't drift apart.
+ * A field left empty there is left out here rather than filled with a guess.
  *
  * Typed as Organization rather than LocalBusiness on purpose: Luxume
  * manufactures and sells nationally through dealers, it is not a storefront
  * customers visit for local-pack intent.
+ *
+ * @param {object} footer  resolveSiteSettings(row).footer
  */
-export const organizationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  '@id': `${SITE_URL}/#organization`,
-  name: 'Luxume Roofing',
-  url: SITE_URL,
-  logo: `${SITE_URL}/images/logo-2.png`,
-  foundingDate: '2011',
-  description:
-    'Luxume, headquartered at Chittoor Road, Ernakulam, is a leading manufacturer of colour-coated steel sheets primarily supplied to the construction industry.',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress:
-      '62/2592, 2nd Floor, Saj Mahal Building, Madakappillil Lane, Near Govt. HSS for Girls, Chittoor Road',
-    addressLocality: 'Ernakulam',
-    addressRegion: 'Kerala',
-    postalCode: '682016',
-    addressCountry: 'IN',
-  },
-  contactPoint: [
-    {
-      '@type': 'ContactPoint',
-      telephone: '+91-97785-57752',
-      contactType: 'customer service',
-      email: 'info@luxume.in',
-      areaServed: 'IN',
-      availableLanguage: ['en'],
-    },
-  ],
-  sameAs: [
-    'https://www.instagram.com/luxume_roofing/',
-    'https://www.facebook.com/profile.php?id=100069323057371',
-    'https://www.youtube.com/@Luxume-i1d',
-  ],
-};
+export function organizationSchema(footer = {}) {
+  const contact = footer.contact || {};
+  // The dashboard address is one free-text field (often multi-line), so it
+  // can't be split reliably into locality/region/postcode.
+  const address = clean(contact.address).split(/\s*\n+\s*/).filter(Boolean).join(', ');
+  const phone = clean(contact.phone);
+  const email = clean(contact.email);
+
+  const sameAs = [
+    ...new Set(
+      (Array.isArray(footer.socials) ? footer.socials : [])
+        .filter((s) => PROFILE_PLATFORMS.has(s?.platform))
+        .map((s) => socialHref(s.platform, s.url))
+        .filter((href) => /^https?:\/\//i.test(href))
+    ),
+  ];
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${SITE_URL}/#organization`,
+    name: 'Luxume Roofing',
+    url: SITE_URL,
+    logo: `${SITE_URL}/images/logo-2.png`,
+    foundingDate: '2011',
+    description:
+      'Luxume is a leading manufacturer of colour-coated steel sheets primarily supplied to the construction industry.',
+    ...(address
+      ? { address: { '@type': 'PostalAddress', streetAddress: address, addressCountry: 'IN' } }
+      : {}),
+    ...(phone || email
+      ? {
+          contactPoint: [
+            {
+              '@type': 'ContactPoint',
+              contactType: 'customer service',
+              ...(phone ? { telephone: phone } : {}),
+              ...(email ? { email } : {}),
+              areaServed: 'IN',
+              availableLanguage: ['en'],
+            },
+          ],
+        }
+      : {}),
+    ...(sameAs.length ? { sameAs } : {}),
+  };
+}
 
 export const websiteSchema = {
   '@context': 'https://schema.org',
