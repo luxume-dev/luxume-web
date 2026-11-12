@@ -102,32 +102,60 @@ export function productSchema(brand) {
   };
 }
 
+const absoluteUrl = (url) => (url && url.startsWith('/') ? `${SITE_URL}${url}` : url);
+
+// blogs.updated_at / created_at have no time zone; the dashboard writes them in UTC.
+// Plain dates (published_on, YYYY-MM-DD) are left as they are.
+const withZone = (value) =>
+  typeof value === 'string' && /T\d{2}:\d{2}/.test(value) && !/(Z|[+-]\d{2}:?\d{2})$/.test(value)
+    ? `${value}Z`
+    : value;
+
 /**
- * BlogPosting for an article.
+ * Article schema for a blog post.
  *
- * Author is the organisation: no post carries a byline, and attributing one to
- * a named person we cannot verify would be worse than organisational
- * authorship. Add real authors when bylines exist.
+ * @param {object} post         the blog row, with `author` joined from the authors table
+ * @param {string} slug
+ * @param {object} [options]
+ * @param {string} [options.headline]     page title (page_seo meta title, else the post title)
+ * @param {string} [options.description]  the page's meta description
+ * @param {string} [options.image]        featured image, absolute or site-relative
+ *
+ * The author is the post's author (Authors in the dashboard) as a Person; a
+ * post without one is attributed to the organisation rather than a made-up name.
  */
-export function blogPostingSchema(post, slug) {
+export function articleSchema(post, slug, { headline, description, image } = {}) {
   if (!post?.title) return null;
+
+  const url = `${SITE_URL}/blog/${slug}`;
+  const authorName = clean(post.author?.author_name);
+  const imageUrl = absoluteUrl(clean(image) || post.image_url);
+  const datePublished = withZone(post.published_on || post.created_at);
+  const dateModified = withZone(post.updated_at) || datePublished;
 
   return {
     '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.meta_title || post.title,
-    ...(post.image_url ? { image: post.image_url } : {}),
-    ...((post.published_on || post.created_at)
-      ? { datePublished: post.published_on || post.created_at }
-      : {}),
-    ...(post.updated_at ? { dateModified: post.updated_at } : {}),
-    author: ORG_REF,
-    publisher: ORG_REF,
+    '@type': 'Article',
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `${SITE_URL}/blog/${slug}`,
+      '@id': url,
     },
-    url: `${SITE_URL}/blog/${slug}`,
+    headline: clean(headline) || post.meta_title || post.title,
+    ...(clean(description) ? { description: clean(description) } : {}),
+    ...(imageUrl ? { image: imageUrl } : {}),
+    author: authorName
+      ? { '@type': 'Person', name: authorName }
+      : { '@type': 'Organization', name: 'Luxume Roofing', url: SITE_URL },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Luxume Roofing',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE_URL}/images/logo-2.png`,
+      },
+    },
+    ...(datePublished ? { datePublished } : {}),
+    ...(dateModified ? { dateModified } : {}),
   };
 }
 

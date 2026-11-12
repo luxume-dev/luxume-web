@@ -6,7 +6,7 @@ import { postMissing } from '@/lib/exists.server';
 import { summarise } from '@/lib/text';
 import { firstParagraph, isHtmlContent } from '@/lib/blogContent';
 import { DEFAULT_OG_IMAGE } from '@/lib/site';
-import { blogPostingSchema, breadcrumbSchema } from '@/lib/schema';
+import { articleSchema, breadcrumbSchema } from '@/lib/schema';
 import { getBlogPostSeoCached } from '@/lib/pageSeo.server';
 import { buildAltMap, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
 import AltTextProvider from '@/providers/AltTextProvider';
@@ -44,6 +44,10 @@ function deriveDescription(content) {
 
 const clean = (value) => (typeof value === 'string' ? value.trim() : '');
 
+// Meta description: page_seo, else the post's old meta column, else the body
+const postDescription = (post, seo) =>
+  clean(seo?.meta_description) || summarise(post.meta_description) || deriveDescription(post.content);
+
 /**
  * SEO is managed per post in the dashboard (blogs.blog_id -> page_seo). Empty
  * page_seo fields fall back to the post's old meta columns, then to the title,
@@ -65,8 +69,7 @@ export async function generateMetadata({ params }) {
   const seoTitle = clean(seo?.meta_title);
   const title = seoTitle ? { absolute: seoTitle } : post.meta_title || post.title;
   const plainTitle = seoTitle || post.meta_title || post.title;
-  const description =
-    clean(seo?.meta_description) || summarise(post.meta_description) || deriveDescription(post.content);
+  const description = postDescription(post, seo);
 
   const seoKeywords = clean(seo?.meta_keywords)
     .split(',')
@@ -118,7 +121,14 @@ export default async function BlogDetailPage({ params }) {
   const faqSchema = faqPageSchema(faqs);
 
   const post = queryClient.getQueryData(blogQuery(slug).queryKey);
-  const article = blogPostingSchema(post, slug);
+  // Same headline, description and image as the page's meta tags
+  const article = post
+    ? articleSchema(post, slug, {
+        headline: clean(seo?.meta_title),
+        description: postDescription(post, seo),
+        image: post.image_url || DEFAULT_OG_IMAGE,
+      })
+    : null;
   const breadcrumbs = breadcrumbSchema([
     { name: 'Home', path: '' },
     { name: 'Blog', path: '/blog' },
@@ -130,7 +140,7 @@ export default async function BlogDetailPage({ params }) {
       {article && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(article) }}
+          dangerouslySetInnerHTML={{ __html: jsonLd(article) }}
         />
       )}
       {breadcrumbs && (
