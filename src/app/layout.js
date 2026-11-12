@@ -109,8 +109,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <Footer />
               </div>
             </AltTextProvider>
+            <WhatsAppButton />
           </HydrationBoundary>
-          <WhatsAppButton />
           <Toaster
             position="top-right"
             richColors={false}

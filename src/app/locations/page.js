@@ -10,9 +10,8 @@ import { getLocationPageSeoCached } from '@/lib/pageSeo.server';
 // import LocationFinder from '@/components/locations/LocationFinder';
 import { breadcrumbSchema } from '@/lib/schema';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
-import { getLocationCatalogue, getProductsForLocation } from '@/data/locations';
 
-// Locations and products come live from the dashboard (locations / brands / profiles)
+// Locations come live from the dashboard (locations table)
 export const revalidate = 10;
 
 // Content and SEO are managed from the dashboard (location_page -> page_seo).
@@ -36,9 +35,8 @@ const text = (value) => (typeof value === 'string' ? value.trim() : '');
 
 export default async function LocationsPage() {
   // None of these throw: a failure renders the page without the dashboard content / SEO extras
-  const [locations, catalogue, { data }, seo] = await Promise.all([
+  const [locations, { data }, seo] = await Promise.all([
     getLocations(),
-    getLocationCatalogue(),
     getLocationPageContent(),
     getLocationPageSeoCached(),
   ]);
@@ -53,10 +51,12 @@ export default async function LocationsPage() {
   };
   const faqs = visibleFaqs(seo);
   const faqSchema = faqPageSchema(faqs);
+  // Per-city product lists were removed; to bring the finder back, fill `products`
+  // ([{ slug, title }]) from the brands table, or leave it empty for location-only search.
   // const finderLocations = locations.map((l) => ({
   //   slug: l.slug,
   //   name: l.name,
-  //   products: getProductsForLocation(catalogue, l).map(({ slug, title }) => ({ slug, title })),
+  //   products: [],
   // }));
 
   const breadcrumbs = breadcrumbSchema([
@@ -106,7 +106,6 @@ export default async function LocationsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {locations.map((l) => {
-              const products = getProductsForLocation(catalogue, l);
               return (
                 <Link
                   key={l.slug}
@@ -142,16 +141,9 @@ export default async function LocationsPage() {
                     {l.description && (
                       <p className="font-lato text-gray-600 text-[14px] leading-relaxed line-clamp-3 mb-5">{l.description}</p>
                     )}
-                    <div className="grid grid-cols-2 gap-3 mb-6 text-center">
-                      {[
-                        [products.length, 'Products'],
-                        [l.dealerCountLabel, 'Dealers'],
-                      ].map(([value, label]) => (
-                        <div key={label} className="rounded-xl bg-gray-50 py-3">
-                          <div className="font-aloevera text-xl font-bold text-[#1a1b4b]">{value}</div>
-                          <div className="font-lato text-xs text-gray-500">{label}</div>
-                        </div>
-                      ))}
+                    <div className="rounded-xl bg-gray-50 py-3 mb-6 text-center">
+                      <div className="font-aloevera text-xl font-bold text-[#1a1b4b]">{l.dealerCountLabel}</div>
+                      <div className="font-lato text-xs text-gray-500">Dealers</div>
                     </div>
                     <div className="mt-auto flex items-center justify-between font-lato font-semibold text-[#C83C64]">
                       <span className="flex items-center gap-2">

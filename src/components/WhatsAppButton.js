@@ -1,9 +1,15 @@
 'use client';
 
+import { useGeneralSettings } from '@/hooks/useGeneralSettings';
+
+/** Floating WhatsApp chat button. Number and message come from General Settings → Footer → WhatsApp Button. */
 export default function WhatsAppButton() {
-  const phone = '919778557752'; // +91 97785 57752
-  const message = encodeURIComponent('Hello! I would like to know more about Luxume roofing products.');
-  const href = `https://wa.me/${phone}?text=${message}`;
+  const { footer } = useGeneralSettings();
+  const phone = String(footer.whatsapp_button?.phone || '').replace(/\D/g, '');
+  if (!phone) return null;
+
+  const message = String(footer.whatsapp_button?.message || '').trim();
+  const href = `https://wa.me/${phone}${message ? `?text=${encodeURIComponent(message)}` : ''}`;
 
   return (
     <a

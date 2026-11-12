@@ -1,13 +1,11 @@
 import { cache } from 'react';
 import { supabase } from '@/lib/supabase';
-import { getStaticLocationData } from '@/data/locations';
 
 /**
  * Locations Service
  * Cities managed in the dashboard (Content → Locations), table `locations`.
  * Dealers come from the `dealers` table (Content → Dealers), linked to each city
  * through `location_dealers` in the order picked in the dashboard.
- * Which products are sold where is still static in src/data/locations.js (keyed by slug).
  */
 
 const text = (value) => (typeof value === 'string' ? value.trim() : '');
@@ -75,8 +73,6 @@ function normalise(row) {
     // Dealers figure on the /locations card: the dealers stat's value when one is
     // entered (e.g. "24+"), otherwise the number of linked dealers
     dealerCountLabel: counts.find((c) => /dealer/i.test(c.label))?.value || String(dealers.length),
-    // Static for now: { availability }
-    ...getStaticLocationData(slug),
   };
 }
 
