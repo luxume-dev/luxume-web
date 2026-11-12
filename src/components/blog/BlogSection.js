@@ -243,6 +243,29 @@ export default function BlogSection() {
                     <p className="text-gray-500 text-sm mb-4 line-clamp-3 flex-1">
                       {getFirstParagraph(post.content)}
                     </p>
+                    {/* Author */}
+                    {post.author && (
+                      <div className="flex items-center gap-2 mb-4">
+                        {post.author.author_image ? (
+                          <img
+                            src={post.author.author_image}
+                            alt={post.author.author_name}
+                            className="w-7 h-7 rounded-full object-cover border border-gray-100 flex-shrink-0"
+                          />
+                        ) : (
+                          <span
+                            className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold text-white flex-shrink-0"
+                            style={{ backgroundColor: '#C83C64' }}
+                            aria-hidden="true"
+                          >
+                            {post.author.author_name?.charAt(0).toUpperCase()}
+                          </span>
+                        )}
+                        <span className="text-gray-700 text-xs font-medium truncate">
+                          {post.author.author_name}
+                        </span>
+                      </div>
+                    )}
                     <div className="flex items-center justify-between mt-auto">
                       <span className="text-gray-400 text-xs">
                         {formatDate(blogDate(post))}

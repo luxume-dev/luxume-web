@@ -6,14 +6,14 @@ import { supabase } from '@/lib/supabase';
  */
 
 /**
- * Fetch all published blogs with their category
+ * Fetch all published blogs with their category and author
  * @returns {Promise<{data: Array|null, error: string|null}>}
  */
 export async function getPublishedBlogs() {
   try {
     const { data, error } = await supabase
       .from('blogs')
-      .select('*, category:categories(*)')
+      .select('*, category:categories(*), author:authors(id, author_name, author_image)')
       .eq('status', 'published')
       // sort_date = published_on, else created_at (set by a DB trigger)
       .order('sort_date', { ascending: false })
@@ -37,7 +37,7 @@ export async function getBlogBySlug(slug) {
   try {
     const { data, error } = await supabase
       .from('blogs')
-      .select('*, category:categories(*)')
+      .select('*, category:categories(*), author:authors(id, author_name, author_image)')
       .eq('slug', slug)
       .eq('status', 'published')
       .limit(1)

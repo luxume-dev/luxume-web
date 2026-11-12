@@ -194,7 +194,30 @@ export default function BlogDetailClient() {
               {blog.title}
             </h1>
 
-            <time className="text-white/70 text-sm">{formatDate(blogDate(blog))}</time>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              {blog.author && (
+                <div className="flex items-center gap-2.5">
+                  {blog.author.author_image ? (
+                    <img
+                      src={blog.author.author_image}
+                      alt={blog.author.author_name}
+                      className="w-10 h-10 rounded-full object-cover border-2 border-white/80"
+                    />
+                  ) : (
+                    <span
+                      className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold text-white border-2 border-white/80"
+                      style={{ backgroundColor: '#C83C64' }}
+                      aria-hidden="true"
+                    >
+                      {blog.author.author_name?.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  <span className="text-white text-sm font-medium">{blog.author.author_name}</span>
+                </div>
+              )}
+              {blog.author && <span className="text-white/50 text-sm" aria-hidden="true">•</span>}
+              <time className="text-white/70 text-sm">{formatDate(blogDate(blog))}</time>
+            </div>
           </div>
         </div>
       </section>
