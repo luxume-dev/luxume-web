@@ -14,8 +14,10 @@ function parseList(value) {
 
 // Supabase Storage serves a file as an attachment when ?download is set, so the
 // button downloads instead of opening (the download attribute is ignored cross-origin).
+// Bucket files now arrive as site paths (/brands/x.pdf) proxied to storage, which keep the query.
 function downloadUrl(url) {
-    if (!url.includes('/storage/v1/object/public/') || /[?&]download=/.test(url)) return url;
+    const isStorage = url.includes('/storage/v1/object/public/') || /^\/(?!\/)/.test(url);
+    if (!isStorage || /[?&]download=/.test(url)) return url;
     return url + (url.includes('?') ? '&' : '?') + 'download=';
 }
 

@@ -93,7 +93,7 @@ export function productSchema(brand) {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: brand.title,
-    ...(brand.cover_image_url ? { image: brand.cover_image_url } : {}),
+    ...(brand.cover_image_url ? { image: absoluteUrl(brand.cover_image_url) } : {}),
     ...(brand.description ? { description: brand.description } : {}),
     brand: { '@type': 'Brand', name: 'Luxume' },
     manufacturer: ORG_REF,

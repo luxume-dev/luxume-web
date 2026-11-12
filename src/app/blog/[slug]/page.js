@@ -6,7 +6,7 @@ import { postMissing } from '@/lib/exists.server';
 import { summarise } from '@/lib/text';
 import { firstParagraph, isHtmlContent } from '@/lib/blogContent';
 import { DEFAULT_OG_IMAGE } from '@/lib/site';
-import { articleSchema, breadcrumbSchema } from '@/lib/schema';
+import { articleSchema } from '@/lib/schema';
 import { getBlogPostSeoCached } from '@/lib/pageSeo.server';
 import { buildAltMap, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
 import AltTextProvider from '@/providers/AltTextProvider';
@@ -129,11 +129,6 @@ export default async function BlogDetailPage({ params }) {
         image: post.image_url || DEFAULT_OG_IMAGE,
       })
     : null;
-  const breadcrumbs = breadcrumbSchema([
-    { name: 'Home', path: '' },
-    { name: 'Blog', path: '/blog' },
-    { name: post?.title ?? 'Article', path: `/blog/${slug}` },
-  ]);
 
   return (
     <AltTextProvider alts={buildAltMap(seo)}>
@@ -141,12 +136,6 @@ export default async function BlogDetailPage({ params }) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLd(article) }}
-        />
-      )}
-      {breadcrumbs && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
         />
       )}
       {seo?.schema && (

@@ -1,4 +1,5 @@
 import { DEFAULT_OG_IMAGE, SITE_URL } from '@/lib/site';
+import { toSitePaths } from '@/lib/storageUrl';
 
 /**
  * Helpers that turn a dashboard-managed page_seo record (with page_faqs and
@@ -74,7 +75,7 @@ export function faqPageSchema(faqs) {
  * match the same alt_image row. Off-site URLs (e.g. Supabase storage) stay absolute.
  */
 export function normaliseImageSrc(src) {
-  const value = clean(src);
+  const value = toSitePaths(clean(src));
   if (!value) return '';
   try {
     const url = new URL(value, SITE_URL);
@@ -111,5 +112,9 @@ export function buildAltMap(seo) {
  * never close the script element early.
  */
 export function jsonLd(data) {
-  return JSON.stringify(data).replace(/</g, '\\u003c');
+  return JSON.stringify(data)
+    // Structured data needs absolute URLs: site-relative media paths
+    // ("/blogs/blog-page/a.jpg") become https://www.luxume.in/blogs/blog-page/a.jpg
+    .replace(/"\/(?!\/)([^"\s]+\.(?:jpe?g|png|webp|gif|svg|avif|pdf))"/gi, `"${SITE_URL}/$1"`)
+    .replace(/</g, '\\u003c');
 }
