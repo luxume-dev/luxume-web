@@ -37,6 +37,7 @@ export async function getCareerById(id) {
       .from('careers')
       .select('id, title, department, employment_type, location, experience, responsibilities, gender, age, skills, salary, banner_image')
       .eq('id', id)
+      .eq('is_active', true)
       .single();
 
     if (error) throw error;

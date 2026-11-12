@@ -34,4 +34,4 @@ export const postMissing = (slug) =>
 export const jobMissing = (id) =>
   !id || !UUID.test(id)
     ? Promise.resolve(true)
-    : isMissing(supabase.from('careers').select('id').eq('id', id));
+    : isMissing(supabase.from('careers').select('id').eq('id', id).eq('is_active', true));
