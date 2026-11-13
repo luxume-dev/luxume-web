@@ -6,9 +6,10 @@ import LocationQuoteButton from '@/components/locations/LocationQuoteButton';
 import FaqSection from '@/components/FaqSection';
 import BottomContent from '@/components/BottomContent';
 import AltTextProvider from '@/providers/AltTextProvider';
-import { breadcrumbSchema } from '@/lib/schema';
+import { breadcrumbSchema, collectionPageSchema } from '@/lib/schema';
 import { buildAltMap, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
 import { iconSrc } from '@/lib/cmsList';
+import { summarise } from '@/lib/text';
 
 /* ─── Helpers shared with the route files ─── */
 
@@ -112,6 +113,14 @@ export default function ProductCategoryDetail({
 
   const breadcrumbs = breadcrumbSchema(crumbs.map((c) => ({ name: c.label, path: c.href === '/' ? '' : c.href ?? path })));
 
+  // The SEO tab's meta description belongs to the category's own page; city pages use their banner text
+  const collection = collectionPageSchema({
+    name: heading || category.name,
+    description: (!location && seo?.meta_description?.trim()) || summarise(description),
+    path,
+    image: category.bannerImage,
+  });
+
   const hasAbout = Boolean(category.aboutImage || category.aboutLabel || category.aboutTitle || category.aboutParagraphs.length);
   const hasLocal =
     location && (location.builtDescription || location.areas.length > 0 || location.dealers.length > 0);
@@ -119,6 +128,7 @@ export default function ProductCategoryDetail({
   return (
     <AltTextProvider alts={buildAltMap(seo)}>
       <main className="min-h-screen bg-white">
+        {collection && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(collection) }} />}
         {breadcrumbs && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbs) }} />}
         {!location && seo?.schema && (
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(seo.schema) }} />

@@ -61,18 +61,25 @@ const nextConfig = {
       },
     ],
   },
-  // Dashboard media is served from the site's own domain
-  // (www.luxume.in/blogs/blog-page/a.jpg) and proxied to the Supabase bucket.
+  // Dashboard media is served from the site's own domain and proxied to the
+  // Supabase bucket: www.luxume.in/blog/a.jpg -> bucket blogs/blog-page/a.jpg,
+  // anything else keeps its bucket path (www.luxume.in/home-page/hero/a.jpg).
   // afterFiles: /public files and static routes are matched first, and only
-  // paths ending in a media extension are proxied, so page routes never are.
+  // paths ending in a media extension are proxied, so page routes never are
+  // (afterFiles also runs before dynamic routes like /blog/[slug]).
   // See src/lib/storageUrl.js, which rewrites the URLs in database responses.
   async rewrites() {
+    const bucket = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/blog-images`;
+    const media = '\\.(?:jpe?g|png|webp|gif|svg|avif|bmp|ico|pdf|mp4|webm|mov|JPE?G|PNG|WEBP|GIF|SVG|AVIF|PDF|MP4)';
     return {
       afterFiles: [
         {
-          source:
-            '/:path(.*\\.(?:jpe?g|png|webp|gif|svg|avif|bmp|ico|pdf|mp4|webm|mov|JPE?G|PNG|WEBP|GIF|SVG|AVIF|PDF|MP4))',
-          destination: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/blog-images/:path`,
+          source: `/blog/:file([^/]+${media})`,
+          destination: `${bucket}/blogs/blog-page/:file`,
+        },
+        {
+          source: `/:path(.*${media})`,
+          destination: `${bucket}/:path`,
         },
       ],
     };

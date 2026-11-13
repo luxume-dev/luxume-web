@@ -80,25 +80,89 @@ export const websiteSchema = {
 const ORG_REF = { '@id': `${SITE_URL}/#organization` };
 
 /**
- * Product schema for a brand detail page.
+ * Product schema for a brand detail page (/products/<slug>).
+ *
+ * sku / mpn come from the brand's Basic Info in the dashboard and are left out
+ * when empty. The description falls back to the page's meta description.
  *
  * Deliberately omits offers/aggregateRating/review: the brands table holds no
  * price, and no review data source exists — this is a quote/lead flow, not
  * checkout. Inventing either would breach Google's structured-data policy.
  */
-export function productSchema(brand) {
+export function productSchema(brand, { description: fallbackDescription } = {}) {
   if (!brand?.title || !brand?.slug) return null;
+
+  const description = clean(brand.description) || clean(fallbackDescription);
+  const image = absoluteUrl(clean(brand.cover_image_url));
+  const sku = clean(brand.sku);
+  const mpn = clean(brand.mpn);
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: brand.title,
-    ...(brand.cover_image_url ? { image: absoluteUrl(brand.cover_image_url) } : {}),
-    ...(brand.description ? { description: brand.description } : {}),
+    ...(description ? { description } : {}),
+    ...(image ? { image: [image] } : {}),
     brand: { '@type': 'Brand', name: 'Luxume' },
+    ...(sku ? { sku } : {}),
+    ...(mpn ? { mpn } : {}),
     manufacturer: ORG_REF,
     category: 'Colour-Coated Steel Roofing Sheets',
     url: `${SITE_URL}/products/${brand.slug}`,
+  };
+}
+
+/**
+ * CollectionPage schema for a product category page (/<category>, /<location>/<category>).
+ *
+ * @param {object} page
+ * @param {string} page.name
+ * @param {string} [page.description]
+ * @param {string} page.path    site path, e.g. "/metal-roofing"
+ * @param {string} [page.image]
+ */
+export function collectionPageSchema({ name, description, path, image } = {}) {
+  if (!clean(name) || !path) return null;
+  const imageUrl = absoluteUrl(clean(image));
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: clean(name),
+    ...(clean(description) ? { description: clean(description) } : {}),
+    url: `${SITE_URL}${path}`,
+    ...(imageUrl ? { image: imageUrl } : {}),
+    inLanguage: 'en',
+  };
+}
+
+/**
+ * ItemList schema for a listing page (/products, /product-category).
+ *
+ * @param {object} list
+ * @param {string} list.name
+ * @param {string} [list.description]
+ * @param {string} list.path                     site path of the listing page
+ * @param {{ name: string, path: string }[]} list.items  in the order shown on the page
+ */
+export function itemListSchema({ name, description, path, items } = {}) {
+  const entries = (Array.isArray(items) ? items : []).filter((item) => clean(item?.name) && item?.path);
+  if (!clean(name) || !path || entries.length === 0) return null;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: clean(name),
+    ...(clean(description) ? { description: clean(description) } : {}),
+    url: `${SITE_URL}${path}`,
+    numberOfItems: entries.length,
+    itemListOrder: 'https://schema.org/ItemListOrderAscending',
+    itemListElement: entries.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `${SITE_URL}${item.path}`,
+      name: clean(item.name),
+    })),
   };
 }
 

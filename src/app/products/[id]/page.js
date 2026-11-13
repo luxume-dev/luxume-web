@@ -75,7 +75,7 @@ export default async function ProductDetailPage({ params }) {
 
   // Read back from the prefetched cache rather than refetching.
   const brand = queryClient.getQueryData(productQuery(slug).queryKey);
-  const product = productSchema(brand);
+  const product = productSchema(brand, { description: seo?.meta_description });
   const breadcrumbs = breadcrumbSchema([
     { name: 'Home', path: '' },
     { name: 'Products', path: '/products' },
@@ -90,13 +90,13 @@ export default async function ProductDetailPage({ params }) {
       {product && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(product) }}
+          dangerouslySetInnerHTML={{ __html: jsonLd(product) }}
         />
       )}
       {breadcrumbs && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
+          dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbs) }}
         />
       )}
       {seo?.schema && (

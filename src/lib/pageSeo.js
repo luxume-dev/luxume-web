@@ -114,7 +114,7 @@ export function buildAltMap(seo) {
 export function jsonLd(data) {
   return JSON.stringify(data)
     // Structured data needs absolute URLs: site-relative media paths
-    // ("/blogs/blog-page/a.jpg") become https://www.luxume.in/blogs/blog-page/a.jpg
+    // ("/blog/a.jpg") become https://www.luxume.in/blog/a.jpg
     .replace(/"\/(?!\/)([^"\s]+\.(?:jpe?g|png|webp|gif|svg|avif|pdf))"/gi, `"${SITE_URL}/$1"`)
     .replace(/</g, '\\u003c');
 }

@@ -5,7 +5,8 @@ import AltTextProvider from '@/providers/AltTextProvider';
 import { ProductCategoryCard } from '@/components/productCategories/ProductCategoryDetail';
 import { getProductCategoryPageContent, getProductCategories } from '@/services/supabase';
 import { getProductCategoryPageSeoCached } from '@/lib/pageSeo.server';
-import { breadcrumbSchema } from '@/lib/schema';
+import { breadcrumbSchema, itemListSchema } from '@/lib/schema';
+import { summarise } from '@/lib/text';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
 
 // Banner, heading and SEO are managed from the dashboard (product_category_page -> page_seo);
@@ -49,6 +50,13 @@ export default async function ProductCategoryPage() {
   const faqs = visibleFaqs(seo);
   const faqSchema = faqPageSchema(faqs);
 
+  const itemList = itemListSchema({
+    name: text(seo?.meta_title) || page.title || DEFAULT_METADATA.title,
+    description: text(seo?.meta_description) || summarise(page.description) || DEFAULT_METADATA.description,
+    path: '/product-category',
+    items: productCategories.map((c) => ({ name: c.name, path: `/${c.slug}` })),
+  });
+
   const breadcrumbs = breadcrumbSchema([
     { name: 'Home', path: '' },
     { name: 'Product Category', path: '/product-category' },
@@ -57,6 +65,9 @@ export default async function ProductCategoryPage() {
   return (
     <AltTextProvider alts={buildAltMap(seo)}>
       <main className="min-h-screen bg-white">
+        {itemList && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(itemList) }} />
+        )}
         {breadcrumbs && (
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbs) }} />
         )}
