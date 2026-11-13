@@ -40,6 +40,8 @@ export function parseHtml(input) {
  *   styles): { p: 'text-gray-600 mb-4' }.
  * - Tables (table / thead / tbody / tr / th / td) are rendered inside a
  *   horizontally scrolling box; cells keep colspan / rowspan.
+ * - Images keep src (http(s) or a path on this site), alt and a width in %
+ *   (10-100); anything else drops the image.
  *
  * @param {string} input
  * @param {{
@@ -124,8 +126,10 @@ function renderHtml(input, config) {
     }
 
     if (VOID_TAGS.has(tag) || selfClosing) {
-      if (config.tags.has(tag)) {
-        current().children.push(createElement(tag, { key: key++, ...config.props(tag, rawAttrs) }));
+      const props = config.tags.has(tag) ? config.props(tag, rawAttrs) : false;
+      // false = drop the element (e.g. an image without a safe src)
+      if (props !== false) {
+        current().children.push(createElement(tag, { key: key++, ...props }));
       }
       continue;
     }
@@ -185,6 +189,7 @@ const RICH_CLASSES = {
   tr: 'border-b border-gray-200 last:border-b-0',
   th: 'border border-gray-200 px-4 py-3 text-left align-top font-semibold text-[#0F172B]',
   td: 'border border-gray-200 px-4 py-3 text-left align-top',
+  img: 'inline-block max-w-full h-auto rounded-xl my-4 align-middle',
 };
 
 const RICH_TAGS = new Set([...Object.keys(RICH_CLASSES), 'br', 'b', 'em', 'i', 'u', 'sub', 'sup']);
@@ -223,6 +228,19 @@ const RICH_CONFIG = {
       if (rowSpan) props.rowSpan = rowSpan;
     }
 
+    if (tag === 'img') {
+      const src = safeSrc(attrs.src);
+      if (!src) return false;
+      props.src = src;
+      props.alt = (attrs.alt ?? '').trim();
+      props.loading = 'lazy';
+      props.decoding = 'async';
+      const width = /(?:^|;)\s*width\s*:\s*(\d{1,3})%/i.exec(attrs.style ?? '');
+      const pct = width ? parseInt(width[1], 10) : NaN;
+      if (pct >= 10 && pct <= 100) props.style = { width: `${pct}%` };
+      return props;
+    }
+
     if (tag === 'a') {
       const href = safeHref(attrs.href);
       if (!href) return false;
@@ -249,6 +267,14 @@ function safeHref(raw) {
   if (/^(https?:|mailto:|tel:)/i.test(href)) return href;
   if (href.startsWith('/') && !href.startsWith('//')) return href;
   if (href.startsWith('#')) return href;
+  return null;
+}
+
+// Image sources: http(s) or a path on this site (no data: / javascript: URLs)
+function safeSrc(raw) {
+  const src = (raw ?? '').replace(/[\u0000- \u007f]/g, '');
+  if (/^https?:\/\//i.test(src)) return src;
+  if (src.startsWith('/') && !src.startsWith('//')) return src;
   return null;
 }
 

@@ -12,6 +12,7 @@ import { buildAltMap, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
 import AltTextProvider from '@/providers/AltTextProvider';
 import BlogDetailClient from '@/components/blog/BlogDetailClient';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 
 export const revalidate = 10;
 
@@ -147,6 +148,7 @@ export default async function BlogDetailPage({ params }) {
       <HydrationBoundary state={dehydrate(queryClient)}>
         <BlogDetailClient />
       </HydrationBoundary>
+      <BottomContent html={seo?.bottom_content} />
       <FaqSection faqs={faqs} />
     </AltTextProvider>
   );

@@ -1,5 +1,6 @@
 import LocationHero from '@/components/locations/LocationHero';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 import AltTextProvider from '@/providers/AltTextProvider';
 import { ProductCategoryCard } from '@/components/productCategories/ProductCategoryDetail';
 import { getProductCategoryPageContent, getProductCategories } from '@/services/supabase';
@@ -102,6 +103,7 @@ export default async function ProductCategoryPage() {
           </div>
         </section>
 
+        <BottomContent html={seo?.bottom_content} />
         <FaqSection faqs={faqs} />
       </main>
     </AltTextProvider>

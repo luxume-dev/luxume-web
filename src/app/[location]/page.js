@@ -11,6 +11,7 @@ import { breadcrumbSchema } from '@/lib/schema';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
 import { getLocationSeoCached, getProductCategorySeoCached } from '@/lib/pageSeo.server';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 import AltTextProvider from '@/providers/AltTextProvider';
 import { summarise } from '@/lib/text';
 import { iconSrc } from '@/lib/cmsList';
@@ -302,6 +303,7 @@ export default async function SlugPage({ params }) {
         </section>
       )}
 
+      <BottomContent html={seo?.bottom_content} />
       <FaqSection faqs={faqs} />
     </main>
     </AltTextProvider>

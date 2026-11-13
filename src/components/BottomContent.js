@@ -22,6 +22,7 @@ const CLASSES = {
   strong: 'font-bold text-[#1a1b4b]',
   s: 'line-through',
   table: 'w-full min-w-[32rem] border-collapse font-lato text-sm sm:text-base',
+  img: 'inline-block max-w-full h-auto rounded-2xl my-6 align-middle shadow-sm',
   thead: 'bg-[#1a1b4b] text-white',
   tbody: '',
   tr: 'border-b border-gray-100 last:border-b-0 even:bg-gray-50',

@@ -8,6 +8,7 @@ import AboutUsSection from '@/components/about/AboutUsSection';
 import AboutCoreValuesSection from '@/components/about/AboutCoreValuesSection';
 import HowWeWorkSection from '@/components/about/HowWeWorkSection';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 
 export const revalidate = 10;
 
@@ -66,6 +67,7 @@ export default async function AboutPage() {
           points={zipLists({ title: content?.work_point_title, description: content?.work_point_description })}
           bottomText={content?.work_buttom_text?.trim()}
         />
+        <BottomContent html={seo?.bottom_content} />
         <FaqSection faqs={faqs} />
       </main>
     </AltTextProvider>

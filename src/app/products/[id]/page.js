@@ -7,6 +7,7 @@ import { getBrandSeoCached } from '@/lib/pageSeo.server';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
 import AltTextProvider from '@/providers/AltTextProvider';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 import { productSchema, breadcrumbSchema } from '@/lib/schema';
 import ProductDetailClient from '@/components/products/ProductDetailClient';
 import { getHomeContent, getProductPageContent } from '@/services/supabase';
@@ -107,6 +108,7 @@ export default async function ProductDetailPage({ params }) {
       <HydrationBoundary state={dehydrate(queryClient)}>
         <ProductDetailClient coatedSteel={coatedSteel} defaultCta={defaultCta} defaultDownloads={defaultDownloads} />
       </HydrationBoundary>
+      <BottomContent html={seo?.bottom_content} />
       <FaqSection faqs={faqs} />
     </AltTextProvider>
   );

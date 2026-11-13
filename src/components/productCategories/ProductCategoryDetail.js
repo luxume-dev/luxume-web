@@ -4,6 +4,7 @@ import { CheckCircle2, MapPin, Phone, ArrowRight } from 'lucide-react';
 import LocationHero from '@/components/locations/LocationHero';
 import LocationQuoteButton from '@/components/locations/LocationQuoteButton';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 import AltTextProvider from '@/providers/AltTextProvider';
 import { breadcrumbSchema } from '@/lib/schema';
 import { buildAltMap, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
@@ -323,6 +324,7 @@ export default function ProductCategoryDetail({
         )}
 
         {/* FAQs (dashboard: the category's SEO tab) */}
+        <BottomContent html={seo?.bottom_content} />
         <FaqSection faqs={faqs} />
 
         {/* Available in (location links for this category) */}

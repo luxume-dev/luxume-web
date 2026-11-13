@@ -1,5 +1,6 @@
 import ContactSection from '@/components/contact/ContactSection';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 import AltTextProvider from '@/providers/AltTextProvider';
 import { getContactPageContent } from '@/services/supabase';
 import { getContactPageSeoCached } from '@/lib/pageSeo.server';
@@ -41,6 +42,7 @@ export default async function ContactPage() {
           info={data?.info}
           formFields={data?.form_fields}
         />
+        <BottomContent html={seo?.bottom_content} />
         <FaqSection faqs={faqs} />
       </main>
     </AltTextProvider>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 import AltTextProvider from '@/providers/AltTextProvider';
 import { getAssurancePageContent } from '@/services/supabase';
 import { getAssurancePageSeoCached } from '@/lib/pageSeo.server';
@@ -260,6 +261,7 @@ export default async function WarrantyPage() {
           </div>
         </section>
 
+        <BottomContent html={seo?.bottom_content} />
         <FaqSection faqs={faqs} />
       </main>
     </AltTextProvider>

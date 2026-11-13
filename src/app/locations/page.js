@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { MapPin, Store, ArrowRight } from 'lucide-react';
 import LocationHero from '@/components/locations/LocationHero';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 import AltTextProvider from '@/providers/AltTextProvider';
 import { getLocationPageContent, getLocations } from '@/services/supabase';
 import { getLocationPageSeoCached } from '@/lib/pageSeo.server';
@@ -159,6 +160,7 @@ export default async function LocationsPage() {
         </div>
       </section>
 
+      <BottomContent html={seo?.bottom_content} />
       <FaqSection faqs={faqs} />
     </main>
     </AltTextProvider>

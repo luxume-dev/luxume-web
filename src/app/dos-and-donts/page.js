@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 import AltTextProvider from '@/providers/AltTextProvider';
 import { getGuidelinePageContent } from '@/services/supabase';
 import { getGuidelinePageSeoCached } from '@/lib/pageSeo.server';
@@ -193,6 +194,7 @@ export default async function DosAndDontsPage() {
           </div>
         </section>
 
+        <BottomContent html={seo?.bottom_content} />
         <FaqSection faqs={faqs} />
       </main>
     </AltTextProvider>

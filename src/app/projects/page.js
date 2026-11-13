@@ -7,6 +7,7 @@ import { getProjectPageContent } from '@/services/supabase';
 import AltTextProvider from '@/providers/AltTextProvider';
 import ProjectsPageContent from '@/components/projects/ProjectsPageContent';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 
 export const revalidate = 10;
 
@@ -54,6 +55,7 @@ export default async function ProjectsPage() {
           description={heading?.description?.trim()}
         />
       </HydrationBoundary>
+      <BottomContent html={seo?.bottom_content} />
       <FaqSection faqs={faqs} />
     </AltTextProvider>
   );

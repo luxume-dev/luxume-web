@@ -8,6 +8,7 @@ import AltTextProvider from '@/providers/AltTextProvider';
 import BlogHeroSection from '@/components/blog/BlogHeroSection';
 import BlogSection from '@/components/blog/BlogSection';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 
 export const revalidate = 10;
 
@@ -51,6 +52,7 @@ export default async function BlogPage() {
             bannerImage={heading?.banner_image?.trim()}
           />
           <BlogSection />
+          <BottomContent html={seo?.bottom_content} />
           <FaqSection faqs={faqs} />
         </main>
       </HydrationBoundary>

@@ -1,5 +1,6 @@
 import CompanyPageContent from '@/components/CompanyPageContent';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 import AltTextProvider from '@/providers/AltTextProvider';
 import { getCompanyPage } from '@/services/supabase';
 import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } from '@/lib/pageSeo';
@@ -50,6 +51,7 @@ export default async function CompanyPage({ slug, fallbackTitle, children }) {
       ) : (
         children
       )}
+      <BottomContent html={seo?.bottom_content} />
       <FaqSection faqs={faqs} />
     </AltTextProvider>
   );

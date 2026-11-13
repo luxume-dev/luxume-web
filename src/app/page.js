@@ -16,6 +16,7 @@ import ProductHighlightsSection from '@/components/ProductHighlightsSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import AwardsSection from '@/components/AwardsSection';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 import DownloadsAndResources from '@/components/DownloadsAndResources';
 
 export const revalidate = 10;
@@ -121,6 +122,7 @@ export default async function Home() {
           awardDescriptions={content?.award_description}
           awardImages={content?.award_image}
         />
+        <BottomContent html={seo?.bottom_content} />
         <FaqSection faqs={faqs} />
         {/* Downloads & Resources comes from home_page (dashboard); there are no
             static fallbacks, an empty field hides its element. */}

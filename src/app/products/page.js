@@ -3,6 +3,7 @@ import ProductStats from '@/components/ProductStats';
 import ProductGrid from '@/components/ProductGrid';
 import ProductHero from '@/components/ProductHero';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 import AltTextProvider from '@/providers/AltTextProvider';
 import { getProductPageContent } from '@/services/supabase';
 import { getProductPageSeoCached } from '@/lib/pageSeo.server';
@@ -45,6 +46,7 @@ export default async function ProductsPage() {
         <ProductStats cards={data?.count_card} />
         {/* Product cards come from the brands table */}
         <ProductGrid />
+        <BottomContent html={seo?.bottom_content} />
         <FaqSection faqs={faqs} />
       </main>
     </AltTextProvider>

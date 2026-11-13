@@ -10,6 +10,7 @@ import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } fro
 import AltTextProvider from '@/providers/AltTextProvider';
 import JobDetailClient from '@/components/careers/JobDetailClient';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 
 export const revalidate = 10;
 
@@ -97,6 +98,7 @@ export default async function JobDetailPage({ params }) {
           }}
         />
       </HydrationBoundary>
+      <BottomContent html={seo?.bottom_content} />
       <FaqSection faqs={faqs} />
     </AltTextProvider>
   );

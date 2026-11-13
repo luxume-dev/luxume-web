@@ -8,6 +8,7 @@ import AltTextProvider from '@/providers/AltTextProvider';
 import CareersHeroSection from '@/components/careers/CareersHeroSection';
 import JobOpeningsSection from '@/components/careers/JobOpeningsSection';
 import FaqSection from '@/components/FaqSection';
+import BottomContent from '@/components/BottomContent';
 
 export const revalidate = 10;
 
@@ -50,6 +51,7 @@ export default async function CareersPage() {
             title={heading?.openings_title?.trim()}
             description={heading?.openings_description?.trim()}
           />
+          <BottomContent html={seo?.bottom_content} />
           <FaqSection faqs={faqs} />
         </main>
       </HydrationBoundary>
