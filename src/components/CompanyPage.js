@@ -7,8 +7,9 @@ import { buildAltMap, buildSeoMetadata, faqPageSchema, jsonLd, visibleFaqs } fro
 
 /**
  * Company pages (Privacy Policy, Terms & Conditions) are managed from the
- * dashboard: company_page (slug) -> page_seo. The fallbacks passed in are used
- * until the page is saved there.
+ * dashboard: company_page (slug) -> page_seo. There is no built-in text: with
+ * no content saved the page shows only its title. The fallback title and
+ * metadata passed in are used until they are saved there.
  */
 
 export async function companyPageMetadata(slug, { title, description }) {
@@ -22,16 +23,10 @@ export async function companyPageMetadata(slug, { title, description }) {
   };
 }
 
-export default async function CompanyPage({ slug, fallbackTitle, children }) {
-  // Never throws: a failure renders the built-in text (children)
+export default async function CompanyPage({ slug, fallbackTitle }) {
+  // Never throws: a failure renders the page with just its title
   const { data } = await getCompanyPage(slug);
   const seo = data?.page_seo ?? null;
-  // HTML from the rich-text editor, or blog-style blocks in older rows
-  const content = data?.content;
-  const hasContent =
-    typeof content === 'string'
-      ? content.replace(/<[^>]*>/g, '').trim() !== ''
-      : Array.isArray(content) && content.length > 0;
 
   const faqs = visibleFaqs(seo);
   const faqSchema = faqPageSchema(faqs);
@@ -41,16 +36,13 @@ export default async function CompanyPage({ slug, fallbackTitle, children }) {
       {seo?.schema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(seo.schema) }} />}
       {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(faqSchema) }} />}
 
-      {hasContent ? (
-        <CompanyPageContent
-          title={data.title?.trim() || fallbackTitle}
-          description={data.description}
-          content={data.content}
-          updatedAt={data.updated_at ?? data.created_at}
-        />
-      ) : (
-        children
-      )}
+      {/* HTML from the rich-text editor, or blog-style blocks in older rows */}
+      <CompanyPageContent
+        title={data?.title?.trim() || fallbackTitle}
+        description={data?.description}
+        content={data?.content}
+        updatedAt={data ? data.updated_at ?? data.created_at : null}
+      />
       <BottomContent html={seo?.bottom_content} />
       <FaqSection faqs={faqs} />
     </AltTextProvider>
