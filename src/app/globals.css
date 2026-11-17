@@ -329,3 +329,16 @@ h6 {
   background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.75) 50%, transparent 100%);
   animation: card-shimmer 1.4s infinite;
 }
+
+/* Floating contact buttons (WhatsApp / Call) — soft, low-impact pulse ring */
+@keyframes fab-soft-pulse {
+  0%   { transform: scale(1);    opacity: 0.35; }
+  70%  { transform: scale(1.35); opacity: 0; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+.fab-soft-pulse {
+  animation: fab-soft-pulse 2.6s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fab-soft-pulse { animation: none; display: none; }
+}
