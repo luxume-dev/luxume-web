@@ -1,5 +1,6 @@
 import { cache } from 'react';
 import { supabase } from '@/lib/supabase';
+import { summarise } from '@/lib/text';
 
 /**
  * Product Categories Service
@@ -23,6 +24,8 @@ function normalise(row) {
     label: text(row.label),
     title: text(row.title),
     description: text(row.description),
+    // Category card text; falls back to the banner description, shortened
+    cardDescription: text(row.card_description) || summarise(text(row.description), 140) || '',
     buttons: list(row.buttons)
       .map((b) => ({ label: text(b?.label), link: text(b?.link) }))
       .filter((b) => b.label && b.link),
@@ -52,6 +55,10 @@ function normalise(row) {
     relatedTitle: text(row.related_title),
     relatedLabel: text(row.related_label),
     relatedLink: text(row.related_link),
+    // "Other locations" section: location ids picked in the dashboard; null = every location
+    otherLocationIds: Array.isArray(row.other_location_ids)
+      ? row.other_location_ids.map(Number).filter(Number.isFinite)
+      : null,
   };
 }
 

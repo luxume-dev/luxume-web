@@ -95,7 +95,10 @@ export default function ProductCategoryDetail({
   const where = location ? ` in ${location.name}` : '';
   const quoteName = `${category.name}${location ? ` – ${location.name}` : ''}`;
   const related = relatedCategories(categories, category.slug);
-  const otherLocations = locations.filter((l) => l.slug !== location?.slug);
+  // Locations picked on the dashboard (all when none were picked), minus the current one
+  const otherLocations = locations.filter(
+    (l) => l.slug !== location?.slug && (!category.otherLocationIds || category.otherLocationIds.includes(l.id))
+  );
   const faqs = visibleFaqs(seo);
   const faqSchema = faqPageSchema(faqs);
 
@@ -426,8 +429,10 @@ export function ProductCategoryCard({ category, href }) {
       </div>
       <div className="p-6 flex flex-col flex-grow">
         <h3 className="aloevera-bold text-2xl text-[#1a1b4b] mb-2">{category.name}</h3>
-        {category.description && (
-          <p className="font-lato text-gray-600 text-[14px] leading-relaxed line-clamp-3 mb-5">{category.description}</p>
+        {category.cardDescription && (
+          <p className="font-lato text-gray-600 text-[14px] leading-relaxed line-clamp-3 mb-5">
+            {category.cardDescription}
+          </p>
         )}
         <span className="mt-auto flex items-center gap-2 font-lato font-semibold text-[#C83C64]">
           View details <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
