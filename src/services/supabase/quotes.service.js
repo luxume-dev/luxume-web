@@ -14,6 +14,7 @@ export async function submitQuoteRequest(formData) {
         product_name: formData.product_name || null,
         profile_type: formData.profile_type || null,
         message: formData.message || null,
+        source_url: typeof window !== 'undefined' ? window.location.href : null,
       },
     ]);
 

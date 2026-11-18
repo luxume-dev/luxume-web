@@ -26,6 +26,7 @@ export async function submitContactForm(formData) {
         company_name: formData.company_name || null,
         subject: formData.subject,
         message: formData.message,
+        source_url: typeof window !== 'undefined' ? window.location.href : null,
       },
     ]);
 

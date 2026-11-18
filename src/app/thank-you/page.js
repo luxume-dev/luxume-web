@@ -278,29 +278,29 @@ export default async function ThankYouPage({ searchParams }) {
         <span className="ty-cloud absolute top-[38%] h-12 w-96 rounded-full bg-white/[0.03] blur-2xl" style={{ animationDuration: '95s', animationDelay: '-40s' }} />
       </div>
 
-      <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center px-6 py-12 text-center">
-        <div className="relative w-full max-w-md">
+      <div className="relative mx-auto flex min-h-svh max-w-6xl flex-col items-center justify-center px-6 py-6 text-center">
+        <div className="relative w-[min(24rem,36svh)] max-w-full">
           <Scene />
         </div>
 
-        <p className="ty-rise mt-6 font-lato text-xs font-bold uppercase tracking-[0.3em] text-[#C83C64]" style={{ animationDelay: '1.9s' }}>
+        <p className="ty-rise mt-3 font-lato text-xs font-bold uppercase tracking-[0.3em] text-[#C83C64]" style={{ animationDelay: '1.9s' }}>
           {v.eyebrow}
         </p>
 
-        <h1 className="ty-rise aloevera-bold mt-4 text-4xl leading-tight sm:text-5xl" style={{ animationDelay: '2.05s' }}>
+        <h1 className="ty-rise aloevera-bold mt-2 text-3xl leading-tight sm:text-4xl lg:text-5xl" style={{ animationDelay: '2.05s' }}>
           {v.title[0]} <span className="text-[#C83C64]">{v.title[1]}</span>
         </h1>
 
-        <p className="ty-rise mt-5 max-w-xl font-lato text-base text-white/70 sm:text-lg" style={{ animationDelay: '2.2s' }}>
+        <p className="ty-rise mt-3 max-w-xl font-lato text-sm sm:text-base text-white/70 sm:text-lg" style={{ animationDelay: '2.2s' }}>
           {v.body}
         </p>
 
         {v.steps && (
-          <ol className="ty-rise mt-9 grid w-full max-w-3xl gap-3 text-left sm:grid-cols-3" style={{ animationDelay: '2.35s' }}>
+          <ol className="ty-rise mt-5 grid w-full max-w-3xl gap-2 sm:gap-3 text-left sm:grid-cols-3" style={{ animationDelay: '2.35s' }}>
             {v.steps.map((step, i) => (
               <li
                 key={step}
-                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 backdrop-blur-sm"
+                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2.5 backdrop-blur-sm sm:py-3"
               >
                 <span className="aloevera-bold flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#C83C64]/20 text-sm text-[#F08DAB] ring-1 ring-[#C83C64]/40">
                   {i + 1}
@@ -311,16 +311,16 @@ export default async function ThankYouPage({ searchParams }) {
           </ol>
         )}
 
-        <div className="ty-rise mt-9 flex flex-col gap-3 sm:flex-row sm:gap-4" style={{ animationDelay: '2.5s' }}>
+        <div className="ty-rise mt-6 flex flex-col gap-3 sm:flex-row sm:gap-4" style={{ animationDelay: '2.5s' }}>
           <Link
             href="/"
-            className="aloevera-medium rounded-full bg-[#C83C64] px-8 py-3.5 text-sm text-white shadow-lg shadow-[#C83C64]/30 transition hover:-translate-y-0.5 hover:bg-[#b03256]"
+            className="aloevera-medium rounded-full bg-[#C83C64] px-8 py-3 text-sm text-white shadow-lg shadow-[#C83C64]/30 transition hover:-translate-y-0.5 hover:bg-[#b03256]"
           >
             Back to home
           </Link>
           <Link
             href="/products"
-            className="aloevera-medium rounded-full border border-white/25 px-8 py-3.5 text-sm text-white transition hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/5"
+            className="aloevera-medium rounded-full border border-white/25 px-8 py-3 text-sm text-white transition hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/5"
           >
             Explore products
           </Link>
